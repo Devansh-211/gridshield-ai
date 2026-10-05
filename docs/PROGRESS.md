@@ -12,7 +12,7 @@
 - [x] **M4: Attribution, Confidence, Risk, Incidents, Events** (PASSED)
 - [x] **M5: Impact, Mitigation, Verification** (PASSED)
 - [x] **M6: Analyst (LLM + Template), Q&A with Action Schema** (PASSED)
-- [ ] **M7: Frontend Pages, SSE, Scenario Lab, Incident Detail, Model Page**
+- [x] **M7: Frontend Pages, SSE, Scenario Lab, Incident Detail, Model Page** (PASSED)
 - [ ] **M8: Demo Mode + Secondary Demo + Golden Test**
 - [ ] **M9: P1 Items, Audit, Performance, Docs, Clean-Clone Test**
 
@@ -20,6 +20,6 @@
 - `.\.venv\Scripts\python backend/spikes/phase0_spikes.py` (Exit code: 0) — All 4 spikes passed.
 - `.\.venv\Scripts\python scripts/generate_types.py` (Exit code: 0) — OpenAPI exported & TypeScript types generated.
 - `.\.venv\Scripts\python -m backend.app.services.train_models` (Exit code: 0) — Dataset generated, L2 IsolationForest & L3 calibrated HistGradientBoosting trained (Accuracy: 91.70%, F1: 0.8846 vs L1 baseline: 0.6667).
-- `.\.venv\Scripts\python -m pytest backend/tests/test_m6_analyst.py -v` (Exit code: 0) — 4/4 passed (Template fallback, prompt injection defense, output validator, simulation-first Q&A).
-- `.\.venv\Scripts\python -m pytest backend/tests -v` (Exit code: 0) — 30/30 tests passed across M0-M6.
+- `.\.venv\Scripts\python -m pytest backend/tests/ -v` (Exit code: 0) — 37/37 tests passed across M0-M7.
+- `cd frontend ; npm.cmd run build` (Exit code: 0) — Frontend production bundle built successfully without TypeScript or build errors.
 - `.\.venv\Scripts\python scripts/check.py` (Exit code: 0) — Master check gate passed.

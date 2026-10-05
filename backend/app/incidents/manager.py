@@ -122,3 +122,16 @@ class IncidentManager:
                 self._active_incident_id = None
 
         return incident, step_events
+
+    def get_all_incidents(self) -> List[Incident]:
+        return list(self.incidents.values())
+
+    def get_incident(self, incident_id: str) -> Optional[Incident]:
+        return self.incidents.get(incident_id)
+
+    def reset(self):
+        self.incidents.clear()
+        self.events.clear()
+        self._incident_counter = 0
+        self._active_incident_id = None
+        self._normal_consecutive_steps = 0

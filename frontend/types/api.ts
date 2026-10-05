@@ -225,7 +225,7 @@ export interface MitigationResult {
 
 export interface ImpactResult {
   incident_id: string;
-  projected_steps: int;
+  projected_steps: number;
   unmitigated_metrics: VerificationMetrics;
   summary: string;
   provenance: Provenance;
@@ -263,6 +263,19 @@ export interface TimelineEvent {
   provenance: Provenance;
 }
 
+export interface AnalystContext {
+  incident_id: string;
+  run_id: string;
+  classification: ClassificationClass;
+  likely_cause: string;
+  certainty: CertaintyBand;
+  risk_level: RiskLevel;
+  evidence: EvidenceItem[];
+  affected_components: string[];
+  recommended_actions: string[];
+  model_version: string;
+}
+
 export interface AnalystExplanation {
   incident_id: string;
   title: string;
@@ -276,6 +289,11 @@ export interface AnalystExplanation {
   is_template_fallback: boolean;
   cited_evidence_ids: string[];
   provenance: Provenance;
+}
+
+export interface AnalystQuestionRequest {
+  incident_id: string;
+  question: string;
 }
 
 export interface AnalystQuestionResponse {

@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "GridShield AI API",
-    "description": "Explainable Cyber-Physical Resilience Platform for Electrical Power Grids",
+    "description": "Explainable Cyber-Physical Resilience Platform for Electrical Power Grids (Research/Educational Digital Twin)",
     "version": "1.0.0"
   },
   "paths": {
@@ -25,6 +25,7 @@
     "/api/v1/grid/topology": {
       "get": {
         "summary": "Get Grid Topology",
+        "description": "Returns IEEE 14-bus system topology with 2D schematic coordinates.",
         "operationId": "get_grid_topology_api_v1_grid_topology_get",
         "responses": {
           "200": {
@@ -40,10 +41,507 @@
         }
       }
     },
+    "/api/v1/grid/state": {
+      "get": {
+        "summary": "Get Grid State",
+        "description": "Returns the current latest physical grid state.",
+        "operationId": "get_grid_state_api_v1_grid_state_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GridState"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/telemetry": {
+      "get": {
+        "summary": "Get Latest Telemetry",
+        "description": "Returns the latest observed telemetry points with noise and provenance.",
+        "operationId": "get_latest_telemetry_api_v1_telemetry_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ObservedTelemetryPoint"
+                  },
+                  "type": "array",
+                  "title": "Response Get Latest Telemetry Api V1 Telemetry Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/scenarios": {
+      "get": {
+        "summary": "Get Scenarios Catalog",
+        "description": "Returns catalog of supported physical scenarios and cyber attacks.",
+        "operationId": "get_scenarios_catalog_api_v1_scenarios_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs": {
+      "post": {
+        "summary": "Create Run",
+        "description": "Executes a complete digital twin run through the full resilience loop:\nSIMULATION -> TELEMETRY -> DETECTION -> ATTRIBUTION -> RISK -> INCIDENT -> MITIGATION",
+        "operationId": "create_run_api_v1_runs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScenarioSpec"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}": {
+      "get": {
+        "summary": "Get Run",
+        "description": "Returns details and timeline of a specific run.",
+        "operationId": "get_run_api_v1_runs__run_id__get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/stream": {
+      "get": {
+        "summary": "Stream Run",
+        "description": "Server-Sent Events (SSE) live telemetry and event stream.",
+        "operationId": "stream_run_api_v1_runs__run_id__stream_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/incidents": {
+      "get": {
+        "summary": "Get Incidents",
+        "description": "Returns all recorded incidents.",
+        "operationId": "get_incidents_api_v1_incidents_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Incident"
+                  },
+                  "type": "array",
+                  "title": "Response Get Incidents Api V1 Incidents Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/incidents/{incident_id}": {
+      "get": {
+        "summary": "Get Incident Detail",
+        "description": "Returns complete details of a specific incident.",
+        "operationId": "get_incident_detail_api_v1_incidents__incident_id__get",
+        "parameters": [
+          {
+            "name": "incident_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Incident Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Incident"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/incidents/{incident_id}/simulate-impact": {
+      "post": {
+        "summary": "Post Simulate Impact",
+        "description": "Runs forward consequence simulation ('if ignored').",
+        "operationId": "post_simulate_impact_api_v1_incidents__incident_id__simulate_impact_post",
+        "parameters": [
+          {
+            "name": "incident_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Incident Id"
+            }
+          },
+          {
+            "name": "projected_steps",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 5,
+              "default": 30,
+              "title": "Projected Steps"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImpactResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/incidents/{incident_id}/recommend-mitigation": {
+      "post": {
+        "summary": "Post Recommend Mitigation",
+        "description": "Generates allowlisted mitigation recommendations with evidence citations.",
+        "operationId": "post_recommend_mitigation_api_v1_incidents__incident_id__recommend_mitigation_post",
+        "parameters": [
+          {
+            "name": "incident_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Incident Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MitigationPlan"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/incidents/{incident_id}/simulate-mitigation": {
+      "post": {
+        "summary": "Post Simulate Mitigation",
+        "description": "Executes 3-way comparative verification (Baseline vs Unmitigated vs Mitigated).",
+        "operationId": "post_simulate_mitigation_api_v1_incidents__incident_id__simulate_mitigation_post",
+        "parameters": [
+          {
+            "name": "incident_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Incident Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/MitigationPlan"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Plan"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MitigationResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/models/status": {
       "get": {
-        "summary": "Get Model Status",
-        "operationId": "get_model_status_api_v1_models_status_get",
+        "summary": "Get Models Status",
+        "description": "Returns models registry metadata, evaluation metrics, and system limitations.",
+        "operationId": "get_models_status_api_v1_models_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analyst/explain": {
+      "post": {
+        "summary": "Post Analyst Explain",
+        "description": "Generates structured incident explanation using LLM or deterministic template fallback.",
+        "operationId": "post_analyst_explain_api_v1_analyst_explain_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalystContext"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalystExplanation"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analyst/ask": {
+      "post": {
+        "summary": "Post Analyst Ask",
+        "description": "Answers operator questions with simulation-first verification of proposed actions.",
+        "operationId": "post_analyst_ask_api_v1_analyst_ask_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalystQuestionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalystQuestionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/demo/run": {
+      "post": {
+        "summary": "Post Demo Run",
+        "description": "Executes the golden demo run through the real digital twin pipeline:\nFDI on Bus 4 -> Closed-loop SCADA over-excitation -> L1-L3 Flag -> Cyber Attribution -> Mitigation -> Verification.",
+        "operationId": "post_demo_run_api_v1_demo_run_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/reset": {
+      "post": {
+        "summary": "Post System Reset",
+        "description": "Resets digital twin state and incident history.",
+        "operationId": "post_system_reset_api_v1_system_reset_post",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -59,6 +557,353 @@
   },
   "components": {
     "schemas": {
+      "AnalystContext": {
+        "properties": {
+          "incident_id": {
+            "type": "string",
+            "title": "Incident Id"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/ClassificationClass"
+          },
+          "likely_cause": {
+            "type": "string",
+            "title": "Likely Cause"
+          },
+          "certainty": {
+            "$ref": "#/components/schemas/CertaintyBand"
+          },
+          "risk_level": {
+            "$ref": "#/components/schemas/RiskLevel"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceItem"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "affected_components": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Affected Components"
+          },
+          "recommended_actions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Recommended Actions"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "incident_id",
+          "run_id",
+          "classification",
+          "likely_cause",
+          "certainty",
+          "risk_level",
+          "evidence",
+          "affected_components",
+          "recommended_actions",
+          "model_version"
+        ],
+        "title": "AnalystContext"
+      },
+      "AnalystExplanation": {
+        "properties": {
+          "incident_id": {
+            "type": "string",
+            "title": "Incident Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "what_happened": {
+            "type": "string",
+            "title": "What Happened"
+          },
+          "where": {
+            "type": "string",
+            "title": "Where"
+          },
+          "why": {
+            "type": "string",
+            "title": "Why"
+          },
+          "evidence_analysis": {
+            "type": "string",
+            "title": "Evidence Analysis"
+          },
+          "cyber_vs_physical": {
+            "type": "string",
+            "title": "Cyber Vs Physical"
+          },
+          "model_assessment": {
+            "type": "string",
+            "title": "Model Assessment"
+          },
+          "recommended_actions": {
+            "type": "string",
+            "title": "Recommended Actions"
+          },
+          "is_template_fallback": {
+            "type": "boolean",
+            "title": "Is Template Fallback",
+            "default": false
+          },
+          "cited_evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Cited Evidence Ids"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance",
+            "default": "LLM"
+          }
+        },
+        "type": "object",
+        "required": [
+          "incident_id",
+          "title",
+          "what_happened",
+          "where",
+          "why",
+          "evidence_analysis",
+          "cyber_vs_physical",
+          "model_assessment",
+          "recommended_actions",
+          "cited_evidence_ids"
+        ],
+        "title": "AnalystExplanation"
+      },
+      "AnalystQuestionRequest": {
+        "properties": {
+          "incident_id": {
+            "type": "string",
+            "title": "Incident Id"
+          },
+          "question": {
+            "type": "string",
+            "title": "Question"
+          }
+        },
+        "type": "object",
+        "required": [
+          "incident_id",
+          "question"
+        ],
+        "title": "AnalystQuestionRequest"
+      },
+      "AnalystQuestionResponse": {
+        "properties": {
+          "incident_id": {
+            "type": "string",
+            "title": "Incident Id"
+          },
+          "question": {
+            "type": "string",
+            "title": "Question"
+          },
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          },
+          "proposed_action": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MitigationInstruction"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "simulation_verified": {
+            "type": "boolean",
+            "title": "Simulation Verified",
+            "default": false
+          },
+          "is_template_fallback": {
+            "type": "boolean",
+            "title": "Is Template Fallback",
+            "default": false
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance",
+            "default": "LLM"
+          }
+        },
+        "type": "object",
+        "required": [
+          "incident_id",
+          "question",
+          "answer"
+        ],
+        "title": "AnalystQuestionResponse"
+      },
+      "AttackSpec": {
+        "properties": {
+          "attack_type": {
+            "$ref": "#/components/schemas/AttackType",
+            "default": "NONE"
+          },
+          "target_components": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Target Components",
+            "description": "Target buses or lines (e.g. ['Bus 4'])"
+          },
+          "target_measurements": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Target Measurements",
+            "description": "Target measurement types (e.g. ['v_pu'])"
+          },
+          "magnitude": {
+            "type": "number",
+            "title": "Magnitude",
+            "description": "Bias or delta modifier",
+            "default": 0.0
+          },
+          "start_step": {
+            "type": "integer",
+            "title": "Start Step",
+            "description": "Step to initiate attack",
+            "default": 10
+          },
+          "duration_steps": {
+            "type": "integer",
+            "title": "Duration Steps",
+            "description": "Duration in steps",
+            "default": 50
+          },
+          "seed": {
+            "type": "integer",
+            "title": "Seed",
+            "default": 42
+          }
+        },
+        "type": "object",
+        "title": "AttackSpec"
+      },
+      "AttackType": {
+        "type": "string",
+        "enum": [
+          "NONE",
+          "FALSE_DATA_INJECTION",
+          "MALICIOUS_CONTROL_COMMAND",
+          "REPLAY",
+          "DENIAL_OF_SERVICE",
+          "COORDINATED_CYBER_PHYSICAL"
+        ],
+        "title": "AttackType"
+      },
+      "Attribution": {
+        "properties": {
+          "likely_cause": {
+            "type": "string",
+            "title": "Likely Cause",
+            "description": "PHYSICAL, CYBER, CYBER_PHYSICAL, or NORMAL"
+          },
+          "hypothesis_scores": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Hypothesis Scores",
+            "description": "H_normal, H_physical, H_cyber, H_cyberphysical"
+          },
+          "supporting_evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceItem"
+            },
+            "type": "array",
+            "title": "Supporting Evidence"
+          },
+          "contradicting_evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceItem"
+            },
+            "type": "array",
+            "title": "Contradicting Evidence"
+          },
+          "alternatives_considered": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Alternatives Considered"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance",
+            "default": "CALCULATED"
+          }
+        },
+        "type": "object",
+        "required": [
+          "likely_cause",
+          "hypothesis_scores",
+          "supporting_evidence"
+        ],
+        "title": "Attribution"
+      },
+      "BusState": {
+        "properties": {
+          "bus_id": {
+            "type": "integer",
+            "title": "Bus Id"
+          },
+          "vm_pu": {
+            "type": "number",
+            "title": "Vm Pu"
+          },
+          "va_degree": {
+            "type": "number",
+            "title": "Va Degree"
+          },
+          "p_mw": {
+            "type": "number",
+            "title": "P Mw"
+          },
+          "q_mvar": {
+            "type": "number",
+            "title": "Q Mvar"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "NORMAL"
+          }
+        },
+        "type": "object",
+        "required": [
+          "bus_id",
+          "vm_pu",
+          "va_degree",
+          "p_mw",
+          "q_mvar"
+        ],
+        "title": "BusState"
+      },
       "BusTopology": {
         "properties": {
           "id": {
@@ -100,6 +945,110 @@
           "bus_type"
         ],
         "title": "BusTopology"
+      },
+      "CertaintyBand": {
+        "type": "string",
+        "enum": [
+          "HIGH",
+          "MEDIUM",
+          "LOW"
+        ],
+        "title": "CertaintyBand"
+      },
+      "ClassificationClass": {
+        "type": "string",
+        "enum": [
+          "NORMAL",
+          "PHYSICAL_FAULT",
+          "FALSE_DATA_INJECTION",
+          "MALICIOUS_CONTROL_COMMAND",
+          "REPLAY",
+          "DENIAL_OF_SERVICE",
+          "COORDINATED_CYBER_PHYSICAL",
+          "UNKNOWN"
+        ],
+        "title": "ClassificationClass"
+      },
+      "ComponentIntegrity": {
+        "type": "string",
+        "enum": [
+          "TRUSTED",
+          "SUSPECT",
+          "COMPROMISED"
+        ],
+        "title": "ComponentIntegrity"
+      },
+      "EvidenceItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "e.g. E1, E2"
+          },
+          "domain": {
+            "type": "string",
+            "title": "Domain",
+            "description": "PHYSICAL, CYBER, or STATE_ESTIMATOR"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "metric_name": {
+            "type": "string",
+            "title": "Metric Name"
+          },
+          "observed_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "boolean"
+              }
+            ],
+            "title": "Observed Value"
+          },
+          "expected_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Value"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance",
+            "default": "OBSERVED"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "domain",
+          "description",
+          "metric_name",
+          "observed_value"
+        ],
+        "title": "EvidenceItem"
       },
       "GeneratorTopology": {
         "properties": {
@@ -143,6 +1092,58 @@
           "sn_mva"
         ],
         "title": "GeneratorTopology"
+      },
+      "GridState": {
+        "properties": {
+          "step": {
+            "type": "integer",
+            "title": "Step"
+          },
+          "sim_time_s": {
+            "type": "number",
+            "title": "Sim Time S"
+          },
+          "converged": {
+            "type": "boolean",
+            "title": "Converged"
+          },
+          "buses": {
+            "items": {
+              "$ref": "#/components/schemas/BusState"
+            },
+            "type": "array",
+            "title": "Buses"
+          },
+          "lines": {
+            "items": {
+              "$ref": "#/components/schemas/LineState"
+            },
+            "type": "array",
+            "title": "Lines"
+          },
+          "frequency_hz": {
+            "type": "number",
+            "title": "Frequency Hz",
+            "default": 60.0
+          },
+          "frequency_provenance": {
+            "$ref": "#/components/schemas/Provenance",
+            "default": "SIMULATED"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance",
+            "default": "SIMULATED"
+          }
+        },
+        "type": "object",
+        "required": [
+          "step",
+          "sim_time_s",
+          "converged",
+          "buses",
+          "lines"
+        ],
+        "title": "GridState"
       },
       "GridTopology": {
         "properties": {
@@ -192,6 +1193,204 @@
           "loads"
         ],
         "title": "GridTopology"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ImpactResult": {
+        "properties": {
+          "incident_id": {
+            "type": "string",
+            "title": "Incident Id"
+          },
+          "projected_steps": {
+            "type": "integer",
+            "title": "Projected Steps"
+          },
+          "unmitigated_metrics": {
+            "$ref": "#/components/schemas/VerificationMetrics"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance",
+            "default": "CALCULATED"
+          }
+        },
+        "type": "object",
+        "required": [
+          "incident_id",
+          "projected_steps",
+          "unmitigated_metrics",
+          "summary"
+        ],
+        "title": "ImpactResult"
+      },
+      "Incident": {
+        "properties": {
+          "incident_id": {
+            "type": "string",
+            "title": "Incident Id",
+            "description": "e.g. GS-0001"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "scenario_ref": {
+            "type": "string",
+            "title": "Scenario Ref"
+          },
+          "created_at_step": {
+            "type": "integer",
+            "title": "Created At Step"
+          },
+          "created_at_wall": {
+            "type": "string",
+            "title": "Created At Wall"
+          },
+          "status": {
+            "$ref": "#/components/schemas/IncidentStatus"
+          },
+          "affected_components": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Affected Components"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/ClassificationClass"
+          },
+          "attribution": {
+            "$ref": "#/components/schemas/Attribution"
+          },
+          "certainty": {
+            "$ref": "#/components/schemas/CertaintyBand"
+          },
+          "risk": {
+            "$ref": "#/components/schemas/RiskAssessment"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceItem"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "recommended_plan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MitigationPlan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mitigation_result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MitigationResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance",
+            "default": "CALCULATED"
+          }
+        },
+        "type": "object",
+        "required": [
+          "incident_id",
+          "run_id",
+          "scenario_ref",
+          "created_at_step",
+          "created_at_wall",
+          "status",
+          "affected_components",
+          "classification",
+          "attribution",
+          "certainty",
+          "risk",
+          "evidence",
+          "model_version"
+        ],
+        "title": "Incident"
+      },
+      "IncidentStatus": {
+        "type": "string",
+        "enum": [
+          "DETECTED",
+          "INVESTIGATING",
+          "MITIGATION_PROPOSED",
+          "SIMULATION_RUNNING",
+          "MITIGATION_VERIFIED",
+          "RESOLVED"
+        ],
+        "title": "IncidentStatus"
+      },
+      "LineState": {
+        "properties": {
+          "line_id": {
+            "type": "integer",
+            "title": "Line Id"
+          },
+          "loading_pct": {
+            "type": "number",
+            "title": "Loading Pct"
+          },
+          "p_from_mw": {
+            "type": "number",
+            "title": "P From Mw"
+          },
+          "q_from_mvar": {
+            "type": "number",
+            "title": "Q From Mvar"
+          },
+          "p_to_mw": {
+            "type": "number",
+            "title": "P To Mw"
+          },
+          "q_to_mvar": {
+            "type": "number",
+            "title": "Q To Mvar"
+          },
+          "in_service": {
+            "type": "boolean",
+            "title": "In Service",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "line_id",
+          "loading_pct",
+          "p_from_mw",
+          "q_from_mvar",
+          "p_to_mw",
+          "q_to_mvar"
+        ],
+        "title": "LineState"
       },
       "LineTopology": {
         "properties": {
@@ -274,6 +1473,202 @@
         ],
         "title": "LoadTopology"
       },
+      "MitigationActionType": {
+        "type": "string",
+        "enum": [
+          "ISOLATE_BUS",
+          "TRIP_LINE",
+          "RESTORE_LINE",
+          "QUARANTINE_MEASUREMENT",
+          "REDISPATCH_GEN",
+          "SHED_LOAD",
+          "REVERT_COMMAND",
+          "NO_ACTION"
+        ],
+        "title": "MitigationActionType"
+      },
+      "MitigationInstruction": {
+        "properties": {
+          "action_type": {
+            "$ref": "#/components/schemas/MitigationActionType"
+          },
+          "target_component": {
+            "type": "string",
+            "title": "Target Component"
+          },
+          "parameter_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parameter Value"
+          },
+          "justification": {
+            "type": "string",
+            "title": "Justification"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action_type",
+          "target_component",
+          "justification"
+        ],
+        "title": "MitigationInstruction"
+      },
+      "MitigationPlan": {
+        "properties": {
+          "plan_id": {
+            "type": "string",
+            "title": "Plan Id"
+          },
+          "incident_id": {
+            "type": "string",
+            "title": "Incident Id"
+          },
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/MitigationInstruction"
+            },
+            "type": "array",
+            "title": "Actions"
+          },
+          "evidence_citations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence Citations"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance",
+            "default": "CALCULATED"
+          }
+        },
+        "type": "object",
+        "required": [
+          "plan_id",
+          "incident_id",
+          "actions"
+        ],
+        "title": "MitigationPlan"
+      },
+      "MitigationResult": {
+        "properties": {
+          "plan_id": {
+            "type": "string",
+            "title": "Plan Id"
+          },
+          "incident_id": {
+            "type": "string",
+            "title": "Incident Id"
+          },
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "baseline_metrics": {
+            "$ref": "#/components/schemas/VerificationMetrics"
+          },
+          "unmitigated_impact_metrics": {
+            "$ref": "#/components/schemas/VerificationMetrics"
+          },
+          "mitigated_metrics": {
+            "$ref": "#/components/schemas/VerificationMetrics"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance",
+            "default": "CALCULATED"
+          }
+        },
+        "type": "object",
+        "required": [
+          "plan_id",
+          "incident_id",
+          "success",
+          "summary",
+          "baseline_metrics",
+          "unmitigated_impact_metrics",
+          "mitigated_metrics"
+        ],
+        "title": "MitigationResult"
+      },
+      "ObservedTelemetryPoint": {
+        "properties": {
+          "timestamp": {
+            "type": "number",
+            "title": "Timestamp",
+            "description": "Simulation step time (seconds)"
+          },
+          "wall_time": {
+            "type": "string",
+            "title": "Wall Time",
+            "description": "ISO 8601 wall-clock timestamp"
+          },
+          "component_id": {
+            "type": "string",
+            "title": "Component Id",
+            "description": "Element identifier, e.g. Bus 4, Line 1-2"
+          },
+          "component_type": {
+            "type": "string",
+            "title": "Component Type",
+            "description": "bus, line, gen, load"
+          },
+          "measurement_type": {
+            "type": "string",
+            "title": "Measurement Type",
+            "description": "v_pu, p_mw, q_mvar, f_hz, loading_pct"
+          },
+          "reported_value": {
+            "type": "number",
+            "title": "Reported Value",
+            "description": "Value reported by sensor"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit",
+            "description": "p.u., MW, MVAr, Hz, %"
+          },
+          "quality": {
+            "$ref": "#/components/schemas/TelemetryQuality",
+            "default": "GOOD"
+          },
+          "sequence": {
+            "type": "integer",
+            "title": "Sequence",
+            "default": 0
+          },
+          "source_device_id": {
+            "type": "string",
+            "title": "Source Device Id",
+            "default": "RTU_01"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance",
+            "default": "OBSERVED"
+          }
+        },
+        "type": "object",
+        "required": [
+          "timestamp",
+          "wall_time",
+          "component_id",
+          "component_type",
+          "measurement_type",
+          "reported_value",
+          "unit"
+        ],
+        "title": "ObservedTelemetryPoint"
+      },
       "Provenance": {
         "type": "string",
         "enum": [
@@ -285,6 +1680,274 @@
           "LLM"
         ],
         "title": "Provenance"
+      },
+      "RiskAssessment": {
+        "properties": {
+          "overall_risk_score": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Overall Risk Score"
+          },
+          "risk_level": {
+            "$ref": "#/components/schemas/RiskLevel"
+          },
+          "sub_scores": {
+            "items": {
+              "$ref": "#/components/schemas/RiskFactor"
+            },
+            "type": "array",
+            "title": "Sub Scores"
+          },
+          "cyber_integrity_map": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ComponentIntegrity"
+            },
+            "type": "object",
+            "title": "Cyber Integrity Map"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance",
+            "default": "CALCULATED"
+          }
+        },
+        "type": "object",
+        "required": [
+          "overall_risk_score",
+          "risk_level",
+          "sub_scores"
+        ],
+        "title": "RiskAssessment"
+      },
+      "RiskFactor": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "raw_value": {
+            "type": "number",
+            "title": "Raw Value"
+          },
+          "normalized_score": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Normalized Score"
+          },
+          "weight": {
+            "type": "number",
+            "title": "Weight"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "raw_value",
+          "normalized_score",
+          "weight",
+          "description"
+        ],
+        "title": "RiskFactor"
+      },
+      "RiskLevel": {
+        "type": "string",
+        "enum": [
+          "LOW",
+          "MEDIUM",
+          "HIGH",
+          "CRITICAL"
+        ],
+        "title": "RiskLevel"
+      },
+      "ScenarioSpec": {
+        "properties": {
+          "scenario_type": {
+            "$ref": "#/components/schemas/ScenarioType",
+            "default": "NORMAL"
+          },
+          "target_component": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Component"
+          },
+          "parameter_value": {
+            "type": "number",
+            "title": "Parameter Value",
+            "default": 0.0
+          },
+          "start_step": {
+            "type": "integer",
+            "title": "Start Step",
+            "default": 10
+          },
+          "duration_steps": {
+            "type": "integer",
+            "title": "Duration Steps",
+            "default": 100
+          },
+          "total_steps": {
+            "type": "integer",
+            "title": "Total Steps",
+            "default": 200
+          },
+          "seed": {
+            "type": "integer",
+            "title": "Seed",
+            "default": 42
+          },
+          "attack": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AttackSpec"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "ScenarioSpec"
+      },
+      "ScenarioType": {
+        "type": "string",
+        "enum": [
+          "NORMAL",
+          "LOAD_INCREASE",
+          "LINE_FAILURE",
+          "GENERATOR_FAILURE",
+          "VOLTAGE_INSTABILITY",
+          "FREQUENCY_DISTURBANCE"
+        ],
+        "title": "ScenarioType"
+      },
+      "TelemetryQuality": {
+        "type": "string",
+        "enum": [
+          "GOOD",
+          "STALE",
+          "MISSING",
+          "SUSPECT"
+        ],
+        "title": "TelemetryQuality"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VerificationMetrics": {
+        "properties": {
+          "max_voltage_deviation_pu": {
+            "type": "number",
+            "title": "Max Voltage Deviation Pu"
+          },
+          "voltage_violations_count": {
+            "type": "integer",
+            "title": "Voltage Violations Count"
+          },
+          "overloaded_lines_count": {
+            "type": "integer",
+            "title": "Overloaded Lines Count"
+          },
+          "max_line_loading_pct": {
+            "type": "number",
+            "title": "Max Line Loading Pct"
+          },
+          "total_load_served_mw": {
+            "type": "number",
+            "title": "Total Load Served Mw"
+          },
+          "load_shed_mw": {
+            "type": "number",
+            "title": "Load Shed Mw"
+          },
+          "frequency_hz": {
+            "type": "number",
+            "title": "Frequency Hz"
+          },
+          "operational_risk_score": {
+            "type": "number",
+            "title": "Operational Risk Score"
+          },
+          "risk_level": {
+            "$ref": "#/components/schemas/RiskLevel"
+          },
+          "state_estimation_error_rmse": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "State Estimation Error Rmse"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance",
+            "default": "CALCULATED"
+          }
+        },
+        "type": "object",
+        "required": [
+          "max_voltage_deviation_pu",
+          "voltage_violations_count",
+          "overloaded_lines_count",
+          "max_line_loading_pct",
+          "total_load_served_mw",
+          "load_shed_mw",
+          "frequency_hz",
+          "operational_risk_score",
+          "risk_level"
+        ],
+        "title": "VerificationMetrics"
       }
     }
   }

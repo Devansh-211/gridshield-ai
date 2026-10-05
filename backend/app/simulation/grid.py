@@ -77,6 +77,19 @@ class DigitalTwinGrid:
                 max_i_ka=float(self.net.line.max_i_ka.at[l_idx]),
                 in_service=bool(self.net.line.in_service.at[l_idx])
             ))
+        # Include transformers as branches (lines 16-20)
+        for t_idx in self.net.trafo.index:
+            from_b = bus_to_ieee(int(self.net.trafo.hv_bus.at[t_idx]))
+            to_b = bus_to_ieee(int(self.net.trafo.lv_bus.at[t_idx]))
+            lines.append(LineTopology(
+                id=len(self.net.line) + int(t_idx) + 1,
+                name=f"Trafo {from_b}-{to_b}",
+                from_bus=from_b,
+                to_bus=to_b,
+                length_km=0.1,
+                max_i_ka=1.0,
+                in_service=bool(self.net.trafo.in_service.at[t_idx])
+            ))
 
         generators = []
         # Include slack ext_grid as Gen 1
