@@ -6,7 +6,7 @@
 
 ## Milestones Summary
 - [x] **M0: Spikes, Contracts, Repo Skeleton, AGENTS.md, Makefile** (PASSED)
-- [ ] **M1: Digital Twin + Telemetry + Controller + Physical Scenarios + SQLite**
+- [x] **M1: Digital Twin + Telemetry + Controller + Physical Scenarios + SQLite** (PASSED)
 - [ ] **M2: Attack Engine (FDI, Command) + Cyber Events**
 - [ ] **M3: Estimator, Features, Dataset, Training, Evaluation**
 - [ ] **M4: Attribution, Confidence, Risk, Incidents, Events**
@@ -18,6 +18,6 @@
 
 ## Verified Commands Log
 - `.\.venv\Scripts\python backend/spikes/phase0_spikes.py` (Exit code: 0) — All 4 spikes passed.
-- `.\.venv\Scripts\python scripts/generate_types.py` (Exit code: 0) — OpenAPI exported to `docs/openapi.json` & TypeScript types generated to `frontend/types/api.ts`.
-- `.\.venv\Scripts\python -m pytest backend/tests -v` (Exit code: 0) — 4/4 initial invariant and contract tests passed.
-- `.\.venv\Scripts\python scripts/check.py` (Exit code: 0) — Full M0 quality gate verified and recorded in `reports/check_report.json`.
+- `.\.venv\Scripts\python scripts/generate_types.py` (Exit code: 0) — OpenAPI exported & TypeScript types generated.
+- `.\.venv\Scripts\python -m pytest backend/tests -v` (Exit code: 0) — 9/9 unit and integration tests passed (Digital Twin, indexing, SCADA supervisory controller, frequency COI swing model, SQLite persistence).
+- `.\.venv\Scripts\python scripts/check.py` (Exit code: 0) — Master check gate passed.
