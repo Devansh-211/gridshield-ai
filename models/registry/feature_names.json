@@ -1,0 +1,21 @@
+[
+  "cyber_auth_failures",
+  "cyber_packet_loss",
+  "cyber_sequence_anomalies",
+  "cyber_unauth_commands",
+  "freq_dev_hz",
+  "l1_chi2_stat",
+  "l1_flagged_count",
+  "l1_max_lnr",
+  "max_line_loading",
+  "max_temporal_v_diff",
+  "max_voltage",
+  "max_voltage_dev",
+  "mean_line_loading",
+  "mean_voltage_dev",
+  "min_voltage",
+  "missing_telemetry_count",
+  "overloaded_lines_count",
+  "stale_telemetry_count",
+  "voltage_variance"
+]

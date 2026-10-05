@@ -1,0 +1,72 @@
+{
+  "model_version": "model-v1.0",
+  "dataset_version": "dataset-v1.0",
+  "feature_version": "feat-v1.0",
+  "trained_at": "2026-10-05T18:26:33.047187+00:00",
+  "classes": [
+    "DENIAL_OF_SERVICE",
+    "FALSE_DATA_INJECTION",
+    "MALICIOUS_CONTROL_COMMAND",
+    "NORMAL",
+    "PHYSICAL_FAULT",
+    "REPLAY"
+  ],
+  "metrics": {
+    "accuracy": 0.9169642857142857,
+    "macro_f1": 0.8845656285672913,
+    "false_positive_rate": 0.005357142857142857,
+    "l1_baseline_f1": 0.6666666666666666,
+    "per_class": {
+      "DENIAL_OF_SERVICE": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 80.0
+      },
+      "FALSE_DATA_INJECTION": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 80.0
+      },
+      "MALICIOUS_CONTROL_COMMAND": {
+        "precision": 0.5,
+        "recall": 0.5375,
+        "f1-score": 0.5180722891566265,
+        "support": 80.0
+      },
+      "NORMAL": {
+        "precision": 0.982363315696649,
+        "recall": 0.9946428571428572,
+        "f1-score": 0.9884649511978705,
+        "support": 560.0
+      },
+      "PHYSICAL_FAULT": {
+        "precision": 0.8237885462555066,
+        "recall": 0.7791666666666667,
+        "f1-score": 0.8008565310492506,
+        "support": 240.0
+      },
+      "REPLAY": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 80.0
+      },
+      "accuracy": 0.9169642857142857,
+      "macro avg": {
+        "precision": 0.8843586436586927,
+        "recall": 0.885218253968254,
+        "f1-score": 0.8845656285672913,
+        "support": 1120.0
+      },
+      "weighted avg": {
+        "precision": 0.9177077749030758,
+        "recall": 0.9169642857142857,
+        "f1-score": 0.9171354671921051,
+        "support": 1120.0
+      }
+    }
+  },
+  "disclaimer": "MODEL TRAINED AND EVALUATED ON SIMULATED IEEE 14-BUS DATA. METRICS ARE OPTIMISTIC (SIMULATED EVALUATION)."
+}
