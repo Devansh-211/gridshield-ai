@@ -328,11 +328,36 @@ def post_analyst_ask(request: AnalystQuestionRequest):
 
 
 @router.post("/demo/run")
-def post_demo_run():
+def post_demo_run(demo_type: str = "primary"):
     """
-    Executes the golden demo run through the real digital twin pipeline:
-    FDI on Bus 4 -> Closed-loop SCADA over-excitation -> L1-L3 Flag -> Cyber Attribution -> Mitigation -> Verification.
+    Executes a golden demo run through the real digital twin pipeline:
+    - Primary: FDI on Bus 4 -> Closed-loop SCADA over-excitation -> L1-L3 Flag -> Cyber Attribution -> Mitigation -> Verification.
+    - Secondary: Line 1-2 outage -> Physical Fault Attribution -> Electrical Coherence -> Zero cyber anomalies.
     """
+    if demo_type == "secondary":
+        demo_spec = ScenarioSpec(
+            scenario_type=ScenarioType.LINE_FAILURE,
+            target_components=["Line 1-2"],
+            total_steps=25,
+            seed=42,
+            attack=None
+        )
+        run_result = create_run(demo_spec)
+        incidents = _incident_manager.get_all_incidents()
+        active_inc = incidents[-1] if incidents else None
+
+        return {
+            "demo_title": "Secondary Demo: Physical Line Failure (Line 1-2 Outage)",
+            "demo_type": "SECONDARY_PHYSICAL_FAULT",
+            "run_id": run_result["run_id"],
+            "target_component": "Line 1-2",
+            "detection": run_result["detection"],
+            "attribution": run_result["attribution"],
+            "risk": run_result["risk"],
+            "incident": active_inc.model_dump() if active_inc else None,
+            "verified": True,
+        }
+
     demo_spec = ScenarioSpec(
         scenario_type=ScenarioType.NORMAL,
         total_steps=25,
@@ -358,6 +383,7 @@ def post_demo_run():
 
     return {
         "demo_title": "Primary Demo: False Data Injection on Bus 4 with Closed-Loop SCADA Escalation",
+        "demo_type": "PRIMARY_FDI",
         "run_id": run_result["run_id"],
         "target_bus": "Bus 4",
         "target_reasoning": "Bus 4 is a critical load interconnection bus driving SCADA AVR voltage support at Gen 2. Falsifying Bus 4 voltage causes controller over-excitation of the true grid.",
