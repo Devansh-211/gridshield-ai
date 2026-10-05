@@ -1,0 +1,291 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "GridShield AI API",
+    "description": "Explainable Cyber-Physical Resilience Platform for Electrical Power Grids",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Get Health",
+        "operationId": "get_health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/grid/topology": {
+      "get": {
+        "summary": "Get Grid Topology",
+        "operationId": "get_grid_topology_api_v1_grid_topology_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GridTopology"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/models/status": {
+      "get": {
+        "summary": "Get Model Status",
+        "operationId": "get_model_status_api_v1_models_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BusTopology": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "1-based IEEE bus number"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "vn_kv": {
+            "type": "number",
+            "title": "Vn Kv"
+          },
+          "x": {
+            "type": "number",
+            "title": "X",
+            "description": "Schematic X coordinate"
+          },
+          "y": {
+            "type": "number",
+            "title": "Y",
+            "description": "Schematic Y coordinate"
+          },
+          "bus_type": {
+            "type": "string",
+            "title": "Bus Type",
+            "description": "PQ, PV, SLACK"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "vn_kv",
+          "x",
+          "y",
+          "bus_type"
+        ],
+        "title": "BusTopology"
+      },
+      "GeneratorTopology": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "bus": {
+            "type": "integer",
+            "title": "Bus"
+          },
+          "p_mw": {
+            "type": "number",
+            "title": "P Mw"
+          },
+          "vm_pu": {
+            "type": "number",
+            "title": "Vm Pu"
+          },
+          "sn_mva": {
+            "type": "number",
+            "title": "Sn Mva"
+          },
+          "in_service": {
+            "type": "boolean",
+            "title": "In Service",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "bus",
+          "p_mw",
+          "vm_pu",
+          "sn_mva"
+        ],
+        "title": "GeneratorTopology"
+      },
+      "GridTopology": {
+        "properties": {
+          "system_name": {
+            "type": "string",
+            "title": "System Name",
+            "default": "IEEE 14-bus Digital Twin"
+          },
+          "buses": {
+            "items": {
+              "$ref": "#/components/schemas/BusTopology"
+            },
+            "type": "array",
+            "title": "Buses"
+          },
+          "lines": {
+            "items": {
+              "$ref": "#/components/schemas/LineTopology"
+            },
+            "type": "array",
+            "title": "Lines"
+          },
+          "generators": {
+            "items": {
+              "$ref": "#/components/schemas/GeneratorTopology"
+            },
+            "type": "array",
+            "title": "Generators"
+          },
+          "loads": {
+            "items": {
+              "$ref": "#/components/schemas/LoadTopology"
+            },
+            "type": "array",
+            "title": "Loads"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance",
+            "default": "SIMULATED"
+          }
+        },
+        "type": "object",
+        "required": [
+          "buses",
+          "lines",
+          "generators",
+          "loads"
+        ],
+        "title": "GridTopology"
+      },
+      "LineTopology": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "from_bus": {
+            "type": "integer",
+            "title": "From Bus"
+          },
+          "to_bus": {
+            "type": "integer",
+            "title": "To Bus"
+          },
+          "length_km": {
+            "type": "number",
+            "title": "Length Km"
+          },
+          "max_i_ka": {
+            "type": "number",
+            "title": "Max I Ka"
+          },
+          "in_service": {
+            "type": "boolean",
+            "title": "In Service",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "from_bus",
+          "to_bus",
+          "length_km",
+          "max_i_ka"
+        ],
+        "title": "LineTopology"
+      },
+      "LoadTopology": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "bus": {
+            "type": "integer",
+            "title": "Bus"
+          },
+          "p_mw": {
+            "type": "number",
+            "title": "P Mw"
+          },
+          "q_mvar": {
+            "type": "number",
+            "title": "Q Mvar"
+          },
+          "in_service": {
+            "type": "boolean",
+            "title": "In Service",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "bus",
+          "p_mw",
+          "q_mvar"
+        ],
+        "title": "LoadTopology"
+      },
+      "Provenance": {
+        "type": "string",
+        "enum": [
+          "SIMULATED",
+          "OBSERVED",
+          "ESTIMATED",
+          "MODEL",
+          "CALCULATED",
+          "LLM"
+        ],
+        "title": "Provenance"
+      }
+    }
+  }
+}
