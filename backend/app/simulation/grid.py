@@ -99,7 +99,7 @@ class DigitalTwinGrid:
                 id=1,
                 name=f"Slack Gen {eg_bus}",
                 bus=eg_bus,
-                p_mw=float(self.net.ext_grid.vm_pu.at[eg_idx] * 100.0), # placeholder base
+                p_mw=float(self.net.ext_grid.vm_pu.at[eg_idx] * 100.0),
                 vm_pu=float(self.net.ext_grid.vm_pu.at[eg_idx]),
                 sn_mva=100.0,
                 in_service=bool(self.net.ext_grid.in_service.at[eg_idx])

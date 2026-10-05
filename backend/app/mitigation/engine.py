@@ -174,7 +174,7 @@ def extract_verification_metrics(
 
     # 5. Operational Risk Assessment
     risk_engine = RiskEngine()
-    dummy_det = DetectionResult(
+    eval_det = DetectionResult(
         step=step_idx if step_idx >= 0 else len(states) - 1,
         l1=l1_res,
         l2=L2Detection(flagged=False, anomaly_score=0.1, threshold=0.5),
@@ -186,12 +186,12 @@ def extract_verification_metrics(
         ),
         overall_anomaly_flag=l1_res.flagged or v_violations > 0 or overloaded_lines > 0,
     )
-    dummy_attr = Attribution(
+    eval_attr = Attribution(
         likely_cause="NORMAL" if v_violations == 0 else "PHYSICAL",
         hypothesis_scores={"H_normal": 0.9},
         supporting_evidence=[],
     )
-    risk_res = risk_engine.evaluate_risk(obs_points, dummy_det, dummy_attr, [])
+    risk_res = risk_engine.evaluate_risk(obs_points, eval_det, eval_attr, [])
 
     return VerificationMetrics(
         max_voltage_deviation_pu=round(max_v_dev, 4),

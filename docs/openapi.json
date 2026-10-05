@@ -523,14 +523,36 @@
     "/api/v1/demo/run": {
       "post": {
         "summary": "Post Demo Run",
-        "description": "Executes the golden demo run through the real digital twin pipeline:\nFDI on Bus 4 -> Closed-loop SCADA over-excitation -> L1-L3 Flag -> Cyber Attribution -> Mitigation -> Verification.",
+        "description": "Executes a golden demo run through the real digital twin pipeline:\n- Primary: FDI on Bus 4 -> Closed-loop SCADA over-excitation -> L1-L3 Flag -> Cyber Attribution -> Mitigation -> Verification.\n- Secondary: Line 1-2 outage -> Physical Fault Attribution -> Electrical Coherence -> Zero cyber anomalies.",
         "operationId": "post_demo_run_api_v1_demo_run_post",
+        "parameters": [
+          {
+            "name": "demo_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "primary",
+              "title": "Demo Type"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }

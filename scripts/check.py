@@ -38,7 +38,13 @@ def main():
     
     # 3. Pytest Backend Tests
     steps.append(run_step("Backend Unit & Integration Tests", f'"{sys.executable}" -m pytest backend/tests -v'))
-    
+
+    # 4. Headless Demo Test
+    steps.append(run_step("Headless Demo Golden Run", f'"{sys.executable}" scripts/run_demo_test.py'))
+
+    # 5. Frontend Production Build Check
+    steps.append(run_step("Frontend Production Build", 'cd frontend && npm.cmd run build'))
+
     # Summary
     all_passed = all(s["status"] == "PASSED" for s in steps)
     report = {
