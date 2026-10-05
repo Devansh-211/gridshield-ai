@@ -13,6 +13,8 @@ from backend.app.simulation.grid import DigitalTwinGrid
 from backend.app.simulation.frequency import FrequencyCOIModel
 from backend.app.simulation.scenarios import ScenarioManager
 from backend.app.telemetry.generator import TelemetryGenerator
+from backend.app.telemetry.cyber_events import CyberEventGenerator
+from backend.app.attacks.engine import AttackEngine
 from backend.app.control.supervisory import SupervisorySCADAController
 from backend.app.core.rng import get_rng
 
@@ -24,7 +26,9 @@ class SimulationRunner:
         self.grid = DigitalTwinGrid()
         self.frequency_model = FrequencyCOIModel()
         self.scenario_manager = ScenarioManager(spec)
+        self.attack_engine = AttackEngine(spec.attack, self.rng)
         self.telemetry_generator = TelemetryGenerator(self.rng)
+        self.cyber_generator = CyberEventGenerator(self.rng)
         self.scada_controller = SupervisorySCADAController()
 
     def run_all(self) -> Dict[str, Any]:
@@ -51,13 +55,18 @@ class SimulationRunner:
             provenance=Provenance.SIMULATED
         ))
 
+        cyber_event_stream: List[List[CyberEvent]] = []
+
         for step in range(total_steps):
             sim_time_s = float(step)
 
-            # 1. Apply scenario physics (load changes, faults)
+            # 1. Apply Malicious Control Command attacks (acts on physical grid)
+            cmd_cyber_evts = self.attack_engine.apply_control_attack(self.grid, step, sim_time_s)
+
+            # 2. Apply scenario physics (load changes, natural faults)
             self.scenario_manager.apply_step_effects(self.grid, step, sim_time_s)
 
-            # 2. Solve power flow to get current actual generation & load
+            # 3. Solve power flow to get current actual generation & load
             converged = self.grid.solve_power_flow()
             if converged and hasattr(self.grid.net, "res_gen") and len(self.grid.net.res_gen) > 0:
                 p_gen_mw = float(self.grid.net.res_gen.p_mw.sum() + self.grid.net.res_ext_grid.p_mw.sum())
@@ -66,17 +75,25 @@ class SimulationRunner:
                 p_gen_mw = 259.0
                 p_load_mw = 259.0
 
-            # 3. Update Frequency COI model
+            # 4. Update Frequency COI model
             f_hz = self.frequency_model.step(p_gen_mw, p_load_mw)
 
-            # 4. Extract physical ground truth state
+            # 5. Extract physical ground truth state
             state = self.grid.get_state(step=step, sim_time_s=sim_time_s, frequency_hz=f_hz)
             states.append(state)
 
-            # 4. Generate telemetry (with noise) and ground-truth points
+            # 6. Generate telemetry (with noise) and ground-truth points
             obs_points, gt_points = self.telemetry_generator.generate(state)
 
-            # 5. Closed-loop SCADA supervisory control step
+            # 7. Apply Telemetry Attacks (FDI, Replay, DoS) to observed stream
+            obs_points, tel_cyber_evts = self.attack_engine.apply_telemetry_attack(obs_points, step, sim_time_s)
+
+            # 8. Generate benign background cyber events and combine
+            benign_evts = self.cyber_generator.generate_benign_events(step, sim_time_s)
+            step_cyber_events = cmd_cyber_evts + tel_cyber_evts + benign_evts
+            cyber_event_stream.append(step_cyber_events)
+
+            # 9. Closed-loop SCADA supervisory control step
             ctrl_event = self.scada_controller.step(obs_points, self.grid, sim_time_s)
             if ctrl_event:
                 events.append(TimelineEvent(
@@ -100,5 +117,6 @@ class SimulationRunner:
             "states": states,
             "observed_stream": observed_stream,
             "ground_truth_stream": ground_truth_stream,
+            "cyber_event_stream": cyber_event_stream,
             "events": events
         }
