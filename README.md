@@ -77,7 +77,7 @@ python -m venv .venv
 pip install -e .
 pip install pytest httpx
 
-# Run complete pytest test suite (50/50 passing)
+# Run complete pytest test suite (96/96 passing)
 pytest -v backend/tests/
 ```
 

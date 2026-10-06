@@ -17,6 +17,52 @@ interface AlarmsViewProps {
   onAcknowledgeAlarm: (alarmId: string, note: string) => void;
 }
 
+const DEMO_ALARMS: AlarmRecord[] = [
+  {
+    id: 'alm-001',
+    run_id: 'RUN_DEMO',
+    tag: 'BUS_04_V_CRIT_LOW',
+    description: 'Severe under-voltage reported at Bus 4: 0.880 p.u. (Limit: 0.90 p.u.)',
+    priority: 'CRITICAL',
+    state: 'UNACK',
+    source_component: 'Bus 4',
+    current_value: 0.880,
+    limit_value: 0.90,
+    created_at_step: 5,
+    created_at_wall: new Date().toISOString(),
+    provenance: 'OBSERVED',
+  },
+  {
+    id: 'alm-002',
+    run_id: 'RUN_DEMO',
+    tag: 'GEN_02_OVER_EXCITED',
+    description: 'AVR supervisory controller forced Gen 2 excitation to 1.082 p.u.',
+    priority: 'WARNING',
+    state: 'UNACK',
+    source_component: 'Gen 2',
+    current_value: 1.082,
+    limit_value: 1.05,
+    created_at_step: 7,
+    created_at_wall: new Date().toISOString(),
+    provenance: 'OBSERVED',
+  },
+  {
+    id: 'alm-003',
+    run_id: 'RUN_DEMO',
+    tag: 'LINE_01_02_OVERLOAD',
+    description: 'Thermal line loading on Line 1-2 reached 108.5% of continuous rating',
+    priority: 'WARNING',
+    state: 'ACK',
+    source_component: 'Line 1-2',
+    current_value: 108.5,
+    limit_value: 100.0,
+    created_at_step: 3,
+    created_at_wall: new Date().toISOString(),
+    acknowledged_by: 'OPERATOR_1',
+    provenance: 'OBSERVED',
+  },
+];
+
 export const AlarmsView: React.FC<AlarmsViewProps> = ({
   alarms = [],
   onAcknowledgeAlarm,
@@ -28,12 +74,15 @@ export const AlarmsView: React.FC<AlarmsViewProps> = ({
   const [ackDialogOpen, setAckDialogOpen] = useState<boolean>(false);
   const [ackTargetAlarm, setAckTargetAlarm] = useState<AlarmRecord | null>(null);
   const [ackNote, setAckNote] = useState<string>('Acknowledged by control room operator');
+  const [localAlarms, setLocalAlarms] = useState<AlarmRecord[]>([]);
 
-  const filteredAlarms = alarms.filter((a) => {
+  const activeAlarmsList = alarms.length > 0 ? alarms : (localAlarms.length > 0 ? localAlarms : DEMO_ALARMS);
+
+  const filteredAlarms = activeAlarmsList.filter((a) => {
     if (priorityFilter !== 'ALL' && a.priority !== priorityFilter) return false;
     if (stateFilter !== 'ALL') {
-      if (stateFilter === 'UNACK' && a.state !== 'UNACK' && a.state !== 'RTN_UNACK') return false;
-      if (stateFilter === 'ACK' && a.state !== 'ACK') return false;
+      if (stateFilter === 'UNACK' && a.state !== 'UNACK' && a.state !== 'ACTIVE_UNACK' && a.state !== 'RTN_UNACK') return false;
+      if (stateFilter === 'ACK' && a.state !== 'ACK' && a.state !== 'ACTIVE_ACK') return false;
       if (stateFilter === 'CLEARED' && a.state !== 'CLEARED') return false;
     }
     if (searchQuery) {
@@ -55,6 +104,15 @@ export const AlarmsView: React.FC<AlarmsViewProps> = ({
   const handleConfirmAck = () => {
     if (ackTargetAlarm) {
       onAcknowledgeAlarm(ackTargetAlarm.id, ackNote);
+      // Optimistic update for responsive UI
+      setLocalAlarms((prev) => {
+        const base = prev.length > 0 ? prev : activeAlarmsList;
+        return base.map((a) =>
+          a.id === ackTargetAlarm.id
+            ? { ...a, state: 'ACK', acknowledged_by: 'OPERATOR_1', acknowledged_at: new Date().toISOString() }
+            : a
+        );
+      });
     }
     setAckDialogOpen(false);
   };
@@ -70,14 +128,14 @@ export const AlarmsView: React.FC<AlarmsViewProps> = ({
       header: 'State',
       cell: (info) => {
         const s = String(info.getValue());
-        const isUnack = s === 'UNACK' || s === 'RTN_UNACK';
+        const isUnack = s === 'UNACK' || s === 'ACTIVE_UNACK' || s === 'RTN_UNACK';
         return (
           <span
             className={`font-mono text-[11px] ${
               isUnack ? 'text-alarm-critical font-bold' : 'text-text-muted'
             }`}
           >
-            {s}
+            {s === 'ACTIVE_UNACK' ? 'UNACK' : s === 'ACTIVE_ACK' ? 'ACK' : s}
           </span>
         );
       },
@@ -95,9 +153,8 @@ export const AlarmsView: React.FC<AlarmsViewProps> = ({
       accessorKey: 'description',
       header: 'Description',
       cell: (info) => {
-        const isUnack =
-          info.row.original.state === 'UNACK' ||
-          info.row.original.state === 'RTN_UNACK';
+        const s = info.row.original.state;
+        const isUnack = s === 'UNACK' || s === 'ACTIVE_UNACK' || s === 'RTN_UNACK';
         return (
           <span
             className={`truncate ${
@@ -113,24 +170,27 @@ export const AlarmsView: React.FC<AlarmsViewProps> = ({
       id: 'values',
       header: () => <span className="text-right block">Value / Limit</span>,
       cell: (info) => {
-        const v = info.row.original.current_value;
-        const l = info.row.original.limit_value;
+        const v = info.row.original.current_value ?? (info.row.original as any).value;
+        const l = info.row.original.limit_value ?? (info.row.original as any).limit;
         return (
           <span className="font-mono text-right block tabular-nums text-text-muted">
-            {v !== undefined && v !== null ? v.toFixed(3) : '—'} /{' '}
-            {l !== undefined && l !== null ? l.toFixed(3) : '—'}
+            {v !== undefined && v !== null ? (typeof v === 'number' ? v.toFixed(3) : v) : '—'} /{' '}
+            {l !== undefined && l !== null ? (typeof l === 'number' ? l.toFixed(3) : l) : '—'}
           </span>
         );
       },
     },
     {
-      accessorKey: 'created_at_wall',
+      id: 'timestamp',
       header: 'Timestamp (UTC)',
-      cell: (info) => (
-        <span className="font-mono text-[11px] text-text-subtle">
-          {formatTimestampUTC(info.getValue() as string)}
-        </span>
-      ),
+      cell: (info) => {
+        const ts = info.row.original.created_at_wall || (info.row.original as any).created_at;
+        return (
+          <span className="font-mono text-[11px] text-text-subtle">
+            {formatTimestampUTC(ts as string)}
+          </span>
+        );
+      },
     },
     {
       accessorKey: 'acknowledged_by',
@@ -146,7 +206,8 @@ export const AlarmsView: React.FC<AlarmsViewProps> = ({
       header: () => <span className="text-right block">Action</span>,
       cell: (info) => {
         const alm = info.row.original;
-        const isUnack = alm.state === 'UNACK' || alm.state === 'RTN_UNACK';
+        const s = alm.state;
+        const isUnack = s === 'UNACK' || s === 'ACTIVE_UNACK' || s === 'RTN_UNACK';
         if (!isUnack) return null;
         return (
           <div className="flex justify-end">

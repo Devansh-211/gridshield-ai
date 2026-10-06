@@ -57,7 +57,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const riskScore = activeIncident?.risk?.overall_risk_score ?? 0.0;
   const riskLevel = activeIncident?.risk?.risk_level ?? 'LOW';
 
-  const unackAlarms = alarms.filter((a) => a.state === 'UNACK' || a.state === 'RTN_UNACK');
+  const unackAlarms = alarms.filter((a) => a.state === 'UNACK' || a.state === 'ACTIVE_UNACK' || a.state === 'RTN_UNACK');
 
   // Mini trend data
   const trendSteps = [0, 5, 10, 15, 20];

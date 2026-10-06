@@ -15,6 +15,7 @@ from fastapi.exceptions import RequestValidationError
 
 from backend.app.schemas.contracts import ErrorEnvelope
 from backend.app.api.v1.endpoints import router as api_v1_router
+from backend.app.persistence.database import IS_VERCEL
 
 app = FastAPI(
     title="GridShield AI API",
@@ -60,7 +61,7 @@ async def add_visitor_and_timing(request: Request, call_next):
             max_age=86400 * 30,
             httponly=True,
             samesite="lax",
-            secure=False  # True in HTTPS production
+            secure=IS_VERCEL  # True on Vercel (HTTPS), False local dev
         )
     return response
 

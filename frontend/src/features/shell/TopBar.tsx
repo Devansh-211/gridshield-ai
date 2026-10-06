@@ -25,7 +25,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onToggleTheme,
 }) => {
   return (
-    <header className="h-9 min-h-[36px] bg-panel border-b border-border px-3 flex items-center justify-between select-none text-xs z-30">
+    <header className="h-10 min-h-[40px] bg-panel border-b border-border px-3 flex items-center justify-between select-none text-xs z-30">
       {/* Left: Wordmark & Simulation Badge */}
       <div className="flex items-center space-x-2.5 shrink-0">
         {/* Typographic Logo with geometric bus mark */}
@@ -46,7 +46,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             <line x1="11" y1="8" x2="11" y2="14" stroke="currentColor" strokeWidth="1.5" />
             <circle cx="11" cy="14" r="1.5" fill="currentColor" />
           </svg>
-          <span className="font-semibold text-text-main text-[13px] tracking-tight">
+          <span className="font-semibold text-text-main text-[14px] tracking-tight">
             GridShield
           </span>
         </div>

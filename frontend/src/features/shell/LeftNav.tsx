@@ -50,7 +50,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
 
   return (
     <nav
-      className="w-[168px] min-w-[168px] bg-panel border-r border-border flex flex-col justify-between py-1.5 select-none z-20"
+      className="w-[188px] min-w-[188px] bg-panel border-r border-border flex flex-col justify-between py-1.5 select-none z-20"
       aria-label="Main Navigation"
     >
       <div className="flex flex-col space-y-0.5">
@@ -60,7 +60,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
             <button
               key={item.id}
               onClick={() => onSelectTab(item.id)}
-              className={`flex items-center justify-between h-7 px-3 text-[13px] font-ui text-left transition-colors border-l-2 ${
+              className={`flex items-center justify-between h-8 px-3 text-[14px] font-ui text-left transition-colors border-l-2 ${
                 isActive
                   ? 'border-l-accent bg-panel-alt text-text-main font-semibold'
                   : 'border-l-transparent text-text-muted hover:text-text-main hover:bg-panel-alt/50'
@@ -83,19 +83,21 @@ export const LeftNav: React.FC<LeftNavProps> = ({
         })}
       </div>
 
-      {/* Development / Kitchen Sink Link */}
-      <div className="pt-2 border-t border-border/40 px-3">
-        <button
-          onClick={() => onSelectTab('kitchen')}
-          className={`w-full text-left text-[11px] font-mono transition-colors ${
-            activeTab === 'kitchen'
-              ? 'text-accent font-semibold'
-              : 'text-text-subtle hover:text-text-muted'
-          }`}
-        >
-          /_kitchen
-        </button>
-      </div>
+      {/* Development-only Kitchen Sink Link — hidden in production builds */}
+      {import.meta.env.DEV && (
+        <div className="pt-2 border-t border-border/40 px-3">
+          <button
+            onClick={() => onSelectTab('kitchen')}
+            className={`w-full text-left text-[11px] font-mono transition-colors ${
+              activeTab === 'kitchen'
+                ? 'text-accent font-semibold'
+                : 'text-text-subtle hover:text-text-muted'
+            }`}
+          >
+            /_kitchen
+          </button>
+        </div>
+      )}
     </nav>
   );
 };

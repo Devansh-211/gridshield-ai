@@ -162,6 +162,17 @@ class TelemetryRepository:
         qualities: Optional[List[str]] = None,
         sequence: int = 0
     ) -> ObservedStepModel:
+        stmt = select(ObservedStepModel).where(
+            ObservedStepModel.run_id == run_id,
+            ObservedStepModel.step == step
+        )
+        existing = self.db.execute(stmt).scalar_one_or_none()
+        if existing:
+            existing.values_json = values
+            existing.quality_json = qualities or ["GOOD"] * len(values)
+            existing.sequence = sequence
+            return existing
+
         obs = ObservedStepModel(
             run_id=run_id,
             step=step,
@@ -493,6 +504,15 @@ class GroundTruthRepository:
         return inj
 
     def save_ground_truth_step(self, run_id: str, step: int, values: List[float]) -> GroundTruthStepModel:
+        stmt = select(GroundTruthStepModel).where(
+            GroundTruthStepModel.run_id == run_id,
+            GroundTruthStepModel.step == step
+        )
+        existing = self.db.execute(stmt).scalar_one_or_none()
+        if existing:
+            existing.values_json = values
+            return existing
+
         gt = GroundTruthStepModel(
             run_id=run_id,
             step=step,

@@ -306,7 +306,7 @@ export interface AnalystQuestionResponse {
   provenance: Provenance;
 }
 
-export type AlarmState = 'UNACK' | 'ACK' | 'RTN_UNACK' | 'SHELVED' | 'CLEARED';
+export type AlarmState = 'UNACK' | 'ACK' | 'ACTIVE_UNACK' | 'ACTIVE_ACK' | 'RTN_UNACK' | 'SHELVED' | 'CLEARED';
 export type AlarmPriority = 'CRITICAL' | 'WARNING' | 'CAUTION' | 'DIAGNOSTIC';
 
 export interface AlarmRecord {

@@ -128,7 +128,7 @@ export const App: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const unackAlarms = alarms.filter((a) => a.state === 'UNACK' || a.state === 'RTN_UNACK');
+  const unackAlarms = alarms.filter((a) => a.state === 'UNACK' || a.state === 'ACTIVE_UNACK' || a.state === 'RTN_UNACK');
   const hasCrit = unackAlarms.some((a) => a.priority === 'CRITICAL');
   const openIncidents = incidents.filter((i) => i.status !== 'RESOLVED');
 
@@ -160,7 +160,7 @@ export const App: React.FC = () => {
 
           {/* Main Content Body */}
           <main className="flex-1 flex flex-col min-w-0 min-h-0 bg-app overflow-hidden">
-            {activeTab === 'kitchen' && <KitchenSinkView />}
+            {import.meta.env.DEV && activeTab === 'kitchen' && <KitchenSinkView />}
 
             {activeTab === 'overview' && (
               <DashboardView

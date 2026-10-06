@@ -186,15 +186,41 @@ def get_scenarios_catalog():
 
 
 @router.post("/runs")
-def create_run(spec: ScenarioSpec):
+def create_run(
+    spec: ScenarioSpec,
+    db = Depends(get_db)
+):
     """
     Executes a complete digital twin run through the full resilience loop:
     SIMULATION -> TELEMETRY -> DETECTION -> ATTRIBUTION -> RISK -> INCIDENT -> MITIGATION
     """
+    return _execute_run_internal(spec, db)
+
+
+def _execute_run_internal(spec: ScenarioSpec, db = None):
     global _latest_run
     runner = SimulationRunner(spec)
     result = runner.run_all()
     _latest_run = result
+
+    # Persist alarms to database if session is present
+    if db is not None:
+        try:
+            from backend.app.incidents.alarm_service import AlarmService
+            alarm_svc = AlarmService(db)
+            for st in result["states"]:
+                voltages = {f"Bus {b.bus_id}": b.vm_pu for b in st.buses}
+                loadings = {f"Line {l.line_id}": l.loading_pct for l in st.lines}
+                alarm_svc.evaluate_grid_alarms(
+                    run_id=result["run_id"],
+                    step=st.step,
+                    voltages_by_bus=voltages,
+                    line_loadings=loadings,
+                    frequency_hz=st.frequency_hz
+                )
+            db.commit()
+        except Exception as err:
+            print(f"Warning: Alarms persistence during run failed: {err}")
 
     # Execute detection on the final window
     obs_stream = result["observed_stream"]
@@ -245,6 +271,7 @@ def create_run(spec: ScenarioSpec):
         "incident": incident.model_dump() if incident else None,
         "events_count": len(result["events"]),
     }
+
 
 
 @router.post("/runs/session")
@@ -448,7 +475,7 @@ def post_analyst_ask(request: AnalystQuestionRequest):
 
 
 @router.post("/demo/run")
-def post_demo_run(demo_type: str = "primary"):
+def post_demo_run(demo_type: str = "primary", db = Depends(get_db)):
     """
     Executes a golden demo run through the real digital twin pipeline:
     - Primary: FDI on Bus 4 -> Closed-loop SCADA over-excitation -> L1-L3 Flag -> Cyber Attribution -> Mitigation -> Verification.
@@ -462,7 +489,7 @@ def post_demo_run(demo_type: str = "primary"):
             seed=42,
             attack=None
         )
-        run_result = create_run(demo_spec)
+        run_result = _execute_run_internal(demo_spec, db=db)
         incidents = _incident_manager.get_all_incidents()
         active_inc = incidents[-1] if incidents else None
 
@@ -490,7 +517,7 @@ def post_demo_run(demo_type: str = "primary"):
             magnitude=-0.12,
         )
     )
-    run_result = create_run(demo_spec)
+    run_result = _execute_run_internal(demo_spec, db=db)
     incidents = _incident_manager.get_all_incidents()
     active_inc = incidents[-1] if incidents else None
 
@@ -615,23 +642,38 @@ def get_alarms(
     """Returns list of active and acknowledged alarms."""
     from backend.app.persistence.repositories import OperationsRepository
     ops_repo = OperationsRepository(db)
-    alarms = ops_repo.get_alarms(run_id=run_id, priority=priority, state=state)
-    return [
-        {
-            "id": a.id,
+    
+    db_state = state
+    if state == "UNACK":
+        db_state = "ACTIVE_UNACK"
+    elif state == "ACK":
+        db_state = "ACTIVE_ACK"
+
+    alarms = ops_repo.get_alarms(run_id=run_id, priority=priority, state=db_state)
+    out = []
+    for a in alarms:
+        st = "UNACK" if a.state == "ACTIVE_UNACK" else ("ACK" if a.state == "ACTIVE_ACK" else a.state)
+        created_wall = a.created_at.isoformat() if a.created_at else None
+        out.append({
+            "id": str(a.id),
             "run_id": a.run_id,
             "step": a.step,
+            "created_at_step": a.step,
             "tag": a.tag,
             "priority": a.priority,
-            "state": a.state,
+            "state": st,
             "description": a.description,
             "value": a.value,
+            "current_value": a.value,
             "limit": a.limit_val,
-            "acknowledged_by": a.acknowledged_by,
-            "created_at": a.created_at.isoformat()
-        }
-        for a in alarms
-    ]
+            "limit_value": a.limit_val,
+            "acknowledged_by": a.ack_by,
+            "acknowledged_at": a.ack_at.isoformat() if a.ack_at else None,
+            "created_at": created_wall,
+            "created_at_wall": created_wall,
+            "provenance": "OBSERVED"
+        })
+    return out
 
 
 @router.post("/alarms/{alarm_id}/acknowledge")
@@ -643,17 +685,38 @@ def acknowledge_alarm(
     """Acknowledges an active alarm with an optional note."""
     from backend.app.incidents.alarm_service import AlarmService
     service = AlarmService(db)
-    actor = payload.get("actor", "Operator")
-    note = payload.get("note", "Acknowledged via console")
-    alarm = service.acknowledge_alarm(alarm_id=alarm_id, actor=actor, note=note)
+    actor = payload.get("actor", "OPERATOR_1")
+    note = payload.get("note", "Acknowledged in console")
+    
+    try:
+        int_id = int(alarm_id)
+    except (ValueError, TypeError):
+        int_id = alarm_id
+
+    alarm = service.acknowledge(alarm_id=int_id, ack_by=actor, note=note)
     if not alarm:
         raise HTTPException(status_code=404, detail=f"Alarm {alarm_id} not found")
+        
+    st = "ACK" if alarm.state in ("ACTIVE_ACK", "ACK") else alarm.state
+    created_wall = alarm.created_at.isoformat() if alarm.created_at else None
     return {
-        "id": alarm.id,
-        "state": alarm.state,
-        "acknowledged_by": alarm.acknowledged_by,
-        "acknowledged_at": alarm.acknowledged_at.isoformat() if alarm.acknowledged_at else None,
-        "note": alarm.ack_note
+        "id": str(alarm.id),
+        "run_id": alarm.run_id,
+        "step": alarm.step,
+        "created_at_step": alarm.step,
+        "tag": alarm.tag,
+        "priority": alarm.priority,
+        "state": st,
+        "description": alarm.description,
+        "value": alarm.value,
+        "current_value": alarm.value,
+        "limit": alarm.limit_val,
+        "limit_value": alarm.limit_val,
+        "acknowledged_by": alarm.ack_by,
+        "acknowledged_at": alarm.ack_at.isoformat() if alarm.ack_at else None,
+        "created_at": created_wall,
+        "created_at_wall": created_wall,
+        "provenance": "OBSERVED"
     }
 
 

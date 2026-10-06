@@ -1,4 +1,4 @@
-# GridShield AI — Demonstration Guide & Walkthrough
+# GridShield AI — Scenario Walkthrough Guide
 
 ## 1. Primary Demo: False Data Injection (FDI) on Bus 4
 ### Why Bus 4?
