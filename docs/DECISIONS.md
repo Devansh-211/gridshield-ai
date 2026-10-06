@@ -1,21 +1,23 @@
-# GridShield AI — Technical Decisions Log
+# GridShield AI — Architectural Decisions Log
 
-## D001: Architecture & Technology Stack
-- **Decision**: Monorepo with Python FastAPI backend + Next.js (TypeScript, Tailwind CSS, Lucide icons, Recharts) frontend.
-- **Rationale**: Clean separation of concerns, native typing, standard REST/SSE communication contracts, rapid development for 3-day MVP.
+## Architectural Decisions
 
-## D002: Machine Learning Architecture
-- **Decision**: Use scikit-learn (`IsolationForest` for L2 anomaly detection, `HistGradientBoostingClassifier` for L3 multi-class attack classification) with calibration via `CalibratedClassifierCV`.
-- **Rationale**: Fast training and deterministic inference with zero external GPU/heavy C++ compiler dependencies, excellent tabular performance on state estimation residuals.
+### AD-01: Framework & Rendering Architecture
+- **Decision**: Keep the lightweight, high-performance Vite + React 18 SPA instead of migrating to Next.js SSR.
+- **Rationale**: GridShield AI is a dense operational SCADA/EMS console without public SEO indexing requirements on internal views. Vite SPA builds to pure static HTML/JS/CSS on Vercel CDN while FastAPI handles serverless Python API requests on the same origin (`/api/*`), eliminating cross-origin CORS overhead.
 
-## D003: Database Persistence
-- **Decision**: SQLite via `aiosqlite` and SQLAlchemy 2.0 async ORM.
-- **Rationale**: Local zero-friction execution, file-based persistence for test runs and incidents, seamlessly swappable to PostgreSQL if required.
+### AD-02: Database & Serverless Connection Topology
+- **Decision**: Dual-database support via SQLAlchemy 2.0. SQLite with WAL mode for local dev/testing (`sqlite:///./data/gridshield.db`), and Supabase Postgres in production.
+- **Rationale**: In production on Vercel serverless, database access connects via Supavisor **transaction-mode pooler** (port 6543) using `NullPool`. This prevents connection exhaustion, supports instant cold starts, and ensures sessionless operation.
 
-## D004: Phase-0 Feasibility Spikes Validation
-- **Decision**: Pinned Python stack validated against pandapower 3.5.5, NumPy 2.4.6, SciPy 1.18.1, scikit-learn 1.9.1, FastAPI 0.142.2, and Pydantic 2.13.5.
-- **Outcomes**:
-  - Spike 1 (pandapower case14 power flow): PASSED (AC Newton-Raphson converged, voltages [1.01, 1.09] p.u.).
-  - Spike 2 (WLS State Estimation + Chi-Square Bad Data Detection): PASSED (7 iterations, bad data detected on corrupted voltage injection).
-  - Spike 3 (Observability): PASSED (72 measurements across 27 states, redundancy ratio 2.67 > 1.2).
-  - Spike 4 (FastAPI & Pydantic OpenAPI generation): PASSED.
+### AD-03: Stateless Live Session & Client-Paced Execution
+- **Decision**: Replace in-process daemon worker threads and primary SSE streams with stateless `POST /runs/{id}/advance` stepwise progression and cursor-based polling (`GET /runs/{id}/feed`).
+- **Rationale**: Vercel serverless execution freezes or terminates instances between requests. Storing session checkpoints in the database and executing bounded step advances (1–10 steps with a 20s time-budget guard) guarantees reliable execution within serverless limits.
+
+### AD-04: Counter-Based Randomness for Determinism (I4)
+- **Decision**: Compute step noise using seeded counter RNG `np.random.default_rng([seed, step, stream_id])`.
+- **Rationale**: Allows any simulation step $t$ to be recomputed in $O(1)$ without requiring serial simulation replay of all preceding steps.
+
+### AD-05: Dense "Operations Gray" UI Philosophy
+- **Decision**: Restyle the frontend completely away from generic AI dark-neon tropes to a flat, dense, high-information "Operations Gray" neutral palette with semantic alarm colors and mono data alignment.
+- **Rationale**: Matches authentic utility control room EMS/SCADA human-machine interfaces.
