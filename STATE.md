@@ -1,36 +1,39 @@
 # GridShield AI — Project State Tracker
 
-## Current Phase: P3 (Interactive Grid Vertical Slice) — COMPLETED / READY FOR GATE REVIEW
+## Current Phase: P4 (Data & Evaluation) — COMPLETED / READY FOR GATE REVIEW
 
 ### Progress Summary
-- **Current Milestone**: P3 Interactive Grid View Vertical Slice Complete
-- **Git Baseline**: `v0.2.0-p2-integrity` locked; `v0.3.0-p3-gridview` ready
+- **Current Milestone**: P4 Data & Evaluation Harness and Benchmark Complete
+- **Git Baseline**: `v0.3.0-p3-gridview` committed; `v0.4.0-p4-dataeval` ready
 - **Deterministic Replay Hash**: `9e4ca5dcd603c454a5da8e607302fc6fcada4204c30a77ef3cb8f8fc40cbe493` (Verified Unchanged)
-- **Backend Test Suite**: 89/89 tests PASS (53 base + 6 golden regression + 25 P2 integrity + 5 P3 grid view tests)
-- **Frontend Build**: Vite + TypeScript 0 errors, bundle 6.15 MB, UI lint 0 violations
-- **CI / Build**: All automated lint, secret scan, SBOM, and typing gates passing
+- **Backend Test Suite**: 93/93 tests PASS (53 base + 6 golden + 25 P2 integrity + 5 P3 grid view + 4 P4 data/eval tests)
+- **Frontend Build**: Vite + TypeScript 0 errors, bundle 464 kB JS, UI lint 0 violations
+- **Doc Metrics Verifier**: `[SUCCESS]` Documentation metrics in `docs/MODEL.md` strictly match evaluation JSON
 
-### Completed in P3
-- Implemented `GridViewService` (`backend/app/services/grid_view_service.py`) generating enveloped topologies, state snapshots, and element detail models.
-- Mounted `/api/v1/topology/{version}/graph`, `/api/v1/state/{snapshot}`, `/api/v1/elements/{element_id}`, and `/api/v1/stream/sse` endpoints (`backend/app/api/v1/endpoints.py`).
-- Built reliable SSE streaming with heartbeat, event IDs, and `Last-Event-ID` gap recovery (§4).
-- Upgraded `GridTopologyView.tsx` with multi-layer overlays (Voltage, Loading, Anomaly, Attribution, Data Quality), system strip, replay scrubber controls, and element inspector linked to Evidence Objects.
-- Enforced Invariant I5 (zero frontend computation of severity, loading %, or physical metrics).
-- Built test suite (`backend/tests/test_p3_grid_view.py`) validating data contracts, SSE events, and latency.
-- Recorded `AD-12` in `docs/DECISIONS.md`.
+### Completed in P4
+- Multi-scenario benchmark dataset generator with run-group isolation and ground-truth firewall (`backend/app/services/dataset_generator.py`).
+- Evaluation harness generating `reports/eval/model-v1.0/metrics.json` and `reports/eval/model-v1.0/REPORT.md`.
+- Wilson 95% confidence interval calculations on binomial proportions (accuracy, normal False Positive Rate).
+- Multi-tier FDI sensitivity characterization across signal-to-noise thresholds (0.5σ to 16.0σ).
+- Model card and evaluation documentation in `docs/MODEL.md` with explicit disclaimer provenance (`SIMULATED EVALUATION`).
+- Doc-metric consistency validator (`scripts/verify_doc_metrics.py`) passing with 100% agreement.
+- Phase P4 test suite (`backend/tests/test_p4_data_and_eval.py`) verifying mathematical properties, firewall isolation, and registry schemas.
+- Recorded `AD-13` in `docs/DECISIONS.md`.
 
 ### Blockers
-- None. Grid view vertical slice is fully verified end-to-end.
+- None. Model evaluation and dataset benchmarks are fully verified.
 
 ### Next Step
-- Await user sign-off on P3 Gate.
-- Proceed to **P4 (Data & Evaluation)**:
-  - Generate comprehensive multi-scenario dataset with physics + cyber telemetry streams.
-  - Implement evaluation harness and benchmark scripts with labeled ground truth.
-  - Train/retrain anomaly detection and cyber-physical attribution models.
-  - Record model cards and ROC/PR curve metrics.
+- Await user sign-off on P4 Gate.
+- Proceed to **P5 (Response Simulation & Mitigation Engine)**:
+  - Implement candidate response generator and action ranking.
+  - Implement response simulation (N-1 stability check, voltage recovery check).
+  - Enforce non-answer prohibition on mitigation recommendations (Rule R4).
+  - Verify deterministic response evaluation across scenarios.
 
 ### Open Decisions
 - [x] Provenance & Value Envelope architecture (`AD-10`).
 - [x] Non-answer & 5D confidence architecture (`AD-11`).
 - [x] Interactive Grid View & Frontend Zero-Computation Invariant (`AD-12`).
+- [x] Data & Evaluation Architecture & Benchmark Protocol (`AD-13`).
+

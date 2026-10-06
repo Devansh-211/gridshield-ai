@@ -1,7 +1,7 @@
 # GridShield AI — Model Evaluation Report (model-v1.0)
 
-**Evaluated At:** 2026-10-06  
-**Provenance:** `SIMULATED EVALUATION` (Synthetic test data across held-out seeds [111, 112, 113, 114], N=1,120 samples)
+**Evaluated At:** 2026-10-06T16:33:57.152734+00:00  
+**Provenance:** `SIMULATED EVALUATION` (Synthetic test data across held-out seeds [111, 112, 113, 114])
 
 ---
 
@@ -9,10 +9,10 @@
 
 | Metric | Measured Value | 95% Confidence Interval |
 |---|---|---|
-| **Overall Accuracy** | **91.61%** | [89.8%, 93.2%] |
+| **Overall Accuracy** | **91.61%** | [0.90, 0.94] |
 | **Macro F1-Score** | **0.8239** | — |
-| **Normal False Positive Rate (FPR)** | **0.36%** | **[0.10%, 1.29%]** (Wilson 95%, N=560 normal windows) |
-| **Improvement over L1 Classical WLS** | **+23.58%** | Baseline F1: 0.6667 → L3 F1: 0.8239 |
+| **Normal False Positive Rate (FPR)** | **0.36%** | **[0.10%, 1.29%]** (Wilson 95%, N=560) |
+| **Improvement over L1 Classical WLS** | **+23.6%** | Baseline F1: 0.6667 → L3 F1: 0.8239 |
 
 ---
 

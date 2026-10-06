@@ -50,4 +50,6 @@
 - **Decision**: Build the Grid View Vertical Slice as a layered, state-driven inspection console powered by `/api/v1/topology/{version}/graph`, `/api/v1/state/{snapshot}`, `/api/v1/elements/{element_id}`, and `/api/v1/stream/sse`.
 - **Rationale**: Ensures the frontend functions purely as a rendering and user-interaction layer with zero client-side calculation of loading percentages, voltage violations, severity, or risk (Invariant I5). Multi-layer toggles (Voltage, Loading, Anomaly, Attribution, Data Quality) and element inspector panels render authoritative backend Value Envelopes and Evidence Objects with full provenance tracing.
 
-
+### AD-13: Data & Evaluation Architecture & Benchmark Protocol (P4)
+- **Decision**: Multi-tier benchmark dataset generation with strict run-group splits (`dataset_generator.py`), held-out seed isolation, and Wilson 95% confidence intervals on binomial proportions (accuracy, normal False Positive Rate). All evaluation outputs persist as machine-readable JSON (`reports/eval/model-v1.0/metrics.json`) and human-readable Markdown (`REPORT.md`).
+- **Rationale**: Enforces Invariants I1, I2, I3 (Ground-Truth Firewall), I6 (Real ML), and I10 (Honest Claims). Feature extraction receives exclusively observed telemetry points and cyber events, never ground-truth states. Wilson 95% confidence intervals and multi-tier FDI sensitivity curves provide transparent, verifiable performance bounds on digital twin evaluations.
