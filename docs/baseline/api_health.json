@@ -1,0 +1,12 @@
+{
+  "status": "HEALTHY",
+  "system": "GridShield AI Digital Twin",
+  "version": "1.0.0",
+  "database": {
+    "status": "OK",
+    "engine": "sqlite",
+    "size_mb": 0.32,
+    "ephemeral_warning": false
+  },
+  "latency_ms": 40.39
+}

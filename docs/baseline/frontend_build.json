@@ -1,0 +1,11 @@
+{
+  "compiler": "tsc && vite build",
+  "vite_version": "5.4.21",
+  "js_bundle_size_kb": 461.0,
+  "js_bundle_gzip_kb": 147.57,
+  "css_bundle_size_kb": 37.69,
+  "css_bundle_gzip_kb": 7.33,
+  "build_duration_s": 26.05,
+  "budget_limit_kb": 500.0,
+  "status": "PASS"
+}
