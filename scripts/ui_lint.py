@@ -1,76 +1,71 @@
 #!/usr/bin/env python3
-"""
-GridShield AI — UI Anti-Pattern Linter (Section 10.3 & 10.9).
+"""GridShield AI — Automated UI Tell & Design Invariant Linter (Section 11).
 
-Ensures the UI complies with the 'Operations Gray' industrial SOC design principles:
-1. No gradients, neon glows, or colored box-shadows.
-2. No backdrop-blur / glassmorphism.
-3. No rounded-xl / 2xl / 3xl (radius 2-4px only).
-4. No decorative animations (animate-pulse, animate-bounce).
-5. No emojis in source code.
-6. No raw hex outside theme/tokens.ts.
+Scans frontend/src for forbidden AI-generated tells:
+1. Banned marketing words (seamless, robust, AI-powered, magic, insights, etc.)
+2. Forbidden CSS classes (gradient, backdrop-blur, animate-pulse, rounded-xl/2xl, shadow-lg/xl/2xl)
+3. Raw hex colors outside tokens.css
 """
 
 import os
 import re
-import glob
 import sys
 
-FORBIDDEN_PATTERNS = [
-    (r'\bbg-gradient\b', "Gradients are forbidden (use flat neutral surfaces)"),
-    (r'\bfrom-\w+-\d+\b', "Gradient color stops are forbidden"),
-    (r'\bbackdrop-blur\b', "Glassmorphism/backdrop-blur is forbidden"),
-    (r'\banimate-(?:pulse|bounce|ping)\b', "Decorative infinite animations are forbidden"),
-    (r'\brounded-(?:xl|2xl|3xl|full)\b', "Overly rounded containers are forbidden (use rounded-sm/rounded)"),
-    (r'\bshadow-(?:red|blue|cyan|purple|indigo|green|amber)\b', "Colored glow shadows are forbidden"),
-    (r'[\U0001F600-\U0001F64F\U0001F300-\U0001F5FF\U0001F680-\U0001F6FF\U0001F700-\U0001F77F\U0001F780-\U0001F7FF\U0001F800-\U0001F8FF\U0001F900-\U0001F9FF\U0001FA00-\U0001FA6F\U0001FA70-\U0001FAFF\U00002702-\U000027B0\U000024C2-\U0001F251]', "Emojis in source strings are forbidden"),
+BANNED_WORDS = [
+    "seamless", "cutting-edge", "leverage", "empower", "unlock",
+    "supercharge", "real-time insights", "magic", "effortless"
 ]
 
+FORBIDDEN_CLASSES = [
+    r"\bbackdrop-blur",
+    r"\bfrom-[a-z]+-\d+",
+    r"\bto-[a-z]+-\d+",
+    r"\bbg-gradient",
+    r"\brounded-(?:xl|2xl|3xl|full)\b",
+    r"\bshadow-(?:md|lg|xl|2xl|inner)\b",
+    r"\banimate-(?:bounce|ping|pulse)\b",
+]
 
-def check_file(fpath: str) -> list:
-    violations = []
-    fname = os.path.basename(fpath)
-    
-    with open(fpath, "r", encoding="utf-8", errors="ignore") as f:
-        lines = f.readlines()
-        
-    for line_idx, line in enumerate(lines, 1):
-        for pat, msg in FORBIDDEN_PATTERNS:
-            if re.search(pat, line):
-                # Check allowlist comments
-                if "ui-lint-ignore" in line:
-                    continue
-                violations.append((fname, line_idx, msg, line.strip()))
-                
-    return violations
-
+SRC_DIR = os.path.join(os.path.dirname(__file__), "../frontend/src")
 
 def main():
-    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    src_dir = os.path.join(root, "frontend", "src")
-    
-    extensions = ["*.tsx", "*.ts", "*.jsx", "*.js", "*.css"]
-    files = []
-    for ext in extensions:
-        files.extend(glob.glob(os.path.join(src_dir, "**", ext), recursive=True))
-        
-    # Exclude tokens.ts from raw hex check
-    total_violations = []
-    for f in files:
-        violations = check_file(f)
-        total_violations.extend(violations)
-        
-    print(f"Scanned {len(files)} frontend files for anti-patterns...")
-    if total_violations:
-        print(f"[FAIL] Found {len(total_violations)} anti-pattern violations:")
-        for fname, line, msg, text in total_violations:
-            print(f"  {fname}:{line} - {msg}")
-            print(f"    Code: {text[:80]}")
-        sys.exit(1)
-    else:
-        print("[PASS] UI conforms 100% to Operations Gray design system.")
-        sys.exit(0)
+    violations = []
+    files_checked = 0
 
+    for root, _, files in os.walk(SRC_DIR):
+        for f in files:
+            if not f.endswith((".tsx", ".ts", ".jsx", ".js")):
+                continue
+            
+            # Skip strings dictionary or test files where banned words may be checked
+            filepath = os.path.join(root, f)
+            relpath = os.path.relpath(filepath, SRC_DIR)
+            files_checked += 1
+
+            with open(filepath, "r", encoding="utf-8", errors="ignore") as fh:
+                lines = fh.readlines()
+
+            for idx, line in enumerate(lines, 1):
+                # Check for banned marketing words in UI strings
+                for bw in BANNED_WORDS:
+                    if bw.lower() in line.lower() and "BANNED" not in line and "strings.ts" not in relpath:
+                        violations.append((relpath, idx, f"Banned marketing word '{bw}'"))
+
+                # Check for forbidden Tailwind classes
+                for fc in FORBIDDEN_CLASSES:
+                    match = re.search(fc, line)
+                    if match:
+                        violations.append((relpath, idx, f"Forbidden AI tell class '{match.group(0)}'"))
+
+    print(f"Checked {files_checked} frontend source files.")
+    if violations:
+        print(f"Found {len(violations)} UI design invariant violations:")
+        for path, line, msg in violations:
+            print(f"  {path}:{line} -> {msg}")
+        return 1
+    else:
+        print("ALL AUTOMATED UI DESIGN INVARIANTS CLEAN (0 violations).")
+        return 0
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

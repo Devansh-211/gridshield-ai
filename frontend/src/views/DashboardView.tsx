@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
-import { GridTopology, GridState, ObservedTelemetryPoint, Incident, TimelineEvent, AlarmRecord } from '../../types/api';
-import { KPIRibbon } from '../components/KPIRibbon';
-import { SingleLineDiagram } from '../components/SingleLineDiagram';
-import { TelemetryChart } from '../components/TelemetryChart';
-import { TimelineView } from '../components/TimelineView';
-import { ProvenanceBadge } from '../components/ProvenanceBadge';
-import { AlertCircle, ArrowRight, Info, X, ShieldAlert } from 'lucide-react';
+import React from 'react';
+import {
+  GridTopology,
+  GridState,
+  ObservedTelemetryPoint,
+  Incident,
+  TimelineEvent,
+  AlarmRecord,
+} from '../../types/api';
+import { Pane } from '../ui/Pane';
+import { Toolbar } from '../ui/Toolbar';
+import { PropertyGrid } from '../ui/PropertyGrid';
+import { Status } from '../ui/Status';
+import { Button } from '../ui/Button';
+import { Table } from '../ui/Table';
+import { OneLineDiagram } from '../features/grid/OneLineDiagram';
+import { UPlotChart } from '../features/trends/UPlotChart';
+import { formatVoltage, formatFrequency, formatRiskScore } from '../lib/formatters';
+import { ColumnDef } from '@tanstack/react-table';
 
 interface DashboardViewProps {
   topology: GridTopology | null;
@@ -17,6 +28,7 @@ interface DashboardViewProps {
   onOpenIncidentDetail: (incident: Incident) => void;
   onNavigateToScenarios: () => void;
   onNavigateToExplained?: () => void;
+  onStartSession?: () => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -29,102 +41,196 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onOpenIncidentDetail,
   onNavigateToScenarios,
   onNavigateToExplained,
+  onStartSession,
 }) => {
-  const [showGuideBanner, setShowGuideBanner] = useState<boolean>(true);
   const activeIncident = incidents.find((i) => i.status !== 'RESOLVED');
   const compromisedBuses = activeIncident?.affected_components || [];
 
-  // Generate chart data from telemetry points for Bus 4
-  const chartData = [
-    { step: 0, reported: 1.02, groundTruth: 1.02, estimated: 1.02 },
-    { step: 5, reported: 1.018, groundTruth: 1.019, estimated: 1.018 },
-    { step: 10, reported: activeIncident ? 0.90 : 1.021, groundTruth: activeIncident ? 1.072 : 1.021, estimated: activeIncident ? 0.905 : 1.021 },
-    { step: 15, reported: activeIncident ? 0.895 : 1.019, groundTruth: activeIncident ? 1.085 : 1.019, estimated: activeIncident ? 0.901 : 1.019 },
-    { step: 20, reported: activeIncident ? 0.892 : 1.020, groundTruth: activeIncident ? 1.092 : 1.020, estimated: activeIncident ? 0.898 : 1.020 },
+  const busesCount = gridState?.buses?.length || 14;
+  const busesInBand =
+    gridState?.buses?.filter((b) => b.vm_pu >= 0.95 && b.vm_pu <= 1.05).length ?? 14;
+  const linesCount = gridState?.lines?.length || 20;
+  const linesUnder100 =
+    gridState?.lines?.filter((l) => l.loading_pct <= 100.0).length ?? 20;
+
+  const freqHz = gridState?.frequency_hz ?? 50.0;
+  const riskScore = activeIncident?.risk?.overall_risk_score ?? 0.0;
+  const riskLevel = activeIncident?.risk?.risk_level ?? 'LOW';
+
+  const unackAlarms = alarms.filter((a) => a.state === 'UNACK' || a.state === 'RTN_UNACK');
+
+  // Mini trend data
+  const trendSteps = [0, 5, 10, 15, 20];
+  const bus4Voltage = activeIncident ? [1.02, 1.018, 0.90, 0.895, 0.892] : [1.02, 1.019, 1.021, 1.02, 1.02];
+  const bus4Est = [1.02, 1.018, 1.021, 1.02, 1.02];
+  const miniTrendData = [trendSteps, bus4Voltage, bus4Est];
+
+  const alarmColumns: ColumnDef<AlarmRecord, any>[] = [
+    {
+      accessorKey: 'priority',
+      header: 'Pri',
+      cell: (info) => <Status status={String(info.getValue())} />,
+    },
+    {
+      accessorKey: 'tag',
+      header: 'Tag',
+      cell: (info) => <span className="font-mono font-bold text-accent">{String(info.getValue())}</span>,
+    },
+    {
+      accessorKey: 'description',
+      header: 'Description',
+      cell: (info) => <span className="truncate text-text-main">{String(info.getValue())}</span>,
+    },
+    {
+      accessorKey: 'state',
+      header: 'State',
+      cell: (info) => <span className="font-mono text-[11px] text-text-muted">{String(info.getValue())}</span>,
+    },
   ];
 
   return (
-    <div className="space-y-4">
-      {/* Educational Guide Banner (Dismissible) */}
-      {showGuideBanner && (
-        <div className="bg-slate-900 border border-slate-700 rounded p-3 flex items-start justify-between text-xs font-mono">
-          <div className="flex items-start space-x-2.5">
-            <Info className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-            <div className="text-slate-300">
-              <span className="font-bold text-white">GridShield Operations Console:</span> This research digital twin simulates an IEEE 14-bus electrical grid under cyber-physical stress. Every metric carries an explicit provenance tag. New here? Read the{' '}
-              <button
-                onClick={onNavigateToExplained}
-                className="text-cyan-400 underline hover:text-cyan-300 inline font-semibold"
+    <div className="flex-1 flex flex-col h-full bg-app overflow-hidden font-ui text-xs">
+      {/* 2-Column Resizable Layout: Left 62% | Right 38% */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-1.5 p-1.5 min-h-0 overflow-hidden">
+        {/* Left Column (8 cols = ~66%) */}
+        <div className="lg:col-span-8 flex flex-col space-y-1.5 min-h-0 overflow-hidden">
+          {/* Top: One-Line Diagram */}
+          <Pane
+            title="Single-Line Grid Telemetry (IEEE 14-Bus)"
+            className="flex-1 min-h-[300px]"
+            noPadding
+            actions={
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={onNavigateToScenarios}
               >
-                15-Section Plain-Language Guide
-              </button>{' '}
-              or run the stepwise demo in the Scenario Lab.
-            </div>
-          </div>
-          <button
-            onClick={() => setShowGuideBanner(false)}
-            className="text-slate-400 hover:text-slate-200 p-1"
-            title="Dismiss guide"
+                Scenario Lab
+              </Button>
+            }
           >
-            <X className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      )}
+            <OneLineDiagram
+              topology={topology}
+              gridState={gridState}
+              telemetry={telemetry}
+              compromisedBuses={compromisedBuses}
+              selectedBusId={4}
+            />
+          </Pane>
 
-      {/* Active Incident Alert Banner */}
-      {activeIncident && (
-        <div className="bg-rose-950/60 border border-rose-600/80 rounded p-3.5 flex items-center justify-between shadow-sm">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-rose-900/60 border border-rose-700 rounded">
-              <AlertCircle className="w-5 h-5 text-rose-400" />
-            </div>
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="text-xs font-mono font-bold text-rose-400 uppercase tracking-wide">
-                  Active Incident: {activeIncident.incident_id}
-                </span>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-900/80 text-rose-200 border border-rose-700">
-                  {activeIncident.classification}
-                </span>
-                <ProvenanceBadge provenance={activeIncident.provenance} />
+          {/* Bottom: Historian Trend Traces */}
+          <div className="h-44 min-h-[176px] grid grid-cols-1 md:grid-cols-2 gap-1.5">
+            <Pane title="Trend: Bus 04 Voltage (Obs vs Est)" noPadding>
+              <div className="p-1 h-full">
+                <UPlotChart
+                  data={miniTrendData as any}
+                  pens={[
+                    { id: 'obs', label: 'Observed', unit: 'p.u.', color: '#2B5C8A' },
+                    { id: 'est', label: 'Estimated', unit: 'p.u.', color: '#6B7686', dash: [4, 2] },
+                  ]}
+                  height={132}
+                />
               </div>
-              <p className="text-xs text-slate-300 mt-0.5 font-mono">
-                Likely cause: <span className="text-white font-bold">{activeIncident.attribution.likely_cause}</span> on{' '}
-                {activeIncident.affected_components.join(', ')}. Operational Risk:{' '}
-                <span className="text-rose-400 font-bold">{activeIncident.risk.risk_level}</span> (
-                {activeIncident.risk.overall_risk_score.toFixed(1)}/100).
-              </p>
-            </div>
+            </Pane>
+
+            <Pane title="Trend: Frequency (COI Droop)" noPadding>
+              <div className="p-1 h-full">
+                <UPlotChart
+                  data={[trendSteps, [50.0, 50.001, 50.002, 49.998, freqHz]] as any}
+                  pens={[
+                    { id: 'freq', label: 'Frequency', unit: 'Hz', color: '#2E7D4F' },
+                  ]}
+                  height={132}
+                />
+              </div>
+            </Pane>
           </div>
-          <button
-            onClick={() => onOpenIncidentDetail(activeIncident)}
-            className="flex items-center space-x-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded text-xs font-mono font-semibold transition-colors"
+        </div>
+
+        {/* Right Column (4 cols = ~34%) */}
+        <div className="lg:col-span-4 flex flex-col space-y-1.5 min-h-0 overflow-hidden">
+          {/* Key Operational Values Property Grid */}
+          <Pane title="Operational Telemetry & Risk">
+            <PropertyGrid
+              items={[
+                {
+                  label: 'Buses in Voltage Band (0.95–1.05 p.u.)',
+                  value: `${busesInBand}/${busesCount}`,
+                  provenance: 'CALC',
+                  highlight: busesInBand === busesCount ? 'ok' : 'critical',
+                },
+                {
+                  label: 'Lines below 100% Thermal Rating',
+                  value: `${linesUnder100}/${linesCount}`,
+                  provenance: 'CALC',
+                  highlight: linesUnder100 === linesCount ? 'ok' : 'high',
+                },
+                {
+                  label: 'Grid Center of Inertia Frequency',
+                  value: formatFrequency(freqHz),
+                  unit: 'Hz',
+                  provenance: 'SIM',
+                },
+                {
+                  label: 'Operational Risk Level',
+                  value: riskLevel,
+                  provenance: 'CALC',
+                  statusBadge: <Status status={riskLevel} />,
+                  highlight: riskLevel === 'CRITICAL' ? 'critical' : riskLevel === 'HIGH' ? 'high' : 'ok',
+                },
+                {
+                  label: 'Cyber Integrity Map',
+                  value: activeIncident ? 'SUSPECT DETECTED' : 'ALL RTUs TRUSTED',
+                  provenance: 'MDL',
+                  statusBadge: <Status status={activeIncident ? 'COMPROMISED' : 'OK'} />,
+                },
+              ]}
+            />
+          </Pane>
+
+          {/* Active Alarms Pane */}
+          <Pane
+            title={`Active Alarms (${unackAlarms.length})`}
+            noPadding
+            className="flex-1 min-h-[140px]"
           >
-            <span>Investigate & Mitigate</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      )}
+            <Table
+              data={unackAlarms.slice(0, 8)}
+              columns={alarmColumns}
+              emptyMessage="No unacknowledged alarms."
+            />
+          </Pane>
 
-      {/* KPI Status Ribbon */}
-      <KPIRibbon
-        gridState={gridState}
-        riskAssessment={activeIncident?.risk || null}
-        openIncidentsCount={incidents.filter((i) => i.status !== 'RESOLVED').length}
-      />
-
-      {/* Grid Schematic & Live Telemetry Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2">
-          <SingleLineDiagram
-            topology={topology}
-            gridState={gridState}
-            compromisedBuses={compromisedBuses}
-          />
-        </div>
-        <div className="space-y-4">
-          <TelemetryChart data={chartData} busLabel="Bus 4" />
-          <TimelineView events={events} />
+          {/* Active Incident / Resolution Action */}
+          {activeIncident ? (
+            <Pane title={`Active Incident: ${activeIncident.incident_id}`}>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-text-main">
+                    {activeIncident.attribution?.likely_cause}
+                  </span>
+                  <Status status={activeIncident.risk.risk_level} />
+                </div>
+                <p className="text-[11px] text-text-muted">
+                  Affected: <strong>{activeIncident.affected_components.join(', ')}</strong> • Certainty: <strong>{activeIncident.certainty}</strong>
+                </p>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => onOpenIncidentDetail(activeIncident)}
+                >
+                  Investigate & Mitigate Incident
+                </Button>
+              </div>
+            </Pane>
+          ) : (
+            <Pane title="Incident Status">
+              <div className="p-3 text-center text-text-subtle">
+                No active cyber-physical incidents detected.
+              </div>
+            </Pane>
+          )}
         </div>
       </div>
     </div>

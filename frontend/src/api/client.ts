@@ -68,8 +68,10 @@ export async function createLiveSession(config?: Record<string, any>): Promise<L
 }
 
 export async function advanceLiveSession(runId: string, steps: number = 1): Promise<LiveSessionState> {
-  const res = await fetch(`${API_BASE}/runs/${runId}/advance?steps=${steps}`, {
+  const res = await fetch(`${API_BASE}/runs/${runId}/advance`, {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ steps }),
   });
   if (!res.ok) throw new Error(`Advance session failed: ${res.statusText}`);
   return res.json();
@@ -99,7 +101,7 @@ export async function acknowledgeAlarm(alarmId: string, operatorId: string = 'OP
   const res = await fetch(`${API_BASE}/alarms/${alarmId}/acknowledge`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ operator_id: operatorId, note }),
+    body: JSON.stringify({ actor: operatorId, note }),
   });
   if (!res.ok) throw new Error(`Alarm ack failed: ${res.statusText}`);
   return res.json();
@@ -165,6 +167,12 @@ export async function fetchModelsStatus(): Promise<any> {
   return res.json();
 }
 
+export async function fetchModelMetrics(): Promise<any> {
+  const res = await fetch(`${API_BASE}/metrics`);
+  if (!res.ok) throw new Error(`Metrics fetch failed: ${res.statusText}`);
+  return res.json();
+}
+
 export async function explainIncident(context: AnalystContext): Promise<AnalystExplanation> {
   const res = await fetch(`${API_BASE}/analyst/explain`, {
     method: 'POST',
@@ -185,8 +193,8 @@ export async function askAnalyst(request: AnalystQuestionRequest): Promise<Analy
   return res.json();
 }
 
-export async function triggerGoldenDemo(): Promise<any> {
-  const res = await fetch(`${API_BASE}/demo/run`, {
+export async function triggerGoldenDemo(demoType: string = 'primary'): Promise<any> {
+  const res = await fetch(`${API_BASE}/demo/run?demo_type=${demoType}`, {
     method: 'POST',
   });
   if (!res.ok) throw new Error(`Demo trigger failed: ${res.statusText}`);

@@ -1,210 +1,315 @@
 import React, { useState } from 'react';
-import { Bell, AlertTriangle, CheckCircle, Clock, Filter, Check } from 'lucide-react';
-
-export interface AlarmItem {
-  id: number;
-  run_id: string;
-  step: number;
-  tag: string;
-  priority: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW' | 'ADVISORY';
-  state: 'ACTIVE_UNACK' | 'ACTIVE_ACK' | 'RTN_UNACK' | 'CLEARED';
-  description: string;
-  value?: number;
-  limit?: number;
-  acknowledged_by?: string;
-  created_at: string;
-}
+import { AlarmRecord } from '../../types/api';
+import { Pane } from '../ui/Pane';
+import { Toolbar, ToolbarSeparator } from '../ui/Toolbar';
+import { Status } from '../ui/Status';
+import { Button } from '../ui/Button';
+import { Table } from '../ui/Table';
+import { Drawer } from '../ui/Drawer';
+import { Dialog } from '../ui/Dialog';
+import { Input } from '../ui/Input';
+import { PropertyGrid } from '../ui/PropertyGrid';
+import { ColumnDef } from '@tanstack/react-table';
+import { formatTimestampUTC } from '../lib/formatters';
 
 interface AlarmsViewProps {
-  alarms: AlarmItem[];
-  onAcknowledgeAlarm: (alarmId: number, note: string) => void;
+  alarms: AlarmRecord[];
+  onAcknowledgeAlarm: (alarmId: string, note: string) => void;
 }
 
-export const AlarmsView: React.FC<AlarmsViewProps> = ({ alarms, onAcknowledgeAlarm }) => {
+export const AlarmsView: React.FC<AlarmsViewProps> = ({
+  alarms = [],
+  onAcknowledgeAlarm,
+}) => {
   const [priorityFilter, setPriorityFilter] = useState<string>('ALL');
   const [stateFilter, setStateFilter] = useState<string>('ALL');
-  const [selectedAlarm, setSelectedAlarm] = useState<AlarmItem | null>(null);
-  const [ackNote, setAckNote] = useState('Acknowledged via operations console');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedAlarm, setSelectedAlarm] = useState<AlarmRecord | null>(null);
+  const [ackDialogOpen, setAckDialogOpen] = useState<boolean>(false);
+  const [ackTargetAlarm, setAckTargetAlarm] = useState<AlarmRecord | null>(null);
+  const [ackNote, setAckNote] = useState<string>('Acknowledged by control room operator');
 
   const filteredAlarms = alarms.filter((a) => {
     if (priorityFilter !== 'ALL' && a.priority !== priorityFilter) return false;
-    if (stateFilter !== 'ALL' && a.state !== stateFilter) return false;
+    if (stateFilter !== 'ALL') {
+      if (stateFilter === 'UNACK' && a.state !== 'UNACK' && a.state !== 'RTN_UNACK') return false;
+      if (stateFilter === 'ACK' && a.state !== 'ACK') return false;
+      if (stateFilter === 'CLEARED' && a.state !== 'CLEARED') return false;
+    }
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      return (
+        a.tag.toLowerCase().includes(q) ||
+        a.description.toLowerCase().includes(q) ||
+        (a.source_component && a.source_component.toLowerCase().includes(q))
+      );
+    }
     return true;
   });
 
-  const getPriorityBadge = (p: string) => {
-    switch (p) {
-      case 'CRITICAL':
-        return <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#ef4444]/20 text-[#ef4444] border border-[#ef4444]/40 rounded">CRITICAL</span>;
-      case 'HIGH':
-        return <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#f97316]/20 text-[#f97316] border border-[#f97316]/40 rounded">HIGH</span>;
-      case 'MEDIUM':
-        return <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#eab308]/20 text-[#eab308] border border-[#eab308]/40 rounded">MEDIUM</span>;
-      case 'LOW':
-        return <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#06b6d4]/20 text-[#06b6d4] border border-[#06b6d4]/40 rounded">LOW</span>;
-      default:
-        return <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#64748b]/20 text-[#64748b] border border-[#64748b]/40 rounded">ADVISORY</span>;
-    }
+  const handleOpenAck = (alarm: AlarmRecord) => {
+    setAckTargetAlarm(alarm);
+    setAckDialogOpen(true);
   };
 
-  const getStateBadge = (s: string) => {
-    switch (s) {
-      case 'ACTIVE_UNACK':
-        return <span className="text-[10px] font-mono text-[#ef4444] font-semibold">UNACKNOWLEDGED</span>;
-      case 'ACTIVE_ACK':
-        return <span className="text-[10px] font-mono text-[#eab308]">ACKNOWLEDGED</span>;
-      case 'CLEARED':
-        return <span className="text-[10px] font-mono text-[#10b981]">CLEARED</span>;
-      default:
-        return <span className="text-[10px] font-mono text-[#94a3b8]">{s}</span>;
+  const handleConfirmAck = () => {
+    if (ackTargetAlarm) {
+      onAcknowledgeAlarm(ackTargetAlarm.id, ackNote);
     }
+    setAckDialogOpen(false);
   };
+
+  const columns: ColumnDef<AlarmRecord, any>[] = [
+    {
+      accessorKey: 'priority',
+      header: 'Priority',
+      cell: (info) => <Status status={String(info.getValue())} />,
+    },
+    {
+      accessorKey: 'state',
+      header: 'State',
+      cell: (info) => {
+        const s = String(info.getValue());
+        const isUnack = s === 'UNACK' || s === 'RTN_UNACK';
+        return (
+          <span
+            className={`font-mono text-[11px] ${
+              isUnack ? 'text-alarm-critical font-bold' : 'text-text-muted'
+            }`}
+          >
+            {s}
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: 'tag',
+      header: 'Tag',
+      cell: (info) => (
+        <span className="font-mono font-bold text-accent">
+          {String(info.getValue())}
+        </span>
+      ),
+    },
+    {
+      accessorKey: 'description',
+      header: 'Description',
+      cell: (info) => {
+        const isUnack =
+          info.row.original.state === 'UNACK' ||
+          info.row.original.state === 'RTN_UNACK';
+        return (
+          <span
+            className={`truncate ${
+              isUnack ? 'font-semibold text-text-main' : 'text-text-muted'
+            }`}
+          >
+            {String(info.getValue())}
+          </span>
+        );
+      },
+    },
+    {
+      id: 'values',
+      header: () => <span className="text-right block">Value / Limit</span>,
+      cell: (info) => {
+        const v = info.row.original.current_value;
+        const l = info.row.original.limit_value;
+        return (
+          <span className="font-mono text-right block tabular-nums text-text-muted">
+            {v !== undefined && v !== null ? v.toFixed(3) : '—'} /{' '}
+            {l !== undefined && l !== null ? l.toFixed(3) : '—'}
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: 'created_at_wall',
+      header: 'Timestamp (UTC)',
+      cell: (info) => (
+        <span className="font-mono text-[11px] text-text-subtle">
+          {formatTimestampUTC(info.getValue() as string)}
+        </span>
+      ),
+    },
+    {
+      accessorKey: 'acknowledged_by',
+      header: 'Ack By',
+      cell: (info) => (
+        <span className="font-mono text-[11px] text-text-subtle">
+          {(info.getValue() as string) || '—'}
+        </span>
+      ),
+    },
+    {
+      id: 'actions',
+      header: () => <span className="text-right block">Action</span>,
+      cell: (info) => {
+        const alm = info.row.original;
+        const isUnack = alm.state === 'UNACK' || alm.state === 'RTN_UNACK';
+        if (!isUnack) return null;
+        return (
+          <div className="flex justify-end">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpenAck(alm);
+              }}
+            >
+              Acknowledge
+            </Button>
+          </div>
+        );
+      },
+    },
+  ];
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#0f141c] text-[#f1f5f9] p-4 space-y-4 overflow-hidden">
-      {/* Header & Filters */}
-      <div className="flex items-center justify-between p-3 bg-[#18202c] border border-[#2c394b] rounded">
-        <div className="flex items-center gap-2">
-          <Bell className="w-4 h-4 text-[#38bdf8]" />
-          <h1 className="text-sm font-bold tracking-wide uppercase text-[#f1f5f9]">ISA-18.2 Alarm Management Console</h1>
-          <span className="text-xs text-[#94a3b8] font-mono ml-2">({filteredAlarms.length} Active / Recorded)</span>
-        </div>
+    <div className="flex-1 flex flex-col h-full bg-app overflow-hidden font-ui text-xs">
+      {/* Alarms Toolbar & Priority Segmented Buttons */}
+      <Toolbar
+        left={
+          <div className="flex items-center space-x-1.5 overflow-x-auto">
+            <span className="font-semibold text-text-main mr-1">
+              ISA-18.2 Alarms
+            </span>
+            {['ALL', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'].map((pri) => (
+              <button
+                key={pri}
+                onClick={() => setPriorityFilter(pri)}
+                className={`px-2 py-0.5 rounded-sm text-xs font-mono transition-colors ${
+                  priorityFilter === pri
+                    ? 'bg-accent text-[var(--sim-badge-fg)] font-semibold'
+                    : 'bg-panel text-text-muted hover:text-text-main border border-border'
+                }`}
+              >
+                {pri}
+              </button>
+            ))}
+            <ToolbarSeparator />
+            {['ALL', 'UNACK', 'ACK', 'CLEARED'].map((st) => (
+              <button
+                key={st}
+                onClick={() => setStateFilter(st)}
+                className={`px-2 py-0.5 rounded-sm text-xs font-mono transition-colors ${
+                  stateFilter === st
+                    ? 'bg-border-strong text-text-main font-semibold'
+                    : 'bg-panel text-text-muted hover:text-text-main border border-border'
+                }`}
+              >
+                {st}
+              </button>
+            ))}
+          </div>
+        }
+        right={
+          <div className="flex items-center space-x-2">
+            <input
+              type="text"
+              placeholder="Filter alarms (/)..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="h-6 w-36 px-2 text-xs bg-panel border border-border rounded-sm text-text-main placeholder:text-text-subtle focus:outline-none focus:border-accent"
+            />
+          </div>
+        }
+      />
 
-        {/* Filter Toolbar */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 bg-[#222d3d] px-2 py-1 rounded border border-[#2c394b] text-xs">
-            <Filter className="w-3 h-3 text-[#94a3b8]" />
-            <span className="text-[11px] text-[#94a3b8]">Priority:</span>
-            <select
-              value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value)}
-              className="bg-transparent text-xs text-[#f1f5f9] focus:outline-none cursor-pointer"
+      {/* Main Alarms Table */}
+      <Pane noPadding className="flex-1 border-t-0">
+        <Table
+          data={filteredAlarms}
+          columns={columns}
+          selectedRowId={selectedAlarm?.id}
+          onSelectRow={(r) => setSelectedAlarm(r)}
+          emptyMessage="No active alarms matching current filter criteria."
+        />
+      </Pane>
+
+      {/* Right-Side Alarm Detail Drawer */}
+      <Drawer
+        open={selectedAlarm !== null}
+        onClose={() => setSelectedAlarm(null)}
+        title={`Alarm Detail: ${selectedAlarm?.tag || ''}`}
+        badge={selectedAlarm && <Status status={selectedAlarm.priority} />}
+        footer={
+          selectedAlarm &&
+          (selectedAlarm.state === 'UNACK' || selectedAlarm.state === 'RTN_UNACK') && (
+            <Button
+              variant="primary"
+              onClick={() => {
+                handleOpenAck(selectedAlarm);
+              }}
             >
-              <option value="ALL">ALL</option>
-              <option value="CRITICAL">CRITICAL</option>
-              <option value="HIGH">HIGH</option>
-              <option value="MEDIUM">MEDIUM</option>
-              <option value="LOW">LOW</option>
-            </select>
+              Acknowledge Alarm
+            </Button>
+          )
+        }
+      >
+        {selectedAlarm && (
+          <div className="space-y-3">
+            <PropertyGrid
+              items={[
+                { label: 'Alarm Tag', value: selectedAlarm.tag },
+                { label: 'Description', value: selectedAlarm.description, isNumeric: false },
+                { label: 'State', value: selectedAlarm.state, isNumeric: false },
+                {
+                  label: 'Current Reading',
+                  value: selectedAlarm.current_value !== undefined ? selectedAlarm.current_value?.toFixed(3) : '—',
+                  provenance: 'OBS',
+                },
+                {
+                  label: 'Configured Limit',
+                  value: selectedAlarm.limit_value !== undefined ? selectedAlarm.limit_value?.toFixed(3) : '—',
+                  provenance: 'CALC',
+                },
+                {
+                  label: 'Raised at Step',
+                  value: String(selectedAlarm.created_at_step),
+                },
+                {
+                  label: 'Raised UTC',
+                  value: formatTimestampUTC(selectedAlarm.created_at_wall),
+                },
+                {
+                  label: 'Acknowledged By',
+                  value: selectedAlarm.acknowledged_by || 'Unacknowledged',
+                  isNumeric: false,
+                },
+              ]}
+            />
           </div>
+        )}
+      </Drawer>
 
-          <div className="flex items-center gap-1 bg-[#222d3d] px-2 py-1 rounded border border-[#2c394b] text-xs">
-            <span className="text-[11px] text-[#94a3b8]">State:</span>
-            <select
-              value={stateFilter}
-              onChange={(e) => setStateFilter(e.target.value)}
-              className="bg-transparent text-xs text-[#f1f5f9] focus:outline-none cursor-pointer"
-            >
-              <option value="ALL">ALL</option>
-              <option value="ACTIVE_UNACK">UNACKNOWLEDGED</option>
-              <option value="ACTIVE_ACK">ACKNOWLEDGED</option>
-              <option value="CLEARED">CLEARED</option>
-            </select>
-          </div>
+      {/* Acknowledge Confirmation Dialog */}
+      <Dialog
+        open={ackDialogOpen}
+        onOpenChange={setAckDialogOpen}
+        title={`Acknowledge Alarm: ${ackTargetAlarm?.tag || ''}`}
+        description="Provide an operator note to audit log this alarm acknowledgment."
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setAckDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleConfirmAck}>
+              Confirm Acknowledge
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-3">
+          <Input
+            label="Operator Log Note"
+            value={ackNote}
+            onChange={(e) => setAckNote(e.target.value)}
+            helperText="Note is permanently logged to the incident audit trail."
+          />
         </div>
-      </div>
-
-      {/* Alarms Table */}
-      <div className="flex-1 bg-[#18202c] border border-[#2c394b] rounded overflow-hidden flex flex-col">
-        <div className="overflow-y-auto flex-1">
-          <table className="w-full text-left border-collapse text-xs">
-            <thead className="bg-[#222d3d] text-[#94a3b8] sticky top-0 border-b border-[#2c394b]">
-              <tr>
-                <th className="p-2.5 font-semibold">Priority</th>
-                <th className="p-2.5 font-semibold">Tag</th>
-                <th className="p-2.5 font-semibold">Step</th>
-                <th className="p-2.5 font-semibold">State</th>
-                <th className="p-2.5 font-semibold">Description</th>
-                <th className="p-2.5 font-semibold font-mono text-right">Value / Limit</th>
-                <th className="p-2.5 font-semibold">Ack By</th>
-                <th className="p-2.5 font-semibold text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#2c394b] text-[#f1f5f9]">
-              {filteredAlarms.map((alm) => (
-                <tr key={alm.id} className="hover:bg-[#222d3d]/50 transition-colors">
-                  <td className="p-2.5">{getPriorityBadge(alm.priority)}</td>
-                  <td className="p-2.5 font-mono font-bold text-[#38bdf8]">{alm.tag}</td>
-                  <td className="p-2.5 font-mono text-[#94a3b8]">{alm.step}</td>
-                  <td className="p-2.5">{getStateBadge(alm.state)}</td>
-                  <td className="p-2.5 text-[#f1f5f9]">{alm.description}</td>
-                  <td className="p-2.5 font-mono text-right text-[#94a3b8]">
-                    {alm.value !== undefined ? alm.value.toFixed(1) : '-'} / {alm.limit !== undefined ? alm.limit.toFixed(1) : '-'}
-                  </td>
-                  <td className="p-2.5 text-[#94a3b8] text-[11px]">{alm.acknowledged_by || '-'}</td>
-                  <td className="p-2.5 text-right">
-                    {alm.state === 'ACTIVE_UNACK' && (
-                      <button
-                        onClick={() => setSelectedAlarm(alm)}
-                        className="px-2 py-1 bg-[#222d3d] hover:bg-[#2d3a4d] border border-[#2c394b] rounded text-[#38bdf8] text-[11px] font-semibold"
-                      >
-                        Acknowledge
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-              {filteredAlarms.length === 0 && (
-                <tr>
-                  <td colSpan={8} className="p-8 text-center text-[#94a3b8] text-xs">
-                    No active alarms matching current filters.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Acknowledge Modal */}
-      {selectedAlarm && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
-          <div className="bg-[#18202c] border border-[#2c394b] rounded w-full max-w-md p-4 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between border-b border-[#2c394b] pb-2">
-              <h3 className="text-sm font-bold text-[#f1f5f9]">Acknowledge Alarm: {selectedAlarm.tag}</h3>
-              <button
-                onClick={() => setSelectedAlarm(null)}
-                className="text-xs text-[#94a3b8] hover:text-[#f1f5f9]"
-              >
-                Cancel
-              </button>
-            </div>
-
-            <div className="text-xs text-[#94a3b8] space-y-1">
-              <p><strong className="text-[#f1f5f9]">Description:</strong> {selectedAlarm.description}</p>
-              <p><strong className="text-[#f1f5f9]">Priority:</strong> {selectedAlarm.priority}</p>
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-xs text-[#94a3b8] block">Operator Note:</label>
-              <textarea
-                value={ackNote}
-                onChange={(e) => setAckNote(e.target.value)}
-                className="w-full bg-[#0f141c] border border-[#2c394b] rounded p-2 text-xs text-[#f1f5f9] focus:outline-none focus:border-[#38bdf8]"
-                rows={3}
-              />
-            </div>
-
-            <div className="flex justify-end gap-2 pt-2 border-t border-[#2c394b]">
-              <button
-                onClick={() => setSelectedAlarm(null)}
-                className="px-3 py-1.5 bg-[#222d3d] hover:bg-[#2d3a4d] text-xs text-[#94a3b8] rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  onAcknowledgeAlarm(selectedAlarm.id, ackNote);
-                  setSelectedAlarm(null);
-                }}
-                className="px-3 py-1.5 bg-[#38bdf8] hover:bg-[#0284c7] text-xs font-bold text-[#0f141c] rounded flex items-center gap-1"
-              >
-                <Check className="w-3.5 h-3.5" /> Confirm Acknowledge
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      </Dialog>
     </div>
   );
 };

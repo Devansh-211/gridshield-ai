@@ -21,3 +21,11 @@
 ### AD-05: Dense "Operations Gray" UI Philosophy
 - **Decision**: Restyle the frontend completely away from generic AI dark-neon tropes to a flat, dense, high-information "Operations Gray" neutral palette with semantic alarm colors and mono data alignment.
 - **Rationale**: Matches authentic utility control room EMS/SCADA human-machine interfaces.
+
+### AD-06: Complete UI Overhaul & Component System
+- **Decision**: Rebuild the UI visual layer from the ground up: 1px docked panes (`Pane`), 2-column Property Grids, ISA-18.2 status badges with distinct geometric glyphs (◆, ▲, ■, ●), self-hosted IBM Plex Sans/Mono fonts, and TanStack Table virtualization.
+- **Rationale**: Completely eliminates consumer AI design tells (floating card soup, glow palettes, curved chart smoothing, sample data mocks).
+
+### AD-07: uPlot Time-Series Engine Replacement for Recharts
+- **Decision**: Replace Recharts in historian views with uPlot.
+- **Rationale**: uPlot provides superior high-density rendering of thousands of sample points with zero spline smoothing, explicit threshold limit lines, shared crosshairs, and fixed cursor readout panels without layout shifts.

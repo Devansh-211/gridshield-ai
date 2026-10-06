@@ -1,0 +1,125 @@
+/* GridShield AI — Design Tokens ("Operations Gray" Industrial SOC Design System) */
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+@import 'uplot/dist/uPlot.min.css';
+
+:root {
+  /* Light Theme ("Operations Gray" Default) */
+  --bg-app: #E6E9ED;          /* behind panes, rarely visible */
+  --bg-panel: #FFFFFF;        /* pane backgrounds */
+  --bg-panel-alt: #F3F5F7;    /* table headers, toolbars, hovered rows */
+  --bg-inset: #EDEFF2;        /* wells, code, diagram canvas */
+  --border: #C9CED6;          /* 1px pane boundaries */
+  --border-strong: #AAB1BC;   /* active control boundaries */
+  --text: #1B2430;            /* primary text (high contrast) */
+  --text-2: #4A5565;          /* labels, secondary text */
+  --text-3: #6B7686;          /* timestamps, subtle metadata */
+  --accent: #2B5C8A;          /* single accent: primary buttons, selection */
+  --accent-hover: #244E75;
+  --accent-tint: #DCE8F4;     /* selected row highlight */
+  --sim-badge-bg: #1B2430;    /* SIMULATION badge: inverse, not alarm */
+  --sim-badge-fg: #E6E9ED;
+
+  /* Alarm priorities (text/border; backgrounds use 12% opacity) */
+  --alarm-critical: #C62828;  /* ◆ Critical */
+  --alarm-high: #D9650B;      /* ▲ High */
+  --alarm-medium: #A87000;    /* ■ Medium */
+  --alarm-low: #0E7C86;       /* ● Low */
+  --advisory: #5B6676;        /* ▬ Advisory */
+  --ok: #2E7D4F;              /* In service */
+  --compromised: #7B3FA0;     /* Cyber-integrity anomaly */
+  --offline: #8A93A0;         /* Offline / disconnected */
+
+  /* Shadows (Only 1 subtle shadow on popovers/dialogs; zero on panes) */
+  --shadow-popover: 0 4px 12px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  /* Fonts */
+  --font-ui: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Dark Theme (True neutral gray, not navy) */
+.dark, [data-theme="dark"] {
+  --bg-app: #15171A;
+  --bg-panel: #1D2024;
+  --bg-panel-alt: #24282D;
+  --bg-inset: #181A1D;
+  --border: #343A41;
+  --border-strong: #4A525B;
+  --text: #E3E6EA;
+  --text-2: #A9B1BB;
+  --text-3: #8A939E;
+  --accent: #6FA3D6;
+  --accent-hover: #8AB7E2;
+  --accent-tint: #203348;
+  --sim-badge-bg: #E3E6EA;
+  --sim-badge-fg: #15171A;
+
+  --alarm-critical: #F2706B;
+  --alarm-high: #F29A4A;
+  --alarm-medium: #E3B341;
+  --alarm-low: #4CC3CE;
+  --advisory: #8A939E;
+  --ok: #48B870;
+  --compromised: #A86CE4;
+  --offline: #68727E;
+
+  --shadow-popover: 0 4px 16px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Global Reset & Typography */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-app);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Monospace Tabular Numerics across all numbers */
+.font-mono, td, .tabular-nums {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 1px Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-inset);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-3);
+}
+
+/* Focus Rings */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* Text Halo for SVG Schematic text readability */
+.text-halo {
+  paint-order: stroke fill;
+  stroke: var(--bg-inset);
+  stroke-width: 3px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

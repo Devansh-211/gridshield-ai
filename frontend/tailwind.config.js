@@ -8,23 +8,47 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "#090D16",
-        surface: "#0F172A",
-        card: "#131E36",
-        border: "#1E293B",
-        primary: {
-          DEFAULT: "#06B6D4", // Cyan
-          hover: "#0891B2",
+        app: 'var(--bg-app)',
+        panel: 'var(--bg-panel)',
+        'panel-alt': 'var(--bg-panel-alt)',
+        inset: 'var(--bg-inset)',
+        border: 'var(--border)',
+        'border-strong': 'var(--border-strong)',
+        'text-main': 'var(--text)',
+        'text-muted': 'var(--text-2)',
+        'text-subtle': 'var(--text-3)',
+        accent: {
+          DEFAULT: 'var(--accent)',
+          hover: 'var(--accent-hover)',
+          tint: 'var(--accent-tint)',
         },
-        normal: "#10B981",    // Emerald
-        warning: "#F59E0B",   // Amber
-        critical: "#F43F5E",  // Rose
-        cyber: "#8B5CF6",     // Violet
-        offline: "#64748B",   // Slate
+        alarm: {
+          critical: 'var(--alarm-critical)',
+          high: 'var(--alarm-high)',
+          medium: 'var(--alarm-medium)',
+          low: 'var(--alarm-low)',
+          advisory: 'var(--advisory)',
+          ok: 'var(--ok)',
+          compromised: 'var(--compromised)',
+          offline: 'var(--offline)',
+        },
+        sim: {
+          bg: 'var(--sim-badge-bg)',
+          fg: 'var(--sim-badge-fg)',
+        }
       },
       fontFamily: {
-        mono: ["'JetBrains Mono'", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
-        sans: ["'Inter'", "ui-sans-serif", "system-ui", "sans-serif"],
+        ui: ['var(--font-ui)'],
+        mono: ['var(--font-mono)'],
+      },
+      boxShadow: {
+        popover: 'var(--shadow-popover)',
+      },
+      borderRadius: {
+        none: '0',
+        sm: '2px',
+        DEFAULT: '2px',
+        md: '4px',
       }
     },
   },

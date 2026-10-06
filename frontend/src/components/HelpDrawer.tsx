@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { X, HelpCircle, BookOpen, ExternalLink, Search } from 'lucide-react';
+import { Drawer } from '../ui/Drawer';
+import { Button } from '../ui/Button';
+import { Input } from '../ui/Input';
 import glossaryData from '../content/glossary.json';
 
 interface HelpDrawerProps {
@@ -62,50 +64,37 @@ const TAB_HELP_CONTENT: Record<string, { title: string; summary: string; keyTerm
 
 export const HelpDrawer: React.FC<HelpDrawerProps> = ({ isOpen, onClose, currentTab, onNavigateToExplained }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  if (!isOpen) return null;
 
   const help = TAB_HELP_CONTENT[currentTab] || TAB_HELP_CONTENT['Overview'];
 
-  const filteredGlossary = Object.entries(glossaryData).filter(([key, val]) =>
+  const filteredGlossary = Object.entries(glossaryData).filter(([_, val]) =>
     val.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
     val.plain.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="fixed inset-y-0 right-0 w-96 bg-[#18202c] border-l border-[#2c394b] text-[#f1f5f9] z-50 flex flex-col shadow-2xl">
-      {/* Header */}
-      <div className="p-4 border-b border-[#2c394b] flex items-center justify-between bg-[#222d3d]">
-        <div className="flex items-center gap-2">
-          <HelpCircle className="w-4 h-4 text-[#38bdf8]" />
-          <h3 className="text-xs font-bold uppercase tracking-wider text-[#f1f5f9]">{help.title}</h3>
-        </div>
-        <button onClick={onClose} className="text-[#94a3b8] hover:text-[#f1f5f9] p-1 rounded hover:bg-[#2c394b]">
-          <X className="w-4 h-4" />
-        </button>
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs">
-        {/* Summary Card */}
-        <div className="p-3 bg-[#0f141c] border border-[#2c394b] rounded space-y-2">
-          <span className="text-[10px] font-mono text-[#38bdf8] uppercase font-bold">Screen Overview</span>
-          <p className="text-[#94a3b8] leading-relaxed">{help.summary}</p>
-          <div className="p-2 bg-[#222d3d]/60 rounded text-[11px] text-[#10b981] border border-[#2c394b]">
-            <strong>Tip:</strong> {help.tip}
+    <Drawer open={isOpen} onClose={onClose} title={help.title} width="w-[380px]">
+      <div className="p-3 space-y-4 text-[13px] text-[var(--text)]">
+        {/* Screen Summary */}
+        <div className="p-2.5 bg-[var(--bg-panel-alt)] border border-[var(--border)] text-[12px] space-y-2">
+          <div className="text-[11px] font-semibold text-[var(--text-2)] uppercase">Summary</div>
+          <p className="text-[var(--text-2)] leading-relaxed">{help.summary}</p>
+          <div className="p-2 bg-[var(--bg-panel)] border border-[var(--border)] text-[11px] text-[var(--accent)] font-medium">
+            <strong>Operational Tip:</strong> {help.tip}
           </div>
         </div>
 
-        {/* Key Terms for this screen */}
+        {/* Key Terms */}
         <div className="space-y-2">
-          <span className="text-[10px] font-mono text-[#94a3b8] uppercase font-bold">Key Terms on this Screen</span>
-          <div className="space-y-2">
+          <div className="text-[11px] font-semibold text-[var(--text-2)] uppercase">Key Reference Terms</div>
+          <div className="space-y-1.5">
             {help.keyTerms.map((termKey) => {
               const termObj = (glossaryData as Record<string, any>)[termKey];
               if (!termObj) return null;
               return (
-                <div key={termKey} className="p-2.5 bg-[#222d3d]/50 border border-[#2c394b] rounded space-y-1">
-                  <div className="font-bold text-[#38bdf8]">{termObj.term}</div>
-                  <div className="text-[#94a3b8] text-[11px] leading-relaxed">{termObj.plain}</div>
+                <div key={termKey} className="p-2 bg-[var(--bg-panel)] border border-[var(--border)] text-[12px]">
+                  <div className="font-semibold text-[var(--text)]">{termObj.term}</div>
+                  <div className="text-[var(--text-2)] text-[11px] mt-0.5 leading-relaxed">{termObj.plain}</div>
                 </div>
               );
             })}
@@ -113,44 +102,43 @@ export const HelpDrawer: React.FC<HelpDrawerProps> = ({ isOpen, onClose, current
         </div>
 
         {/* Mini Glossary Search */}
-        <div className="space-y-2 pt-2 border-t border-[#2c394b]">
-          <span className="text-[10px] font-mono text-[#94a3b8] uppercase font-bold">Search Glossary</span>
-          <div className="relative">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-2 text-[#94a3b8]" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search any power or cyber term..."
-              className="w-full bg-[#0f141c] border border-[#2c394b] rounded pl-8 pr-3 py-1.5 text-xs text-[#f1f5f9] focus:outline-none focus:border-[#38bdf8]"
-            />
-          </div>
+        <div className="space-y-2 pt-2 border-t border-[var(--border)]">
+          <div className="text-[11px] font-semibold text-[var(--text-2)] uppercase">Search System Glossary</div>
+          <Input
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Filter power & cyber glossary..."
+          />
 
           {searchTerm && (
-            <div className="space-y-2 max-h-48 overflow-y-auto">
-              {filteredGlossary.slice(0, 4).map(([key, val]) => (
-                <div key={key} className="p-2 bg-[#0f141c] border border-[#2c394b] rounded text-[11px]">
-                  <strong className="text-[#38bdf8] block">{val.term}</strong>
-                  <p className="text-[#94a3b8]">{val.plain}</p>
+            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+              {filteredGlossary.slice(0, 5).map(([key, val]) => (
+                <div key={key} className="p-2 bg-[var(--bg-panel)] border border-[var(--border)] text-[11px]">
+                  <strong className="text-[var(--text)] block">{val.term}</strong>
+                  <p className="text-[var(--text-2)] mt-0.5">{val.plain}</p>
                 </div>
               ))}
+              {filteredGlossary.length === 0 && (
+                <div className="text-[11px] text-[var(--text-3)] p-2 text-center">No matching terms</div>
+              )}
             </div>
           )}
         </div>
 
         {/* Link to Full Explained Guide */}
-        <div className="pt-2 border-t border-[#2c394b]">
-          <button
+        <div className="pt-2 border-t border-[var(--border)]">
+          <Button
+            variant="secondary"
+            className="w-full justify-center"
             onClick={() => {
               onClose();
               onNavigateToExplained();
             }}
-            className="w-full py-2 bg-[#222d3d] hover:bg-[#2d3a4d] border border-[#2c394b] rounded text-[#38bdf8] text-xs font-semibold flex items-center justify-center gap-1.5"
           >
-            <BookOpen className="w-3.5 h-3.5" /> Read Full Plain-Language Guide
-          </button>
+            Open Full Explained Guide
+          </Button>
         </div>
       </div>
-    </div>
+    </Drawer>
   );
 };
