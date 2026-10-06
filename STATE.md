@@ -1,36 +1,22 @@
 # GridShield AI — Project State Tracker
 
-## Current Phase: MVP (Minimum Viable Product) — COMPLETE
+## Control State: DECISION
+Awaiting user approval of `implementation_plan.md` before initiating Phase 1 execution.
 
-### Progress Summary
-- **Current Milestone**: MVP — All phases (P0–P6) completed, production hardening applied
-- **Git Baseline**: `v0.6.0-p6-production` (last committed tag)
-- **Deterministic Replay Hash**: `9e4ca5dcd603c454a5da8e607302fc6fcada4204c30a77ef3cb8f8fc40cbe493` (Verified Unchanged)
-- **Backend Test Suite**: 96/96 tests PASS across all unit, integration, golden regression, and integrity test suites
-- **Frontend Build**: Vite + TypeScript 0 errors, bundle 464 kB JS, UI lint 0 violations, KitchenSink dev-gated
-- **Doc Metrics Verifier**: `[SUCCESS]` Documentation metrics strictly match evaluation JSON
+## Active Branch
+`workbench-mvp` (pushed to remote `origin/workbench-mvp`; `main` untouched).
 
-### Milestone Progression & Tags
-- `v0.0.0-p0-baseline`: Baseline metrics, replay hash lock, and environment audit
-- `v0.1.0-p1-hardened`: Golden regression test fixtures, strict tolerances, security scan & SBOM
-- `v0.2.0-p2-integrity`: Value Envelope, 5D Confidence Vector, Evidence Object, Compatibility Gate
-- `v0.3.0-p3-gridview`: Enveloped topology, state snapshots, reliable SSE stream, interactive grid console
-- `v0.4.0-p4-dataeval`: Multi-scenario benchmark dataset generator, Wilson 95% CIs, model evaluation harness
-- `v0.5.0-p5-mitigation`: Allowlisted mitigation engine, 3-way comparative verification, Rule R4 non-answer safety
-- `v0.6.0-p6-production`: Vercel serverless integration, Supabase Postgres persistence, production documentation
+## Current Phase: Phase 1 (Core Integrity Architecture & Rules Engine) — PLANNED
 
-### All Non-Negotiable Invariants Enforced
-- I1: No fabricated data traces
-- I2: Labelled provenance on all envelopes
-- I3: Ground-truth firewall
-- I4: O(1) Counter-based RNG determinism
-- I5: Backend source of truth (0 frontend calculation)
-- I6: Real trained ML + statistical tests
-- I7: No dead UI (0 AI card soup / 0 fake buttons)
-- I8: Honest failure & non-answer states
-- I9: In-process attack isolation
-- I10: Honest digital twin educational claims
-- I11: Stateless compute & database checkpoints
-- I12: Public-safe visitor isolation & RLS
+### Completed Milestones
+- **Git Branch Creation**: Created and pushed `workbench-mvp` to remote repository.
+- **MVP Baseline Verification**: All 96/96 backend pytest tests passing, Vite frontend TypeScript compilation passing with 0 errors.
+- **Implementation Plan Drafted**: `implementation_plan.md` created covering Phase 1 through Phase 5 aligned with Always-On Rules (A1–A9), Integrity Rules (R1–R11), and the Usability Floor.
 
+### Open Decisions & Blockers
+- **Open Decision**: User approval requested for `implementation_plan.md`.
 
+### Next Steps
+1. Upon user approval, initialize `task.md` for Phase 1.
+2. Create git tag `phase-1-start`.
+3. Implement Phase 1 (Value Envelope R1, Environment Label R2, Evidence Object & 5D Confidence R4/R5, Validated-Domain Gate R6, Ground-Truth Firewall R11).
