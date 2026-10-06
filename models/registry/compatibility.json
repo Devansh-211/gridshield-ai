@@ -1,0 +1,45 @@
+{
+  "registry_version": "1.0.0",
+  "models": {
+    "model-v1.0": {
+      "model_type": "HistGradientBoostingClassifier",
+      "feature_version": "feat-v1.0",
+      "data_schema_version": "contracts-v1.0",
+      "supported_topologies": [
+        "IEEE_14",
+        "ieee14",
+        "case14",
+        "IEEE 14-bus Digital Twin"
+      ],
+      "validated": true,
+      "ood_bounds": {
+        "v_pu_min": 0.50,
+        "v_pu_max": 1.50,
+        "loading_pct_max": 350.0,
+        "frequency_hz_min": 45.0,
+        "frequency_hz_max": 65.0,
+        "max_feature_deviation_sigmas": 6.0
+      }
+    },
+    "isolation-forest-v1.0": {
+      "model_type": "IsolationForest",
+      "feature_version": "feat-v1.0",
+      "data_schema_version": "contracts-v1.0",
+      "supported_topologies": [
+        "IEEE_14",
+        "ieee14",
+        "case14",
+        "IEEE 14-bus Digital Twin"
+      ],
+      "validated": true,
+      "ood_bounds": {
+        "v_pu_min": 0.50,
+        "v_pu_max": 1.50,
+        "loading_pct_max": 350.0,
+        "frequency_hz_min": 45.0,
+        "frequency_hz_max": 65.0,
+        "max_feature_deviation_sigmas": 6.0
+      }
+    }
+  }
+}

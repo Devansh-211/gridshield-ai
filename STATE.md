@@ -1,35 +1,36 @@
 # GridShield AI — Project State Tracker
 
-## Current Phase: P1 (Harden & Lock Regression) — COMPLETED / READY FOR GATE REVIEW
+## Current Phase: P2 (Integrity Spine) — COMPLETED / READY FOR GATE REVIEW
 
 ### Progress Summary
-- **Current Milestone**: P1 Golden Fixtures, CI & Regression Lock Complete
-- **Git Baseline**: `v0.0.0-p0-baseline` locked; `v0.1.0-p1-hardened` ready
-- **Deterministic Replay Hash**: `9e4ca5dcd603c454a5da8e607302fc6fcada4204c30a77ef3cb8f8fc40cbe493` (Unchanged)
-- **Backend Test Suite**: 59/59 tests PASS (53 base + 6 golden regression tests)
-- **Golden Fixtures**: 6/6 generated in `tests/golden/` (normal, generator_trip, line_outage, sensor_fault, fdi, cyber_physical)
-- **CI Hardening**: Lint, secret scanner (`scripts/security_scan.py`), SBOM generator (`scripts/generate_sbom.py`), golden regression suite, type-checks
-- **Frontend Build**: 0 errors, 461.00 kB JS / 37.69 kB CSS
+- **Current Milestone**: P2 Integrity Spine Architecture Complete
+- **Git Baseline**: `v0.1.0-p1-hardened` locked; `v0.2.0-p2-integrity` ready
+- **Deterministic Replay Hash**: `9e4ca5dcd603c454a5da8e607302fc6fcada4204c30a77ef3cb8f8fc40cbe493` (Verified Unchanged)
+- **Backend Test Suite**: 84/84 tests PASS (53 base + 6 golden regression + 25 P2 integrity tests)
+- **Golden Fixtures**: 9/9 total in `tests/golden/` (6 physical/cyber + 3 non-answer/OOD/conflict)
+- **CI / Build**: All automated lint, secret scan, SBOM, and typing gates passing
 
-### Completed in P1
-- Generated 6 pre-refactor golden fixtures in `tests/golden/*.json`.
-- Implemented `backend/tests/test_golden_regression.py` with strict relative (1e-4) and absolute (1e-5) tolerances.
-- Built automated Secret Scanner (`scripts/security_scan.py`) — 0 leaks found.
-- Built Software Bill of Materials (SBOM) generator (`scripts/generate_sbom.py`) — 171 components tracked in `docs/sbom.json`.
-- Updated GitHub Actions CI workflow (`.github/workflows/ci.yml`).
-- Recorded architectural decisions AD-08 and AD-09 in `docs/DECISIONS.md`.
+### Completed in P2
+- Implemented `ValueEnvelope[T]` with strict provenance invariants (`backend/app/schemas/envelope.py`).
+- Implemented legacy label migration map (`migrate_legacy_provenance`).
+- Implemented 5-dimensional `ConfidenceVector` (detection, attribution, model_uncertainty, evidence_completeness, data_quality).
+- Implemented `EvidenceObject` with prohibition of mitigation under non-answer states (Rule R3).
+- Implemented `CompatibilityGate` (`backend/app/core/compatibility_gate.py`) and `models/registry/compatibility.json`.
+- Generated 3 new golden fixtures (`conflicting_evidence.json`, `model_out_of_distribution.json`, `topology_unsupported.json`).
+- Built 25-test verification suite (`backend/tests/test_p2_integrity_spine.py`) covering all R1–R6 rules.
+- Recorded `AD-10` and `AD-11` in `docs/DECISIONS.md`.
 
 ### Blockers
-- None. System is fully operational and locked against regression.
+- None. Integrity spine is active and verified.
 
 ### Next Step
-- Await user sign-off on P1 Gate.
-- Proceed to **P2 (Integrity Spine: R1–R6, R9–R10)**:
-  - Implement Value Envelope serializer + provenance migration map.
-  - Implement Evidence Object with 5-dimension confidence.
-  - Implement Non-Answer states (`UNKNOWN`, `INSUFFICIENT_DATA`, `CONFLICTING_EVIDENCE`, `MODEL_OUT_OF_DISTRIBUTION`, `TOPOLOGY_UNSUPPORTED`) and `H_data_quality`.
-  - Build `models/registry/compatibility.json` topology & OOD gate.
+- Await user sign-off on P2 Gate.
+- Proceed to **P3 (Interactive Grid Vertical Slice)**:
+  - Connect grid diagram to P2 enveloped telemetry and Evidence Objects.
+  - Implement SSE streaming with heartbeat and `Last-Event-ID` gap recovery.
+  - Deliver multi-layer toggles (voltage, loading %, anomaly scores, attribution, OOD hatching).
+  - Verify acceptance criteria 1–7 (§4).
 
 ### Open Decisions
-- [x] Golden fixture tolerances: Relative 1e-4, absolute 1e-5 for voltages; 1e-4 Hz for frequency (`AD-08`).
-- [x] Python Environment Target: Python 3.12 production / Python 3.14 local dev (`AD-09`).
+- [x] Provenance & Value Envelope architecture (`AD-10`).
+- [x] Non-answer & 5D confidence architecture (`AD-11`).

@@ -1,0 +1,35 @@
+{
+  "incident_id": "INC_GOLDEN_TOPO_UNSUPPORTED",
+  "timestamp": "2026-10-06T15:35:29.775511+00:00",
+  "environment": "FIXTURE",
+  "versions": {
+    "topology": "IEEE_118_UNVALIDATED",
+    "state_estimate": "WLS_v1.0",
+    "model": "model-v1.0",
+    "data_schema": "contracts-v1.0",
+    "code_commit": "v0.1.0-p1-hardened"
+  },
+  "data_sources": [],
+  "measurements": [],
+  "detector_outputs": {},
+  "attribution": {
+    "label": "UNKNOWN",
+    "hypothesis_probabilities": {},
+    "non_answer_state": "TOPOLOGY_UNSUPPORTED"
+  },
+  "confidence": {
+    "detection": 0.0,
+    "attribution": 0.0,
+    "model_uncertainty": 0.0,
+    "evidence_completeness": 0.0,
+    "data_quality": 0.0,
+    "composite": 0.0
+  },
+  "uncertainty": 1.0,
+  "affected_elements": [],
+  "mitigation_simulations": [],
+  "provenance": "DERIVED",
+  "limitations": [
+    "Topology IEEE_118_UNVALIDATED is not validated for model-v1.0."
+  ]
+}

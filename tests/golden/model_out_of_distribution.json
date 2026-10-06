@@ -1,0 +1,58 @@
+{
+  "incident_id": "INC_GOLDEN_OOD",
+  "timestamp": "2026-10-06T15:35:29.774271+00:00",
+  "environment": "FIXTURE",
+  "versions": {
+    "topology": "IEEE_14_v1",
+    "state_estimate": "WLS_v1.0",
+    "model": "model-v1.0",
+    "data_schema": "contracts-v1.0",
+    "code_commit": "v0.1.0-p1-hardened"
+  },
+  "data_sources": [
+    "RTU_B04"
+  ],
+  "measurements": [
+    {
+      "value": 1.85,
+      "unit": "p.u.",
+      "source": "RTU_B04",
+      "timestamp": "2026-10-06T15:35:29.774171+00:00",
+      "provenance": "SIMULATED",
+      "dataset_id": null,
+      "transformation": null,
+      "confidence": null,
+      "validity": false
+    }
+  ],
+  "detector_outputs": {
+    "ood_check": {
+      "out_of_distribution": true,
+      "feature": "v_pu",
+      "value": 1.85,
+      "bound_max": 1.5
+    }
+  },
+  "attribution": {
+    "label": "UNKNOWN",
+    "hypothesis_probabilities": {},
+    "non_answer_state": "MODEL_OUT_OF_DISTRIBUTION"
+  },
+  "confidence": {
+    "detection": 0.99,
+    "attribution": 0.0,
+    "model_uncertainty": 0.0,
+    "evidence_completeness": 0.9,
+    "data_quality": 0.1,
+    "composite": 0.3975
+  },
+  "uncertainty": 1.0,
+  "affected_elements": [
+    "Bus 4"
+  ],
+  "mitigation_simulations": [],
+  "provenance": "DERIVED",
+  "limitations": [
+    "Observed voltage 1.85 pu exceeds model training distribution boundary (1.50 pu)."
+  ]
+}

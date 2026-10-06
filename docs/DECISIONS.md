@@ -38,3 +38,12 @@
 - **Decision**: Standardize on Python 3.12 for production serverless deployment and CI while maintaining forward compatibility with Python 3.14 for local development.
 - **Rationale**: Pandapower and SciPy pre-built binary wheels are fully mature on Python 3.12 across all OS platforms and cloud serverless runtimes.
 
+### AD-10: Value Envelope & Provenance Migration Map (R1, R2)
+- **Decision**: Wrap all telemetry and analytical outputs in `ValueEnvelope[T]` carrying explicit units, source device IDs, ISO timestamps, validity flags, and canonical R1 Provenance enums (`LIVE`, `HISTORICAL`, `PUBLIC_DATASET`, `SIMULATED`, `DERIVED`, `PREDICTED`, `UNAVAILABLE`). Provide bi-directional migration for legacy labels (`OBSERVED`, `ESTIMATED`, `CALCULATED`, `MODEL`, `LLM`).
+- **Rationale**: Completely enforces Invariants I1 and I2, guarantees unlabelled values are rejected at validation, and ensures `UNAVAILABLE` values cannot contain numeric payloads.
+
+### AD-11: Five-Dimensional Confidence & Non-Answer Integrity Spine (R3, R4, R5, R6)
+- **Decision**: Replace scalar confidence with a 5-dimension vector (`detection`, `attribution`, `model_uncertainty`, `evidence_completeness`, `data_quality`). Treat non-answers (`UNKNOWN`, `INSUFFICIENT_DATA`, `CONFLICTING_EVIDENCE`, `MODEL_OUT_OF_DISTRIBUTION`, `TOPOLOGY_UNSUPPORTED`) as first-class states where all mitigation recommendations are strictly prohibited.
+- **Rationale**: Prevents dangerous hallucinated mitigation actions during sensor drift, detector disagreement, or unvalidated grid topologies.
+
+

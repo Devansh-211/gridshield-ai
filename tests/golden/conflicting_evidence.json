@@ -1,0 +1,78 @@
+{
+  "incident_id": "INC_GOLDEN_CONFLICT",
+  "timestamp": "2026-10-06T15:35:29.771462+00:00",
+  "environment": "FIXTURE",
+  "versions": {
+    "topology": "IEEE_14_v1",
+    "state_estimate": "WLS_v1.0",
+    "model": "model-v1.0",
+    "data_schema": "contracts-v1.0",
+    "code_commit": "v0.1.0-p1-hardened"
+  },
+  "data_sources": [
+    "RTU_B04",
+    "PMU_B04",
+    "SCADA_HOST"
+  ],
+  "measurements": [
+    {
+      "value": 0.985,
+      "unit": "p.u.",
+      "source": "RTU_B04",
+      "timestamp": "2026-10-06T15:35:29.765704+00:00",
+      "provenance": "SIMULATED",
+      "dataset_id": null,
+      "transformation": null,
+      "confidence": null,
+      "validity": true
+    },
+    {
+      "value": 1.12,
+      "unit": "p.u.",
+      "source": "PMU_B04",
+      "timestamp": "2026-10-06T15:35:29.771349+00:00",
+      "provenance": "SIMULATED",
+      "dataset_id": null,
+      "transformation": null,
+      "confidence": null,
+      "validity": true
+    }
+  ],
+  "detector_outputs": {
+    "physics_residual": {
+      "anomaly": true,
+      "residual_sigmas": 4.8
+    },
+    "ml_classifier": {
+      "predicted_class": "NORMAL",
+      "probability": 0.89
+    }
+  },
+  "attribution": {
+    "label": "UNKNOWN",
+    "hypothesis_probabilities": {
+      "NORMAL": 0.45,
+      "PHYSICAL_FAULT": 0.1,
+      "FALSE_DATA_INJECTION": 0.4,
+      "H_data_quality": 0.05
+    },
+    "non_answer_state": "CONFLICTING_EVIDENCE"
+  },
+  "confidence": {
+    "detection": 0.85,
+    "attribution": 0.2,
+    "model_uncertainty": 0.15,
+    "evidence_completeness": 0.9,
+    "data_quality": 0.4,
+    "composite": 0.4875
+  },
+  "uncertainty": 0.85,
+  "affected_elements": [
+    "Bus 4"
+  ],
+  "mitigation_simulations": [],
+  "provenance": "DERIVED",
+  "limitations": [
+    "Detectors disagree materially on Bus 4 voltage anomaly vs normal state."
+  ]
+}
