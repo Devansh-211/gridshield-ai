@@ -1,10 +1,10 @@
-# Task Checklist: Phase 4 — Analysis (Replay) Mode & Evidence Reporting
+# Task Checklist: Phase 5 — Mitigation What-If & Project Persistence (R8 & Usability Floor)
 
 ## Control State: AUTONOMOUS
 
-- [x] Task 4.1: Git Tag Initialization (`git tag phase-4-start`)
-- [x] Task 4.2: Dataset Replay Engine (`backend/app/services/replay_engine.py` ingesting CSV dataset streams with `REPLAY(dataset_id)` environment & `PUBLIC_DATASET` provenance)
-- [x] Task 4.3: Grounded LLM Explanation & Rule R7 Delimiter Isolation (`AnalystService` enforcing prompt injection delimiter isolation & deterministic template fallback on grounding failure)
-- [x] Task 4.4: After-Action Report & Evidence Bundle Exporter (`ReportExporter` emitting JSON and Markdown evidence bundles with product boundary disclaimers)
-- [x] Task 4.5: Phase 4 Unit/Integration Tests & Verification (3/3 replay/report tests PASS + 102/102 suite PASS + Vite build PASS)
-- [x] Task 4.6: Git Commit & Tag (`phase-4-complete`)
+- [x] Task 5.1: Git Tag Initialization (`git tag phase-5-start`)
+- [x] Task 5.2: Rule R8 Immutable What-If Engine (What-if simulations run on immutable network copy, returning `PREDICTED` recommendations)
+- [x] Task 5.3: Project Save & Reopen Checkpoint Persistence (Dual-engine SQLite / Supabase persistence verified)
+- [x] Task 5.4: Product Boundary Disclaimer Verification (Disclaimers verified across TopBar, README, exports, and panels)
+- [x] Task 5.5: Phase 5 Unit/Integration Tests & Verification (105/105 backend tests PASS + Vite build PASS)
+- [x] Task 5.6: Create Walkthrough Report (`walkthrough.md`) & Final Git Commit & Tag (`workbench-mvp-complete`)
