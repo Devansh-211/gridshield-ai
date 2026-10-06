@@ -5,8 +5,6 @@ from backend.app.simulation.grid import DigitalTwinGrid
 from backend.app.simulation.frequency import FrequencyCOIModel
 from backend.app.schemas.contracts import ScenarioSpec, ScenarioType
 from backend.app.services.simulation_runner import SimulationRunner
-from backend.app.persistence.database import init_db, AsyncSessionLocal
-from backend.app.persistence.models import SimulationRunModel
 
 def test_indexing_bidirectional_mapping():
     """Verify explicit 1-based to 0-based indexing mappings in both directions."""
@@ -90,18 +88,37 @@ def test_frequency_coi_swing_model():
     f_deficit = coi.step(p_gen_total_mw=220.0, p_load_total_mw=259.0)
     assert f_deficit < 60.0
 
-@pytest.mark.asyncio
-async def test_sqlite_persistence_initialization():
+from backend.app.persistence.database import init_db, SessionLocal
+from backend.app.persistence.models import RunModel, VisitorModel
+from datetime import datetime, timezone, timedelta
+
+
+def test_sqlite_persistence_initialization():
     """Verify SQLite database schema and persistence."""
-    await init_db()
-    async with AsyncSessionLocal() as session:
+    init_db()
+    with SessionLocal() as session:
+        now = datetime.now(timezone.utc)
+        vis = VisitorModel(
+            id="vis-test-01",
+            created_at=now,
+            last_seen_at=now,
+            expires_at=now + timedelta(hours=24),
+            quota_counters_json={}
+        )
+        session.merge(vis)
+        session.flush()
+
         test_id = f"RUN_TEST_{uuid.uuid4().hex[:6]}"
-        run_record = SimulationRunModel(
+        run_record = RunModel(
             id=test_id,
+            visitor_id="vis-test-01",
+            kind="SCENARIO",
             scenario_type="NORMAL",
             seed=42,
-            total_steps=50,
+            sim_step=50,
             status="COMPLETED"
         )
         session.add(run_record)
-        await session.commit()
+        session.commit()
+
+

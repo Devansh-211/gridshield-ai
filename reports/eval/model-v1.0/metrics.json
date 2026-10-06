@@ -1,0 +1,62 @@
+{
+  "model_version": "model-v1.0",
+  "evaluated_at": "2026-10-06T06:02:24.220473+00:00",
+  "dataset_version": "dataset-v1.0",
+  "feature_version": "feat-v1.1",
+  "test_seeds": [
+    111,
+    112,
+    113,
+    114
+  ],
+  "test_samples_count": 1120,
+  "overall_accuracy": 0.9161,
+  "f1_macro": 0.8239,
+  "f1_weighted": 0.8943,
+  "normal_evaluation": {
+    "normal_windows_count": 560,
+    "false_positives_count": 2,
+    "measured_fpr": 0.0036,
+    "wilson_95_ci": [
+      0.001,
+      0.0129
+    ]
+  },
+  "baseline_comparison": {
+    "l1_classical_wls_f1": 0.6667,
+    "l2_isolation_forest_f1": 0.7812,
+    "l3_calibrated_classifier_f1": 0.8239,
+    "improvement_over_l1_pct": 23.58
+  },
+  "fdi_sensitivity_curve": [
+    {
+      "magnitude_sigma": "0.5\u03c3 (0.0025 pu)",
+      "detection_rate": 0.32,
+      "detector": "L1 + L2"
+    },
+    {
+      "magnitude_sigma": "1.0\u03c3 (0.0050 pu)",
+      "detection_rate": 0.68,
+      "detector": "L2 IsolationForest"
+    },
+    {
+      "magnitude_sigma": "2.0\u03c3 (0.0100 pu)",
+      "detection_rate": 0.91,
+      "detector": "L3 Classifier"
+    },
+    {
+      "magnitude_sigma": "5.0\u03c3 (0.0250 pu)",
+      "detection_rate": 0.99,
+      "detector": "L1 Chi2 + L3"
+    },
+    {
+      "magnitude_sigma": "16.0\u03c3 (0.0800 pu)",
+      "detection_rate": 1.0,
+      "detector": "All Layers"
+    }
+  ],
+  "known_failure_cases": [
+    "Sub-sigma stealthy FDI (magnitude < 0.8\u03c3) blends with Gaussian measurement noise.",
+    "Simultaneous multi-line tripping during heavy load increase can be classified as generator outage before dynamic settling."
+  ]
+}

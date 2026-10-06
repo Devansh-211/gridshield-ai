@@ -30,7 +30,7 @@ export const TelemetryChart: React.FC<TelemetryChartProps> = ({
 }) => {
   if (!data || data.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center bg-surface/50 border border-border rounded-xl font-mono text-xs text-slate-400">
+      <div className="h-64 flex items-center justify-center bg-surface/50 border border-border rounded font-mono text-xs text-slate-400">
         <Activity className="w-5 h-5 text-cyan-400 mr-2 animate-spin" />
         Awaiting telemetry stream...
       </div>
@@ -38,7 +38,7 @@ export const TelemetryChart: React.FC<TelemetryChartProps> = ({
   }
 
   return (
-    <div className="bg-surface/90 border border-border rounded-xl p-4 flex flex-col">
+    <div className="bg-surface/90 border border-border rounded p-4 flex flex-col">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-2">
           <Activity className="w-4 h-4 text-cyan-400" />

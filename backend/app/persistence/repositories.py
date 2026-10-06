@@ -410,6 +410,37 @@ class OperationsRepository:
         self.db.add(evt)
         return evt
 
+    def get_alarms(
+        self,
+        run_id: Optional[str] = None,
+        priority: Optional[str] = None,
+        state: Optional[str] = None,
+        limit: int = 100
+    ) -> List[AlarmModel]:
+        stmt = select(AlarmModel)
+        if run_id:
+            stmt = stmt.where(AlarmModel.run_id == run_id)
+        if priority:
+            stmt = stmt.where(AlarmModel.priority == priority)
+        if state:
+            stmt = stmt.where(AlarmModel.state == state)
+        stmt = stmt.order_by(desc(AlarmModel.id)).limit(limit)
+        return list(self.db.execute(stmt).scalars().all())
+
+    def get_incidents(self, run_id: Optional[str] = None, limit: int = 50) -> List[IncidentModel]:
+        stmt = select(IncidentModel)
+        if run_id:
+            stmt = stmt.where(IncidentModel.run_id == run_id)
+        stmt = stmt.order_by(desc(IncidentModel.created_at)).limit(limit)
+        return list(self.db.execute(stmt).scalars().all())
+
+    def get_events(self, run_id: Optional[str] = None, limit: int = 100) -> List[EventModel]:
+        stmt = select(EventModel)
+        if run_id:
+            stmt = stmt.where(EventModel.run_id == run_id)
+        stmt = stmt.order_by(desc(EventModel.timestamp)).limit(limit)
+        return list(self.db.execute(stmt).scalars().all())
+
     def log_audit(
         self,
         visitor_id: str,

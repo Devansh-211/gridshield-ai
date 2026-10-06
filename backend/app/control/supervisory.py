@@ -12,6 +12,7 @@ from backend.app.simulation.grid import DigitalTwinGrid
 class SupervisorySCADAController:
     """
     Automated voltage & reactive power regulator (AVR / SCADA closed-loop).
+    Supports stateless hydration from session checkpoints.
     """
     def __init__(self,
                  target_bus_ieee: int = 4,
@@ -20,7 +21,7 @@ class SupervisorySCADAController:
                  voltage_deadband_high: float = 1.04,
                  step_change: float = 0.015):
         self.target_bus_ieee = target_bus_ieee
-        self.controlled_gen_id = controlled_gen_id # Gen at Bus 2 (case14 index 0 or ext_grid)
+        self.controlled_gen_id = controlled_gen_id  # Gen at Bus 2 (case14 index 0)
         self.v_low = voltage_deadband_low
         self.v_high = voltage_deadband_high
         self.step_change = step_change
@@ -31,6 +32,24 @@ class SupervisorySCADAController:
     def reset(self):
         self.current_gen_vm_pu = self.base_gen_vm_pu
         self.actions_log.clear()
+
+    def get_state(self) -> Dict[str, Any]:
+        """Serializes controller state for database checkpointing."""
+        return {
+            "target_bus_ieee": self.target_bus_ieee,
+            "controlled_gen_id": self.controlled_gen_id,
+            "current_gen_vm_pu": round(self.current_gen_vm_pu, 4),
+            "actions_log": self.actions_log[-10:]
+        }
+
+    def set_state(self, state: Dict[str, Any], grid: Optional[DigitalTwinGrid] = None):
+        """Hydrates controller state from database checkpoint."""
+        if not state:
+            return
+        self.current_gen_vm_pu = state.get("current_gen_vm_pu", self.base_gen_vm_pu)
+        self.actions_log = state.get("actions_log", [])
+        if grid and len(grid.net.gen) > 0:
+            grid.net.gen.loc[0, "vm_pu"] = self.current_gen_vm_pu
 
     def step(self,
              observed_telemetry: List[ObservedTelemetryPoint],
@@ -52,10 +71,10 @@ class SupervisorySCADAController:
 
         event: Optional[CyberEvent] = None
 
-        # 2. Control Logic with Deadband and Rate Limits
+        # 2. Control Logic with Deadband and Anti-Windup Rate Limits
         if target_v_obs < self.v_low:
             # Sensed under-voltage: Raise generator voltage setpoint to boost grid voltage
-            new_vm = min(1.10, self.current_gen_vm_pu + self.step_change)
+            new_vm = min(1.10, round(self.current_gen_vm_pu + self.step_change, 4))
             if new_vm != self.current_gen_vm_pu:
                 self.current_gen_vm_pu = new_vm
                 # Apply to pandapower net
@@ -76,7 +95,7 @@ class SupervisorySCADAController:
 
         elif target_v_obs > self.v_high:
             # Sensed over-voltage: Lower generator setpoint
-            new_vm = max(0.95, self.current_gen_vm_pu - self.step_change)
+            new_vm = max(0.95, round(self.current_gen_vm_pu - self.step_change, 4))
             if new_vm != self.current_gen_vm_pu:
                 self.current_gen_vm_pu = new_vm
                 if len(grid.net.gen) > 0:

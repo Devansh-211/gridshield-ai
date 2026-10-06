@@ -129,9 +129,27 @@ class IncidentManager:
     def get_incident(self, incident_id: str) -> Optional[Incident]:
         return self.incidents.get(incident_id)
 
+    def get_state(self) -> Dict[str, Any]:
+        return {
+            "incident_counter": self._incident_counter,
+            "active_incident_id": self._active_incident_id,
+            "normal_consecutive_steps": self._normal_consecutive_steps,
+            "incidents": {k: v.model_dump() for k, v in self.incidents.items()}
+        }
+
+    def set_state(self, state: Dict[str, Any]):
+        if not state:
+            return
+        self._incident_counter = state.get("incident_counter", 0)
+        self._active_incident_id = state.get("active_incident_id")
+        self._normal_consecutive_steps = state.get("normal_consecutive_steps", 0)
+        raw_incidents = state.get("incidents", {})
+        self.incidents = {k: Incident.model_validate(v) for k, v in raw_incidents.items()}
+
     def reset(self):
         self.incidents.clear()
         self.events.clear()
         self._incident_counter = 0
         self._active_incident_id = None
         self._normal_consecutive_steps = 0
+

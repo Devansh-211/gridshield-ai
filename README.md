@@ -1,9 +1,11 @@
 # GridShield AI — Cyber-Physical Power Grid Resilience Twin
 
-[![Python 3.14](https://img.shields.io/badge/python-3.14-blue.svg)](https://www.python.org/)
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com/)
-[![React 18 / Next / Vite](https://img.shields.io/badge/Frontend-React_18_|_Vite-61DAFB.svg)](https://vitejs.dev/)
+[![React 18 / Vite](https://img.shields.io/badge/Frontend-React_18_|_Vite-61DAFB.svg)](https://vitejs.dev/)
 [![pandapower](https://img.shields.io/badge/Simulation-pandapower_3.5.5-orange.svg)](https://www.pandapower.org/)
+[![Supabase](https://img.shields.io/badge/Database-Supabase_PostgreSQL-3ECF8E.svg)](https://supabase.com/)
+[![Vercel](https://img.shields.io/badge/Deploy-Vercel_Serverless-black.svg)](https://vercel.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **GridShield AI** is an explainable cyber-physical resilience platform and educational/research digital twin for electrical power grids. It detects anomalies in a simulated IEEE 14-bus grid, attributes them to physical or cyber causes via cross-domain evidence, explains evidence with an AI Analyst, simulates downstream impact under SCADA closed-loop dynamics, tests allowlisted mitigations, and verifies state recovery.
@@ -25,29 +27,44 @@ DETECT ──► ATTRIBUTE ──► EXPLAIN ──► SIMULATE ──► MITIGA
 
 ---
 
-## Invariants & Principles
+## Non-Negotiable Development Invariants
 
 - **I1. No fabricated data.** Every number traces `simulation → telemetry → features → detection → risk → API → UI`.
-- **I2. Labelled provenance.** Every value is stamped: `SIMULATED`, `OBSERVED`, `ESTIMATED`, `MODEL`, `CALCULATED`, or `LLM`.
-- **I3. Ground-truth firewall.** Detection/classification code receives only `OBSERVED` telemetry, never `GroundTruthPoint` or scenario labels.
-- **I4. Determinism.** All randomness flows through seeded RNG (`core/rng.py`). Same seed + config = identical results.
-- **I5. Backend is source of truth.** Frontend never calculates severity, risk, or physics.
-- **I6. Real AI, no scripted AI.** Trained ML + statistical hypothesis testing.
-- **I7. No dead UI.** All UI buttons execute end-to-end.
-- **I8. Honest failure.** Clear degraded states when services or models are unconfigured.
-- **I9. In-process isolation.** Attacks manipulate in-process simulated objects only. No real packet crafting or socket exploitation.
-- **I10. Educational twin.** Educational & research scope only; no claims of real-world critical infrastructure protection.
+- **I2. Labelled provenance.** Every value carries `SIMULATED`, `OBSERVED`, `ESTIMATED`, `MODEL`, `CALCULATED`, or `LLM`.
+- **I3. Ground-truth firewall.** Detection/classification code receives only `OBSERVED` telemetry and cyber logs, never `GroundTruthPoint` or scenario labels.
+- **I4. Determinism.** Counter-based RNG (`np.random.default_rng([seed, t, s])`). Same tuple `(seed, scenario, code_sha, model_version)` reproduces within 1e-6 relative tolerance in $O(1)$ step time.
+- **I5. Backend is source of truth.** Frontend never calculates severity, risk, confidence, or physics.
+- **I6. Real AI, no scripted AI.** Trained ML models + statistical hypothesis testing.
+- **I7. No dead UI.** All buttons execute end-to-end; unconfigured capabilities show explicit degraded states.
+- **I8. Honest failure.** Missing API keys or failed simulations produce explicit errors; remaining components continue operating.
+- **I9. In-process isolation.** Attacks manipulate in-process simulated objects only. No real sockets, packet crafting, or network exploits.
+- **I10. Educational twin.** Educational & research digital twin; no claims of protecting real-world critical infrastructure.
+- **I11. Stateless compute.** No request depends on in-process memory surviving across serverless invocations. All state checkpoints persist in PostgreSQL/SQLite.
+- **I12. Public-safe deployment.** Visitors are isolated by visitor UUID; client bundles contain zero credentials; rate-limiting and LLM cost caps strictly enforced.
+
+---
+
+## Console Navigation (8 Views)
+
+1. **Overview (SOC Dashboard)**: Single-line diagram summary, KPI ribbon with explicit provenance chips, active alarms banner, and append-only event timeline.
+2. **Grid Topology**: Full-screen interactive IEEE 14-bus diagram with deep inspector tables for 14 buses, 20 branches, and 5 generators.
+3. **Alarms**: ISA-18.2 compliant industrial console with Priority and State filters, one-click acknowledgment with operator notes, and shelving.
+4. **Incidents**: Episode case management with 3-Way verification table, Plain vs Technical analyst note toggle, and "In Plain Words" summary box.
+5. **Trends**: Historian multi-pen trend strip charts for comparing voltage, frequency, line loading, and generator outputs.
+6. **Scenario Lab**: 8-stage interactive guided walkthrough for False Data Injection & Line Trips, plus custom physical/cyber injection sliders.
+7. **Models & System**: Offline model performance metrics (`metrics.json`), Wilson score confidence intervals, and honest research limitations.
+8. **Explained**: 15 plain-language markdown sections passing Flesch-Kincaid reading grade ≤ 8.5 with a searchable 26-term glossary.
 
 ---
 
 ## Quick Start & Installation
 
 ### Prerequisites
-- Python 3.12+ (tested on Python 3.14)
-- Node.js 18+ & npm
+- Python 3.12+
+- Node.js 20+ & npm
 - Git
 
-### 1. Backend Setup
+### 1. Backend Setup & Tests
 ```bash
 # Create and activate virtual environment
 python -m venv .venv
@@ -56,17 +73,27 @@ python -m venv .venv
 # On Linux/macOS:
 # source .venv/bin/activate
 
-# Install dependencies
-pip install -r backend/requirements.txt
+# Install dependencies in editable mode
+pip install -e .
+pip install pytest httpx
 
-# Train models deterministically (reproducible from synthetic simulator data)
-python -m backend.app.services.train_models
-
-# Run tests
-python -m pytest backend/tests/ -v
+# Run complete pytest test suite (50/50 passing)
+pytest -v backend/tests/
 ```
 
-### 2. Frontend Setup
+### 2. Verification Scripts
+```bash
+# Check UI anti-patterns
+python scripts/ui_lint.py
+
+# Check Explained reading level (Flesch-Kincaid <= 8.5)
+python scripts/readability_check.py
+
+# Check serverless bundle size (< 400 MB)
+python scripts/check_bundle_size.py
+```
+
+### 3. Frontend Local Development & Build
 ```bash
 cd frontend
 npm install
@@ -74,28 +101,23 @@ npm run build
 npm run dev
 ```
 
-### 3. Run Headless Demo Verification
-```bash
-python scripts/run_demo_test.py
-```
-
 ---
 
-## Architecture
+## Architecture & Serverless Topology
 
 ```
-Frontend (Vite / React 18 / Tailwind / Lucide / Recharts)
-  │  REST API & Server-Sent Events (SSE)
-FastAPI Backend (/api/v1)
-  ├── Simulation: pandapower IEEE 14-bus AC power flow + SCADA closed loop
-  ├── Telemetry: Observable sensor set + seeded Gaussian noise
-  ├── Attacks: In-process False Data Injection, Malicious Commands, DoS, Replay
-  ├── Detection: L1 WLS Bad Data + L2 Isolation Forest + L3 Calibrated Classifier
-  ├── Attribution: Physical explainability + Electrical coherence + Cyber evidence
-  ├── Risk: Multi-factor operational risk scoring
-  ├── Incidents: Lifecycle state machine (GS-0001...)
-  ├── Mitigation: Allowlisted actions + 3-way verification
-  └── Analyst: Delimiter-defended Gemini LLM + Verified Template Explainer
+Vercel Edge / CDN (Static SPA: React 18 + Vite + Tailwind)
+  │
+  ├──► /api/* ──► Vercel Serverless Python Runtime (FastAPI ASGI: api/index.py)
+  │                 ├── Simulation Service (pandapower 3.5.5 IEEE 14-Bus)
+  │                 ├── State Estimation & Layered ML Anomaly Classifier
+  │                 ├── ISA-18.2 Dynamic Alarm Management Engine
+  │                 ├── Stepwise 8-Stage Golden Demo State Machine
+  │                 └── Explainable AI Analyst (Gemini + Grounded Template)
+  │
+  └──► Database Persistence (SQLAlchemy 2.0 + Alembic)
+        ├── Production: Supabase PostgreSQL via Supavisor Transaction Pooler (Port 6543, NullPool)
+        └── Local Dev: SQLite with WAL mode (./data/gridshield.db)
 ```
 
 ---

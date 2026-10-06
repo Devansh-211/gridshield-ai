@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Incident, AnalystQuestionResponse } from '../../types/api';
 import { askAnalyst } from '../api/client';
 import { ProvenanceBadge } from '../components/ProvenanceBadge';
-import { Bot, Send, Zap, CheckCircle2, ShieldAlert, CornerDownRight } from 'lucide-react';
+import { Bot, Send } from 'lucide-react';
 
 interface AnalystPanelProps {
   incidents: Incident[];
@@ -50,11 +50,11 @@ export const AnalystPanel: React.FC<AnalystPanelProps> = ({ incidents }) => {
   return (
     <div className="max-w-4xl mx-auto space-y-4 font-mono text-xs">
       {/* Header */}
-      <div className="bg-surface/90 border border-border rounded-xl p-5 flex items-center justify-between">
+      <div className="bg-surface border border-border rounded p-4 flex items-center justify-between">
         <div>
           <div className="flex items-center space-x-2">
             <Bot className="w-5 h-5 text-cyan-400" />
-            <h2 className="text-base font-bold text-white uppercase">
+            <h2 className="text-base font-bold text-white uppercase tracking-wider">
               AI Cyber-Physical Resilience Analyst
             </h2>
           </div>
@@ -66,13 +66,13 @@ export const AnalystPanel: React.FC<AnalystPanelProps> = ({ incidents }) => {
       </div>
 
       {/* Incident Selector */}
-      <div className="bg-surface/90 border border-border rounded-xl p-3.5 flex items-center justify-between">
+      <div className="bg-surface border border-border rounded p-3 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <span className="text-slate-400">Context Incident:</span>
           <select
             value={selectedIncidentId}
             onChange={(e) => setSelectedIncidentId(e.target.value)}
-            className="bg-background border border-slate-700 rounded-lg p-1.5 text-cyan-400 font-bold outline-none"
+            className="bg-background border border-slate-700 rounded p-1.5 text-cyan-400 font-bold outline-none"
           >
             {incidents.length === 0 ? (
               <option value="GS-0001">GS-0001 (Active Session)</option>
@@ -91,17 +91,17 @@ export const AnalystPanel: React.FC<AnalystPanelProps> = ({ incidents }) => {
       </div>
 
       {/* Chat History */}
-      <div className="bg-surface/90 border border-border rounded-xl p-5 min-h-[380px] max-h-[500px] overflow-y-auto space-y-4">
+      <div className="bg-surface border border-border rounded p-4 min-h-[360px] max-h-[480px] overflow-y-auto space-y-4">
         {history.length === 0 ? (
           <div className="text-center py-12 text-slate-500 space-y-3">
-            <Bot className="w-10 h-10 text-cyan-500/40 mx-auto animate-bounce" />
+            <Bot className="w-8 h-8 text-cyan-500/50 mx-auto" />
             <p>Ask a question about the active incident or propose a mitigation action to simulate.</p>
             <div className="flex flex-wrap justify-center gap-2 pt-2">
               {sampleQuestions.map((q, idx) => (
                 <button
                   key={idx}
                   onClick={() => setQuestion(q)}
-                  className="px-3 py-1 bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-800 rounded-full text-[11px] transition"
+                  className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-800 rounded text-[11px] transition-colors"
                 >
                   {q}
                 </button>
@@ -113,7 +113,7 @@ export const AnalystPanel: React.FC<AnalystPanelProps> = ({ incidents }) => {
             <div key={idx} className="space-y-2">
               {/* User Question */}
               <div className="flex justify-end">
-                <div className="bg-cyan-950/80 border border-cyan-500/40 rounded-xl p-3 max-w-[80%] text-cyan-200">
+                <div className="bg-slate-800 border border-slate-700 rounded p-3 max-w-[80%] text-cyan-200">
                   <span className="text-[10px] text-cyan-400 block font-bold mb-0.5">OPERATOR</span>
                   <p>{item.question}</p>
                 </div>
@@ -121,7 +121,7 @@ export const AnalystPanel: React.FC<AnalystPanelProps> = ({ incidents }) => {
 
               {/* Analyst Answer */}
               <div className="flex justify-start">
-                <div className="bg-card border border-border rounded-xl p-3.5 max-w-[85%] text-slate-200 space-y-2">
+                <div className="bg-card border border-border rounded p-3.5 max-w-[85%] text-slate-200 space-y-2">
                   <div className="flex items-center justify-between border-b border-border pb-1">
                     <span className="text-[10px] text-emerald-400 font-bold flex items-center">
                       <Bot className="w-3 h-3 mr-1" />
@@ -157,14 +157,14 @@ export const AnalystPanel: React.FC<AnalystPanelProps> = ({ incidents }) => {
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="Ask a question or propose an action (e.g. 'What if we quarantine Bus 4?')..."
-          className="flex-1 bg-surface border border-border rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:border-cyan-500 outline-none"
+          className="flex-1 bg-surface border border-border rounded px-3 py-2 text-white placeholder-slate-500 focus:border-cyan-500 outline-none"
         />
         <button
           type="submit"
           disabled={isLoading || !question.trim()}
-          className="px-5 py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl font-bold flex items-center space-x-1.5 transition disabled:opacity-50"
+          className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded font-bold flex items-center space-x-1.5 transition disabled:opacity-50"
         >
-          <Send className="w-4 h-4" />
+          <Send className="w-3.5 h-3.5" />
           <span>{isLoading ? 'Running...' : 'Send'}</span>
         </button>
       </form>

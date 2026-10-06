@@ -58,7 +58,7 @@ export const KPIRibbon: React.FC<KPIRibbonProps> = ({
             {busesInBand === busesCount ? 'Nominal (0.95-1.05)' : 'Violations Detected'}
           </span>
         </div>
-        <div className="w-full bg-slate-800 h-1 rounded-full mt-2 overflow-hidden">
+        <div className="w-full bg-slate-800 h-1 rounded-sm mt-2 overflow-hidden">
           <div
             className={`h-full ${
               busesInBand === busesCount ? 'bg-emerald-500' : 'bg-rose-500'
@@ -86,7 +86,7 @@ export const KPIRibbon: React.FC<KPIRibbonProps> = ({
             {linesUnder100 === linesCount ? '< 100% Loading' : 'Thermal Overload'}
           </span>
         </div>
-        <div className="w-full bg-slate-800 h-1 rounded-full mt-2 overflow-hidden">
+        <div className="w-full bg-slate-800 h-1 rounded-sm mt-2 overflow-hidden">
           <div
             className={`h-full ${
               linesUnder100 === linesCount ? 'bg-emerald-500' : 'bg-rose-500'
@@ -114,7 +114,7 @@ export const KPIRibbon: React.FC<KPIRibbonProps> = ({
             COI Droop Model
           </span>
         </div>
-        <div className="w-full bg-slate-800 h-1 rounded-full mt-2 overflow-hidden">
+        <div className="w-full bg-slate-800 h-1 rounded-sm mt-2 overflow-hidden">
           <div
             className={`h-full ${
               Math.abs(freqHz - 60.0) < 0.2 ? 'bg-emerald-500' : 'bg-rose-500'
@@ -140,7 +140,7 @@ export const KPIRibbon: React.FC<KPIRibbonProps> = ({
           </div>
           <span className="text-xs font-mono font-bold uppercase">{riskLevel}</span>
         </div>
-        <div className="w-full bg-slate-900/60 h-1 rounded-full mt-2 overflow-hidden">
+        <div className="w-full bg-slate-900/60 h-1 rounded-sm mt-2 overflow-hidden">
           <div
             className={`h-full ${
               riskLevel === 'CRITICAL'
@@ -172,7 +172,7 @@ export const KPIRibbon: React.FC<KPIRibbonProps> = ({
             {openIncidentsCount > 0 ? 'Tamper Detected' : 'All RTUs Trusted'}
           </span>
         </div>
-        <div className="w-full bg-slate-800 h-1 rounded-full mt-2 overflow-hidden">
+        <div className="w-full bg-slate-800 h-1 rounded-sm mt-2 overflow-hidden">
           <div
             className={`h-full ${openIncidentsCount > 0 ? 'bg-rose-500' : 'bg-emerald-500'}`}
             style={{ width: openIncidentsCount > 0 ? '100%' : '100%' }}

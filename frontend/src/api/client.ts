@@ -1,6 +1,6 @@
 /**
  * GridShield AI — Type-Safe API Client.
- * All types adhere to frozen contracts in generated types/api.ts.
+ * Connects the Vite React frontend to the FastAPI serverless backend.
  */
 
 import {
@@ -16,6 +16,9 @@ import {
   AnalystExplanation,
   AnalystQuestionRequest,
   AnalystQuestionResponse,
+  AlarmRecord,
+  DemoStepResult,
+  LiveSessionState,
 } from '../../types/api';
 
 const API_BASE = '/api/v1';
@@ -51,6 +54,70 @@ export async function createRun(spec: ScenarioSpec): Promise<any> {
     body: JSON.stringify(spec),
   });
   if (!res.ok) throw new Error(`Create run failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function createLiveSession(config?: Record<string, any>): Promise<LiveSessionState> {
+  const res = await fetch(`${API_BASE}/runs/session`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(config || {}),
+  });
+  if (!res.ok) throw new Error(`Live session creation failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function advanceLiveSession(runId: string, steps: number = 1): Promise<LiveSessionState> {
+  const res = await fetch(`${API_BASE}/runs/${runId}/advance?steps=${steps}`, {
+    method: 'POST',
+  });
+  if (!res.ok) throw new Error(`Advance session failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchSessionFeed(runId: string, tStart: number = 0, tEnd: number = 100): Promise<any> {
+  const res = await fetch(`${API_BASE}/runs/${runId}/feed?t_start=${tStart}&t_end=${tEnd}`, {
+    method: 'POST',
+  });
+  if (!res.ok) throw new Error(`Session feed fetch failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchAlarms(params?: { run_id?: string; state?: string; priority?: string }): Promise<AlarmRecord[]> {
+  const query = new URLSearchParams();
+  if (params?.run_id) query.append('run_id', params.run_id);
+  if (params?.state) query.append('state', params.state);
+  if (params?.priority) query.append('priority', params.priority);
+  
+  const url = `${API_BASE}/alarms${query.toString() ? `?${query.toString()}` : ''}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Alarms fetch failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function acknowledgeAlarm(alarmId: string, operatorId: string = 'OPERATOR_1', note: string = 'Acknowledged in console'): Promise<AlarmRecord> {
+  const res = await fetch(`${API_BASE}/alarms/${alarmId}/acknowledge`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ operator_id: operatorId, note }),
+  });
+  if (!res.ok) throw new Error(`Alarm ack failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function shelveAlarm(alarmId: string, durationMinutes: number = 60): Promise<AlarmRecord> {
+  const res = await fetch(`${API_BASE}/alarms/${alarmId}/shelve?duration_minutes=${durationMinutes}`, {
+    method: 'POST',
+  });
+  if (!res.ok) throw new Error(`Alarm shelve failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function advanceDemoStep(runId: string): Promise<DemoStepResult> {
+  const res = await fetch(`${API_BASE}/demo/${runId}/next`, {
+    method: 'POST',
+  });
+  if (!res.ok) throw new Error(`Demo advance failed: ${res.statusText}`);
   return res.json();
 }
 

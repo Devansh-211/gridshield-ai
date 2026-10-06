@@ -1,0 +1,191 @@
+{
+  "bus": {
+    "term": "Bus",
+    "plain": "A junction point in a power grid where power lines, generators, and towns connect.",
+    "technical": "A node in an electrical power system where transmission lines, generators, and loads interconnect at a common voltage level.",
+    "see_also": ["voltage", "generator", "load"],
+    "used_in": ["Grid", "Overview", "Explained", "Incidents"]
+  },
+  "pu": {
+    "term": "p.u. (Per Unit)",
+    "plain": "A percentage-like scale where 1.0 means exactly normal or nominal operating level.",
+    "technical": "Per-unit system expressing electrical quantities as fractions of defined base values (e.g. 1.0 p.u. = nominal voltage).",
+    "see_also": ["voltage", "bus"],
+    "used_in": ["Grid", "Overview", "Explained", "Incidents", "Trends"]
+  },
+  "voltage": {
+    "term": "Voltage",
+    "plain": "The electrical pressure pushing electric current through the power grid.",
+    "technical": "Electric potential difference between two points, maintained within nominal limits (typically 0.95 to 1.05 p.u.).",
+    "see_also": ["pu", "bus", "avr"],
+    "used_in": ["Grid", "Overview", "Explained", "Incidents", "Alarms", "Trends"]
+  },
+  "frequency": {
+    "term": "Frequency",
+    "plain": "The heartbeat of the electrical grid (typically 60 Hz or 50 Hz), showing whether generation matches consumption.",
+    "technical": "Rotational frequency of synchronized generators across the grid, governed by the swing equation balancing mechanical power and electrical demand.",
+    "see_also": ["coi", "generator"],
+    "used_in": ["Overview", "Grid", "Explained", "Models & System"]
+  },
+  "generator": {
+    "term": "Generator",
+    "plain": "A power plant that produces electrical energy to power the grid.",
+    "technical": "Synchronous machine converting mechanical torque into active and reactive electrical power, controlled by governor and AVR systems.",
+    "see_also": ["voltage", "frequency", "avr"],
+    "used_in": ["Grid", "Overview", "Explained"]
+  },
+  "synchronous_condenser": {
+    "term": "Synchronous Condenser",
+    "plain": "A rotating machine that provides voltage stability without burning fuel.",
+    "technical": "Unloaded synchronous motor operating to supply or absorb reactive power for voltage regulation and system inertia.",
+    "see_also": ["generator", "voltage"],
+    "used_in": ["Grid", "Explained"]
+  },
+  "transmission_line": {
+    "term": "Transmission Line",
+    "plain": "High-voltage wires that carry electricity over long distances between junctions.",
+    "technical": "Conductors modeled with series impedance and shunt admittance carrying power between grid substations.",
+    "see_also": ["bus", "transformer"],
+    "used_in": ["Grid", "Overview", "Explained", "Alarms"]
+  },
+  "transformer": {
+    "term": "Transformer",
+    "plain": "Equipment that steps voltage up for long-distance transport or down for safe local use.",
+    "technical": "Electromagnetic device transferring AC energy between different voltage circuits through mutual induction.",
+    "see_also": ["transmission_line", "bus"],
+    "used_in": ["Grid", "Explained"]
+  },
+  "breaker": {
+    "term": "Breaker",
+    "plain": "An automated switch that opens to isolate faulty equipment or lines.",
+    "technical": "Circuit breaker designed to interrupt fault currents under protection relay commands.",
+    "see_also": ["transmission_line"],
+    "used_in": ["Grid", "Explained", "Incidents"]
+  },
+  "state_estimation": {
+    "term": "State Estimation",
+    "plain": "The mathematical process that calculates the most likely true grid condition from noisy sensor readings.",
+    "technical": "Weighted Least Squares (WLS) algorithm minimizing measurement residuals to estimate complex voltage states [V, theta].",
+    "see_also": ["residual", "chi_square"],
+    "used_in": ["Models & System", "Explained", "Incidents"]
+  },
+  "residual": {
+    "term": "Residual",
+    "plain": "The difference between what a sensor reports and what physics says it should be.",
+    "technical": "Difference vector r = z - h(x) between observed telemetry z and estimated measurement function h(x).",
+    "see_also": ["state_estimation", "normalized_residual"],
+    "used_in": ["Models & System", "Incidents", "Explained"]
+  },
+  "normalized_residual": {
+    "term": "Normalized Residual",
+    "plain": "The measurement difference divided by expected sensor noise to detect outliers.",
+    "technical": "Residual r_i divided by the square root of diagonal element of residual covariance matrix Omega = R - H(H^T R^-1 H)^-1 H^T.",
+    "see_also": ["residual", "chi_square"],
+    "used_in": ["Models & System", "Incidents", "Explained"]
+  },
+  "chi_square": {
+    "term": "Chi-Square Test",
+    "plain": "A statistical test to check if overall sensor errors are within normal random noise limits.",
+    "technical": "Global detection criterion J(x) = sum((z_i - h_i(x))^2 / sigma_i^2) evaluated against Chi-Square threshold with m-n degrees of freedom.",
+    "see_also": ["state_estimation", "normalized_residual"],
+    "used_in": ["Models & System", "Explained", "Incidents"]
+  },
+  "false_data_injection": {
+    "term": "False Data Injection (FDI)",
+    "plain": "A cyberattack where sensor readings are secretly modified to trick operators or automated controls.",
+    "technical": "Cyberattack injecting malicious vector 'a' into telemetry z_bad = z + a, crafted to bypass or trigger bad data detection.",
+    "see_also": ["scada", "avr"],
+    "used_in": ["Scenarios", "Incidents", "Explained", "Models & System"]
+  },
+  "replay": {
+    "term": "Replay Attack",
+    "plain": "A cyberattack that repeats recorded past sensor data to hide ongoing physical disturbances.",
+    "technical": "Cyber event re-transmitting valid historical telemetry frames to mask contemporary state deviations.",
+    "see_also": ["false_data_injection"],
+    "used_in": ["Scenarios", "Incidents", "Explained"]
+  },
+  "denial_of_service": {
+    "term": "Denial of Service (DoS)",
+    "plain": "An attack that cuts off communication lines so the control room loses visibility.",
+    "technical": "Disruption of SCADA communication channels causing packet loss, timeout, or frozen state observations.",
+    "see_also": ["telemetry"],
+    "used_in": ["Scenarios", "Incidents", "Explained"]
+  },
+  "malicious_command": {
+    "term": "Malicious Control Command",
+    "plain": "An unauthorized instruction sent to field equipment to force unsafe operating setpoints.",
+    "technical": "Tampering with supervisory control signals (e.g. generator setpoint, capacitor switching) to induce instability.",
+    "see_also": ["scada", "avr"],
+    "used_in": ["Scenarios", "Incidents", "Explained"]
+  },
+  "telemetry": {
+    "term": "Telemetry",
+    "plain": "Data measurements (voltage, power, current) sent from sensors to the control room.",
+    "technical": "Digital sensor measurement stream sampled at discrete time intervals and transmitted via industrial protocols.",
+    "see_also": ["state_estimation", "observed_value"],
+    "used_in": ["Grid", "Overview", "Trends", "Explained"]
+  },
+  "observed_value": {
+    "term": "Observed Value",
+    "plain": "The raw number received by the control room from a sensor (which could contain noise or tampering).",
+    "technical": "Telemetry value received by the EMS, tagged with OBSERVED provenance.",
+    "see_also": ["ground_truth", "estimated_value"],
+    "used_in": ["Grid", "Incidents", "Overview", "Explained"]
+  },
+  "estimated_value": {
+    "term": "Estimated Value",
+    "plain": "The value calculated by the physics mathematical model after filtering sensor noise.",
+    "technical": "Optimal state calculation h(x_hat) derived from weighted least squares state estimation.",
+    "see_also": ["state_estimation", "observed_value"],
+    "used_in": ["Grid", "Incidents", "Explained"]
+  },
+  "ground_truth": {
+    "term": "Ground Truth",
+    "plain": "The real physical condition of the simulated grid, kept completely secret from detection algorithms.",
+    "technical": "True state vector computed directly by the power flow solver, firewalled from detector and analyst modules.",
+    "see_also": ["observed_value", "digital_twin"],
+    "used_in": ["Grid", "Scenarios", "Explained"]
+  },
+  "digital_twin": {
+    "term": "Digital Twin",
+    "plain": "A realistic software simulation of an electrical grid used for testing, research, and learning.",
+    "technical": "High-fidelity virtual model replicating electrical and supervisory dynamics in-process for study without physical risk.",
+    "see_also": ["ground_truth"],
+    "used_in": ["Explained", "Models & System", "Overview"]
+  },
+  "scada": {
+    "term": "SCADA",
+    "plain": "Supervisory Control and Data Acquisition: the central computer system used to monitor and manage the grid.",
+    "technical": "Industrial control system architecture comprising RTUs, PLCs, communications, and master stations for grid operations.",
+    "see_also": ["telemetry", "avr"],
+    "used_in": ["Overview", "Grid", "Explained", "Incidents"]
+  },
+  "avr": {
+    "term": "AVR (Automatic Voltage Regulator)",
+    "plain": "An automated controller on a generator that adjusts output to keep nearby voltage steady.",
+    "technical": "Closed-loop feedback controller on synchronous generators adjusting field excitation current to maintain terminal voltage setpoint.",
+    "see_also": ["generator", "voltage"],
+    "used_in": ["Grid", "Incidents", "Explained"]
+  },
+  "coi": {
+    "term": "COI (Center of Inertia)",
+    "plain": "A combined measurement of overall generator speeds to calculate the grid's average frequency.",
+    "technical": "Inertia-weighted aggregate frequency model representing rotational kinetic energy dynamics across all interconnected generators.",
+    "see_also": ["frequency", "generator"],
+    "used_in": ["Models & System", "Explained"]
+  },
+  "mitigation": {
+    "term": "Mitigation",
+    "plain": "Corrective control action taken to stop an ongoing problem and return the grid to safety.",
+    "technical": "Pre-approved, allowlisted operational interventions (sensor quarantine, setpoint reset, line re-routing) to restore nominal operation.",
+    "see_also": ["verification", "incident"],
+    "used_in": ["Incidents", "Explained", "Scenarios"]
+  },
+  "verification": {
+    "term": "3-Way Verification",
+    "plain": "A 3-way test comparing before the attack, during the problem, and after the fix to prove the remedy worked.",
+    "technical": "Comparative simulation evaluating Baseline, Unmitigated, and Mitigated physical trajectories to calculate objective improvement.",
+    "see_also": ["mitigation", "incident"],
+    "used_in": ["Incidents", "Explained", "Scenarios"]
+  }
+}

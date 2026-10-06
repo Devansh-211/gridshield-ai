@@ -208,3 +208,19 @@ class DigitalTwinGrid:
             frequency_provenance=Provenance.SIMULATED,
             provenance=Provenance.SIMULATED
         )
+
+    def step(self, sim_time_s: float = 0.0, step: int = 0, frequency_hz: float = 60.0) -> GridState:
+        """Advance physical state and return computed GridState."""
+        return self.get_state(step=step, sim_time_s=sim_time_s, frequency_hz=frequency_hz)
+
+    def trip_line_by_name(self, line_name: str) -> bool:
+        """Take a transmission line out of service by name (e.g. 'Line 1-2' or 'Line 2-5')."""
+        for l_idx in self.net.line.index:
+            from_b = bus_to_ieee(int(self.net.line.from_bus.at[l_idx]))
+            to_b = bus_to_ieee(int(self.net.line.to_bus.at[l_idx]))
+            name = line_label(from_b, to_b)
+            if name.lower() == line_name.lower():
+                self.net.line.at[l_idx, "in_service"] = False
+                return True
+        return False
+

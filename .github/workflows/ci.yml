@@ -1,0 +1,56 @@
+name: GridShield CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-and-verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install pytest httpx
+
+      - name: Run Backend Pytest Suite
+        run: |
+          pytest -v backend/tests/
+
+      - name: Run UI Anti-Pattern Linter
+        run: |
+          python scripts/ui_lint.py
+
+      - name: Run Explained Readability Checker
+        run: |
+          python scripts/readability_check.py
+
+      - name: Check Serverless Bundle Size
+        run: |
+          python scripts/check_bundle_size.py
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: Build Frontend SPA
+        run: |
+          cd frontend
+          npm ci
+          npm run build

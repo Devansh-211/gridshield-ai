@@ -306,9 +306,62 @@ export interface AnalystQuestionResponse {
   provenance: Provenance;
 }
 
+export type AlarmState = 'UNACK' | 'ACK' | 'RTN_UNACK' | 'SHELVED' | 'CLEARED';
+export type AlarmPriority = 'CRITICAL' | 'WARNING' | 'CAUTION' | 'DIAGNOSTIC';
+
+export interface AlarmRecord {
+  id: string;
+  run_id: string;
+  tag: string;
+  description: string;
+  priority: AlarmPriority;
+  state: AlarmState;
+  source_substation?: string | null;
+  source_component?: string | null;
+  setpoint_violated?: string | null;
+  current_value?: number | null;
+  limit_value?: number | null;
+  units?: string | null;
+  created_at_step: number;
+  created_at_wall?: string | null;
+  acknowledged_by?: string | null;
+  acknowledged_at?: string | null;
+  shelved_until?: string | null;
+  return_to_normal_at?: string | null;
+  provenance: Provenance;
+}
+
+export interface DemoStepResult {
+  step_index: number;
+  total_steps: number;
+  title: string;
+  stage_name: string;
+  summary_plain: string;
+  summary_technical: string;
+  sim_step: number;
+  alarms_raised: AlarmRecord[];
+  incidents_raised: string[];
+  actions_applied: string[];
+  next_step_index: number | null;
+  is_complete: boolean;
+  provenance: Provenance;
+}
+
+export interface LiveSessionState {
+  run_id: string;
+  status: string;
+  current_step: number;
+  total_steps: number;
+  active_alarms_count: number;
+  open_incidents_count: number;
+  grid_state: GridState;
+  provenance: Provenance;
+}
+
 export interface ErrorEnvelope {
   code: string;
   message: string;
   details?: Record<string, any> | null;
   request_id?: string | null;
 }
+

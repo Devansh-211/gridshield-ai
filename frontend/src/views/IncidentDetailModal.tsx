@@ -18,15 +18,10 @@ import { ProvenanceBadge } from '../components/ProvenanceBadge';
 import {
   X,
   ShieldAlert,
-  AlertTriangle,
-  Play,
   CheckCircle2,
   XCircle,
   Bot,
   Zap,
-  Activity,
-  FileText,
-  TrendingDown,
 } from 'lucide-react';
 
 interface IncidentDetailModalProps {
@@ -41,6 +36,7 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
   onUpdated,
 }) => {
   const [activeTab, setActiveTab] = useState<'evidence' | 'ai' | 'impact' | 'mitigation' | 'verification'>('evidence');
+  const [isPlainMode, setIsPlainMode] = useState<boolean>(true);
   const [impactResult, setImpactResult] = useState<ImpactResult | null>(null);
   const [mitigationPlan, setMitigationPlan] = useState<MitigationPlan | null>(incident.recommended_plan || null);
   const [mitigationResult, setMitigationResult] = useState<MitigationResult | null>(incident.mitigation_result || null);
@@ -103,12 +99,12 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
   const cyberEvidence = incident.evidence.filter((e: EvidenceItem) => e.domain === 'CYBER');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-      <div className="bg-surface border border-border rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 overflow-y-auto">
+      <div className="bg-surface border border-border rounded max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="p-4 bg-card border-b border-border flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-rose-500/20 border border-rose-500/40 rounded-lg">
+            <div className="p-2 bg-rose-900/60 border border-rose-700 rounded">
               <ShieldAlert className="w-5 h-5 text-rose-400" />
             </div>
             <div>
@@ -127,12 +123,34 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
               </p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setIsPlainMode(!isPlainMode)}
+              className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-xs font-mono text-cyan-300 border border-slate-700 rounded"
+            >
+              {isPlainMode ? 'Mode: Plain Words' : 'Mode: Technical'}
+            </button>
+            <button
+              onClick={onClose}
+              className="p-1.5 text-slate-400 hover:text-white rounded hover:bg-slate-800 transition"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Plain Language Summary Box */}
+        <div className="bg-slate-900 border-b border-slate-800 p-3 text-xs font-mono text-slate-300">
+          <span className="font-bold text-cyan-400 uppercase tracking-wide mr-2">In Plain Words:</span>
+          {isPlainMode ? (
+            <span>
+              The digital twin detected anomalous data on <strong className="text-white">{incident.affected_components.join(', ')}</strong>. The attribution engine identified a <strong className="text-amber-300">{incident.attribution.likely_cause}</strong> with <strong className="text-amber-300">{incident.certainty}</strong> confidence. Voltage readings diverged from physical grid laws.
+            </span>
+          ) : (
+            <span>
+              SCADA state estimation residual test J(x̂) exceeded threshold (χ² test). Attribution hypothesis: {incident.attribution.likely_cause} with certainty {incident.certainty}. Model version: {incident.model_version}.
+            </span>
+          )}
         </div>
 
         {/* Tab Navigation */}
@@ -163,7 +181,7 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
           {/* TAB 1: EVIDENCE & ATTRIBUTION */}
           {activeTab === 'evidence' && (
             <div className="space-y-4">
-              <div className="bg-background p-3.5 rounded-lg border border-slate-800 flex items-center justify-between">
+              <div className="bg-background p-3.5 rounded border border-slate-800 flex items-center justify-between">
                 <div>
                   <span className="text-slate-400 block text-[11px]">Attribution Engine Likely Cause:</span>
                   <span className="text-base font-bold text-cyan-400 uppercase">
@@ -182,7 +200,7 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Physical Evidence Column */}
-                <div className="bg-background p-4 rounded-xl border border-slate-800 space-y-2">
+                <div className="bg-background p-4 rounded border border-slate-800 space-y-2">
                   <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                     <span className="font-bold text-amber-400 uppercase flex items-center">
                       <Zap className="w-3.5 h-3.5 mr-1" />
@@ -205,7 +223,7 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
                 </div>
 
                 {/* Cyber Evidence Column */}
-                <div className="bg-background p-4 rounded-xl border border-slate-800 space-y-2">
+                <div className="bg-background p-4 rounded border border-slate-800 space-y-2">
                   <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                     <span className="font-bold text-purple-400 uppercase flex items-center">
                       <ShieldAlert className="w-3.5 h-3.5 mr-1" />
@@ -252,7 +270,7 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
               </div>
 
               {explanation ? (
-                <div className="bg-background p-4 rounded-xl border border-slate-800 space-y-3">
+                <div className="bg-background p-4 rounded border border-slate-800 space-y-3">
                   <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                     <span className="font-bold text-white text-sm">{explanation.title}</span>
                     <span className="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-cyan-400">
@@ -281,7 +299,7 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="p-8 text-center bg-background rounded-xl border border-slate-800 text-slate-400">
+                <div className="p-8 text-center bg-background rounded border border-slate-800 text-slate-400">
                   Click "Generate AI Explanation" to generate a grounded explanation citing evidence IDs.
                 </div>
               )}
@@ -306,8 +324,8 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
               </div>
 
               {impactResult ? (
-                <div className="bg-background p-4 rounded-xl border border-rose-500/30 space-y-3">
-                  <div className="p-3 bg-rose-950/40 border border-rose-500/40 rounded-lg text-rose-300 font-semibold">
+                <div className="bg-background p-4 rounded border border-rose-500/30 space-y-3">
+                  <div className="p-3 bg-rose-950/40 border border-rose-500/40 rounded text-rose-300 font-semibold">
                     {impactResult.summary}
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
@@ -330,7 +348,7 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="p-8 text-center bg-background rounded-xl border border-slate-800 text-slate-400">
+                <div className="p-8 text-center bg-background rounded border border-slate-800 text-slate-400">
                   Click "Simulate Forward Impact" to calculate grid degradation if left unaddressed.
                 </div>
               )}
@@ -356,7 +374,7 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
 
               <div className="space-y-2">
                 {incident.recommended_plan?.actions.map((act: MitigationInstruction, idx: number) => (
-                  <div key={idx} className="p-3.5 bg-background rounded-xl border border-slate-800 space-y-1">
+                  <div key={idx} className="p-3.5 bg-background rounded border border-slate-800 space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-emerald-400 uppercase">
                         Action {idx + 1}: {act.action_type}
@@ -393,7 +411,7 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
                 <div className="space-y-4">
                   {/* Status Banner */}
                   <div
-                    className={`p-3.5 rounded-xl border flex items-center space-x-3 ${
+                    className={`p-3.5 rounded border flex items-center space-x-3 ${
                       mitigationResult.success
                         ? 'bg-emerald-950/50 border-emerald-500/50 text-emerald-300'
                         : 'bg-rose-950/50 border-rose-500/50 text-rose-300'
@@ -408,7 +426,7 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
                   </div>
 
                   {/* 3-Way Comparison Table */}
-                  <div className="overflow-x-auto rounded-xl border border-slate-800 bg-background">
+                  <div className="overflow-x-auto rounded border border-slate-800 bg-background">
                     <table className="w-full text-left text-[11px]">
                       <thead className="bg-slate-900/90 text-slate-400 border-b border-slate-800 uppercase">
                         <tr>
@@ -454,7 +472,7 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="p-8 text-center bg-background rounded-xl border border-slate-800 text-slate-400">
+                <div className="p-8 text-center bg-background rounded border border-slate-800 text-slate-400">
                   Click "Execute Mitigation & Verify" to simulate remediation and generate the 3-way verification report.
                 </div>
               )}
@@ -466,7 +484,7 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
         <div className="p-3 bg-card border-t border-border flex justify-end space-x-2">
           <button
             onClick={onClose}
-            className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-mono font-semibold transition"
+            className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded text-xs font-mono font-semibold transition"
           >
             Close
           </button>

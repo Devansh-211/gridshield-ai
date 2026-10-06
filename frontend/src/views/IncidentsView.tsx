@@ -22,7 +22,7 @@ export const IncidentsView: React.FC<IncidentsViewProps> = ({
   return (
     <div className="space-y-4 max-w-5xl mx-auto font-mono">
       {/* Header */}
-      <div className="bg-surface/90 border border-border rounded-xl p-5 flex items-center justify-between">
+      <div className="bg-surface border border-border rounded p-4 flex items-center justify-between">
         <div>
           <div className="flex items-center space-x-2">
             <AlertTriangle className="w-5 h-5 text-amber-400" />
@@ -39,7 +39,7 @@ export const IncidentsView: React.FC<IncidentsViewProps> = ({
           <select
             value={filterSeverity}
             onChange={(e) => setFilterSeverity(e.target.value)}
-            className="bg-background border border-slate-700 rounded-lg p-1.5 text-xs text-white outline-none"
+            className="bg-background border border-slate-700 rounded p-1.5 text-xs text-white outline-none"
           >
             <option value="ALL">All Severities</option>
             <option value="CRITICAL">Critical</option>
@@ -53,22 +53,22 @@ export const IncidentsView: React.FC<IncidentsViewProps> = ({
       {/* Incident List */}
       <div className="space-y-3">
         {filteredIncidents.length === 0 ? (
-          <div className="bg-surface/50 border border-border rounded-xl p-8 text-center text-slate-500 text-xs">
+          <div className="bg-surface/50 border border-border rounded p-8 text-center text-slate-500 text-xs">
             No incidents found matching the selected filter. Run a scenario or demo to generate incidents.
           </div>
         ) : (
           filteredIncidents.map((inc) => (
             <div
               key={inc.incident_id}
-              className="bg-surface/90 border border-border hover:border-cyan-500/50 rounded-xl p-4 flex items-center justify-between transition-all shadow-sm group cursor-pointer"
+              className="bg-surface border border-border hover:border-slate-600 rounded p-4 flex items-center justify-between transition-colors shadow-sm group cursor-pointer"
               onClick={() => onSelectIncident(inc)}
             >
               <div className="flex items-center space-x-4">
-                <div className="p-2 bg-slate-900 border border-slate-800 rounded-lg group-hover:border-cyan-500/40">
+                <div className="p-2 bg-slate-900 border border-slate-800 rounded group-hover:border-slate-700">
                   <ShieldAlert
                     className={`w-5 h-5 ${
                       inc.risk.risk_level === 'CRITICAL' || inc.risk.risk_level === 'HIGH'
-                        ? 'text-rose-400 animate-pulse'
+                        ? 'text-rose-400'
                         : 'text-amber-400'
                     }`}
                   />
@@ -95,12 +95,12 @@ export const IncidentsView: React.FC<IncidentsViewProps> = ({
                   className={`px-2.5 py-1 rounded text-xs font-bold uppercase ${
                     inc.status === 'RESOLVED'
                       ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-800'
-                      : 'bg-rose-950/60 text-rose-400 border border-rose-800 animate-pulse'
+                      : 'bg-rose-950/60 text-rose-400 border border-rose-800'
                   }`}
                 >
                   {inc.status}
                 </span>
-                <button className="p-2 bg-slate-800 hover:bg-cyan-600 text-slate-300 hover:text-white rounded-lg transition">
+                <button className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded transition">
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>

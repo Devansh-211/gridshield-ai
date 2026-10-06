@@ -1,7 +1,7 @@
 import React from 'react';
 import { TimelineEvent } from '../../types/api';
 import { ProvenanceBadge } from './ProvenanceBadge';
-import { Clock, ShieldAlert, Cpu, AlertTriangle, CheckCircle, Info } from 'lucide-react';
+import { Clock, Cpu, AlertTriangle, CheckCircle, Info } from 'lucide-react';
 
 interface TimelineViewProps {
   events: TimelineEvent[];
@@ -30,7 +30,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
   };
 
   return (
-    <div className="bg-surface/90 border border-border rounded-xl p-4 flex flex-col h-full">
+    <div className="bg-surface/90 border border-border rounded p-4 flex flex-col h-full">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-2">
           <Clock className="w-4 h-4 text-cyan-400" />
@@ -50,7 +50,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
           displayEvents.map((evt) => (
             <div
               key={evt.id}
-              className="bg-background/80 border border-slate-800/80 rounded-lg p-2.5 flex items-start space-x-2.5 text-xs font-mono transition-all hover:border-slate-700"
+              className="bg-background/90 border border-slate-800 rounded p-2.5 flex items-start space-x-2.5 text-xs font-mono transition-colors hover:border-slate-700"
             >
               <div className="p-1 rounded bg-slate-900 border border-slate-800 mt-0.5">
                 {getEventIcon(evt.event_type)}

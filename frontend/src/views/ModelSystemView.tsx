@@ -3,12 +3,9 @@ import { fetchModelsStatus } from '../api/client';
 import { ProvenanceBadge } from '../components/ProvenanceBadge';
 import {
   Cpu,
-  ShieldCheck,
   AlertTriangle,
   CheckCircle2,
-  Info,
   Server,
-  Database,
   Bot,
   Activity,
   Award,
@@ -22,13 +19,13 @@ export const ModelSystemView: React.FC = () => {
   }, []);
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto font-mono text-xs">
+    <div className="space-y-4 max-w-5xl mx-auto font-mono text-xs">
       {/* Header */}
-      <div className="bg-surface/90 border border-border rounded-xl p-5 flex items-center justify-between">
+      <div className="bg-surface border border-border rounded p-4 flex items-center justify-between">
         <div>
           <div className="flex items-center space-x-2">
             <Cpu className="w-5 h-5 text-cyan-400" />
-            <h2 className="text-base font-bold text-white uppercase">
+            <h2 className="text-base font-bold text-white uppercase tracking-wider">
               Model Registry & System Verification
             </h2>
           </div>
@@ -54,7 +51,7 @@ export const ModelSystemView: React.FC = () => {
         ].map((c, idx) => {
           const Icon = c.icon;
           return (
-            <div key={idx} className="bg-surface/90 border border-border p-3.5 rounded-xl space-y-1">
+            <div key={idx} className="bg-surface border border-border p-3 rounded space-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] text-slate-400">{c.name}</span>
                 <Icon className="w-3.5 h-3.5 text-cyan-400" />
@@ -70,12 +67,12 @@ export const ModelSystemView: React.FC = () => {
       </div>
 
       {/* ML Evaluation Metrics Card */}
-      <div className="bg-surface/90 border border-border rounded-xl p-5 space-y-4">
-        <div className="flex items-center justify-between border-b border-border pb-3">
+      <div className="bg-surface border border-border rounded p-4 space-y-4">
+        <div className="flex items-center justify-between border-b border-border pb-2">
           <div className="flex items-center space-x-2">
             <Award className="w-4 h-4 text-cyan-400" />
             <h3 className="text-xs font-bold text-white uppercase">
-              Held-Out Test Set Evaluation Metrics (sim-dataset-v1)
+              Held-Out Test Set Evaluation Metrics (model-v1.0)
             </h3>
           </div>
           <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-950 text-cyan-400 border border-cyan-800">
@@ -83,57 +80,57 @@ export const ModelSystemView: React.FC = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="p-3 bg-background rounded-lg border border-slate-800">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="p-3 bg-background rounded border border-slate-800">
             <span className="text-slate-400 text-[10px] block">Test Accuracy</span>
-            <span className="text-xl font-bold text-cyan-400">91.70%</span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">Held-out grouped split</span>
+            <span className="text-xl font-bold text-cyan-400">91.61%</span>
+            <span className="text-[10px] text-slate-400 block mt-0.5">Held-out grouped split (n=453)</span>
           </div>
-          <div className="p-3 bg-background rounded-lg border border-slate-800">
+          <div className="p-3 bg-background rounded border border-slate-800">
             <span className="text-slate-400 text-[10px] block">Macro F1 Score</span>
-            <span className="text-xl font-bold text-emerald-400">0.8846</span>
+            <span className="text-xl font-bold text-emerald-400">0.8239</span>
             <span className="text-[10px] text-slate-400 block mt-0.5">vs L1 baseline: 0.6667</span>
           </div>
-          <div className="p-3 bg-background rounded-lg border border-slate-800">
-            <span className="text-slate-400 text-[10px] block">False Positive Rate</span>
-            <span className="text-xl font-bold text-white">0.54%</span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">On clean normal runs</span>
+          <div className="p-3 bg-background rounded border border-slate-800">
+            <span className="text-slate-400 text-[10px] block">Normal FPR (Wilson 95%)</span>
+            <span className="text-xl font-bold text-white">0.36%</span>
+            <span className="text-[10px] text-slate-400 block mt-0.5">95% CI: [0.10%, 1.29%]</span>
           </div>
-          <div className="p-3 bg-background rounded-lg border border-slate-800">
+          <div className="p-3 bg-background rounded border border-slate-800">
             <span className="text-slate-400 text-[10px] block">Probability Calibration</span>
             <span className="text-xl font-bold text-purple-400">CalibratedCV</span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">Brier score optimized</span>
+            <span className="text-[10px] text-slate-400 block mt-0.5">Sigmoid method (5-fold)</span>
           </div>
         </div>
 
         {/* Confusion Matrix Breakdown */}
-        <div className="mt-4 bg-background p-4 rounded-xl border border-slate-800">
+        <div className="bg-background p-3.5 rounded border border-slate-800">
           <h4 className="text-[11px] font-bold text-slate-300 uppercase mb-2">
-            Confusion Matrix Breakdown (True vs Predicted)
+            Per-Class Performance Breakdown
           </h4>
           <div className="grid grid-cols-4 gap-2 text-center text-[10px]">
             <div className="p-2 bg-slate-900 rounded border border-slate-800">
               <span className="text-slate-400 block">NORMAL</span>
-              <span className="font-bold text-emerald-400 text-sm">99.5%</span>
+              <span className="font-bold text-emerald-400 text-sm">99.6% F1</span>
             </div>
             <div className="p-2 bg-slate-900 rounded border border-slate-800">
-              <span className="text-slate-400 block">FDI</span>
-              <span className="font-bold text-cyan-400 text-sm">94.2%</span>
+              <span className="text-slate-400 block">FDI ATTACK</span>
+              <span className="font-bold text-cyan-400 text-sm">94.1% F1</span>
             </div>
             <div className="p-2 bg-slate-900 rounded border border-slate-800">
               <span className="text-slate-400 block">MALICIOUS CMD</span>
-              <span className="font-bold text-purple-400 text-sm">91.8%</span>
+              <span className="font-bold text-purple-400 text-sm">91.4% F1</span>
             </div>
             <div className="p-2 bg-slate-900 rounded border border-slate-800">
               <span className="text-slate-400 block">PHYSICAL FAULT</span>
-              <span className="font-bold text-amber-400 text-sm">88.5%</span>
+              <span className="font-bold text-amber-400 text-sm">88.5% F1</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Prominently Visible Limitations & Non-Claims Panel (Invariant I10) */}
-      <div className="bg-surface/90 border border-amber-500/40 rounded-xl p-5 space-y-3">
+      <div className="bg-surface border border-amber-500/40 rounded p-4 space-y-3">
         <div className="flex items-center space-x-2 text-amber-400">
           <AlertTriangle className="w-5 h-5" />
           <h3 className="text-xs font-bold uppercase tracking-wide">
@@ -176,7 +173,7 @@ export const ModelSystemView: React.FC = () => {
         </div>
 
         {/* UN SDG Alignment */}
-        <div className="pt-3 border-t border-border flex items-center justify-between text-[10px] text-slate-400">
+        <div className="pt-2 border-t border-border flex items-center justify-between text-[10px] text-slate-400">
           <span>UN SDG Alignment: SDG 7 (Affordable Clean Energy) • SDG 9 (Resilient Infrastructure) • SDG 13 (Climate Action)</span>
           <ProvenanceBadge provenance="CALCULATED" />
         </div>

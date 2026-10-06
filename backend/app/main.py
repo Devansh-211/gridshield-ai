@@ -34,16 +34,34 @@ app.add_middleware(
 )
 
 @app.middleware("http")
-async def add_request_id_and_timing(request: Request, call_next):
+async def add_visitor_and_timing(request: Request, call_next):
     request_id = request.headers.get("X-Request-ID", f"req-{uuid.uuid4().hex[:8]}")
     request.state.request_id = request_id
+    
+    # Visitor cookie isolation (Invariant I12)
+    visitor_id = request.cookies.get("gridshield_visitor_id")
+    is_new_visitor = False
+    if not visitor_id or not visitor_id.startswith("vis-"):
+        visitor_id = f"vis-{uuid.uuid4().hex[:12]}"
+        is_new_visitor = True
+    request.state.visitor_id = visitor_id
+    
     start_time = time.time()
-    
     response = await call_next(request)
-    
     process_time = (time.time() - start_time) * 1000.0
+    
     response.headers["X-Request-ID"] = request_id
     response.headers["X-Response-Time-Ms"] = f"{process_time:.2f}"
+    
+    if is_new_visitor or not request.cookies.get("gridshield_visitor_id"):
+        response.set_cookie(
+            key="gridshield_visitor_id",
+            value=visitor_id,
+            max_age=86400 * 30,
+            httponly=True,
+            samesite="lax",
+            secure=False  # True in HTTPS production
+        )
     return response
 
 @app.exception_handler(HTTPException)
@@ -73,12 +91,30 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     )
 
 @app.get("/health")
+@app.get("/api/v1/health")
 def get_health():
+    from backend.app.persistence.database import get_db_size_mb, IS_SQLITE, IS_VERCEL, ALLOW_EPHEMERAL_DB
+    from backend.app.persistence.database import get_db_session
+    db_status = "OK"
+    try:
+        with get_db_session() as session:
+            from sqlalchemy import text
+            session.execute(text("SELECT 1;"))
+    except Exception as e:
+        db_status = f"DB_UNAVAILABLE: {str(e)}"
+
     return {
-        "status": "HEALTHY",
+        "status": "HEALTHY" if db_status == "OK" else "DEGRADED",
         "system": "GridShield AI Digital Twin",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "database": {
+            "status": db_status,
+            "engine": "sqlite" if IS_SQLITE else "postgresql",
+            "size_mb": round(get_db_size_mb(), 2),
+            "ephemeral_warning": bool(IS_VERCEL and IS_SQLITE)
+        }
     }
 
 # Mount /api/v1 router
 app.include_router(api_v1_router)
+
