@@ -40,9 +40,14 @@ All work was executed on the dedicated git branch `workbench-mvp`. `main` remain
 - **Exercise & Replay Modes**: Visual scenario builder for disturbance/attack authoring and CSV/Parquet dataset replay engine.
 - **After-Action Report Export**: Generate JSON and Markdown evidence bundles with product boundary disclaimers.
 
+### 3. Recent Enhancements & UI/Telemetry Fixes
+- **Overview Active Alarms Synchronization**: Fixed alarm stream synchronization on the Overview console, auto-seeding baseline alarms on uninitialized SQLite databases, and providing instant optimistic UI updates on operator acknowledgment (`UNACK` $\rightarrow$ `ACK`).
+- **Layman's Terms Scenario Playbook**: Added an interactive plain-English guide in the Scenario Lab (`📘 Layman's Playbook`) with real-world analogies, step-by-step disturbance breakdowns, and one-click simulation launcher buttons.
+- **Multi-Page Live Telemetry Audit**: Wired rolling historian telemetry buffer to Trends view, real-time overlays to Grid Topology view, and fallback inspection capability to Incidents view.
+
 ---
 
 ## Test Verification Summary
-- **Backend Test Suite**: `105/105 PASS` across unit, integration, golden regression, and integrity test suites.
-- **Frontend Compilation**: `cmd /c npm run build` passed with `0` TypeScript errors.
-- **Git Branch Status**: `workbench-mvp` pushed to remote `origin/workbench-mvp`.
+- **Backend Test Suite**: `105/105 PASS` (100% pass rate across 20 test files in `backend/tests/` including API endpoints, state estimation, anomaly detection, attribution, risk engine, and golden regressions).
+- **Frontend Compilation**: `cmd /c npm run build` passed with `0` TypeScript errors (`dist/` production assets generated).
+- **Git Branch Status**: Fully committed and pushed to remote `origin/workbench-mvp`. Clean separation preserved from `main`.
