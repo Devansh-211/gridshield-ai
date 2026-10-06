@@ -53,3 +53,7 @@
 ### AD-13: Data & Evaluation Architecture & Benchmark Protocol (P4)
 - **Decision**: Multi-tier benchmark dataset generation with strict run-group splits (`dataset_generator.py`), held-out seed isolation, and Wilson 95% confidence intervals on binomial proportions (accuracy, normal False Positive Rate). All evaluation outputs persist as machine-readable JSON (`reports/eval/model-v1.0/metrics.json`) and human-readable Markdown (`REPORT.md`).
 - **Rationale**: Enforces Invariants I1, I2, I3 (Ground-Truth Firewall), I6 (Real ML), and I10 (Honest Claims). Feature extraction receives exclusively observed telemetry points and cyber events, never ground-truth states. Wilson 95% confidence intervals and multi-tier FDI sensitivity curves provide transparent, verifiable performance bounds on digital twin evaluations.
+
+### AD-14: Response Simulation, Action Allowlist & Non-Answer Invariants (P5)
+- **Decision**: Restrict mitigation actions strictly to an allowlisted catalog (`QUARANTINE_MEASUREMENT`, `REVERT_COMMAND`, `REDISPATCH_GEN`, `NO_ACTION`). Implement 3-way comparative verification (Baseline vs Unmitigated vs Mitigated) with forward-looking AC power flow impact simulation. Non-answer incident classifications (`UNKNOWN`, `INSUFFICIENT_DATA`, `MODEL_OUT_OF_DISTRIBUTION`) strictly trigger `NO_ACTION` (Rule R4).
+- **Rationale**: Prevents hallucinated or unauthorized grid interventions. 3-way verification guarantees operators receive concrete, physically validated before/after risk trajectories prior to executing any manual mitigation.
