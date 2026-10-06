@@ -1,0 +1,2489 @@
+{
+  "scenario_name": "fdi",
+  "spec": {
+    "scenario_type": "NORMAL",
+    "target_component": null,
+    "parameter_value": 0.0,
+    "start_step": 10,
+    "duration_steps": 100,
+    "total_steps": 10,
+    "seed": 104,
+    "attack": {
+      "attack_type": "FALSE_DATA_INJECTION",
+      "target_components": [
+        "Bus 4"
+      ],
+      "target_measurements": [
+        "v_pu"
+      ],
+      "magnitude": 0.15,
+      "start_step": 3,
+      "duration_steps": 4,
+      "seed": 104
+    }
+  },
+  "states": [
+    {
+      "step": 0,
+      "converged": true,
+      "frequency_hz": 60.310269,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 1.06,
+          "va_degree": 0.0,
+          "p_mw": -232.393272,
+          "q_mvar": 16.549301,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 1.045,
+          "va_degree": -4.982589,
+          "p_mw": -18.3,
+          "q_mvar": -30.8571,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 1.01,
+          "va_degree": -12.7251,
+          "p_mw": 94.2,
+          "q_mvar": -6.075348,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 1.017671,
+          "va_degree": -10.312901,
+          "p_mw": 47.8,
+          "q_mvar": -3.9,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 1.019514,
+          "va_degree": -8.773854,
+          "p_mw": 7.6,
+          "q_mvar": 1.6,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 1.07,
+          "va_degree": -14.220946,
+          "p_mw": 11.2,
+          "q_mvar": -5.230944,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 1.06152,
+          "va_degree": -13.359627,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 1.09,
+          "va_degree": -13.359627,
+          "p_mw": 0.0,
+          "q_mvar": -17.623451,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 1.055932,
+          "va_degree": -14.938521,
+          "p_mw": 29.5,
+          "q_mvar": -4.584844,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 1.050985,
+          "va_degree": -15.097288,
+          "p_mw": 9.0,
+          "q_mvar": 5.8,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 1.056907,
+          "va_degree": -14.790622,
+          "p_mw": 3.5,
+          "q_mvar": 1.8,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 1.055189,
+          "va_degree": -15.075585,
+          "p_mw": 6.1,
+          "q_mvar": 1.6,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 1.050382,
+          "va_degree": -15.156276,
+          "p_mw": 13.5,
+          "q_mvar": 5.8,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 1.03553,
+          "va_degree": -16.033645,
+          "p_mw": 14.9,
+          "q_mvar": 5.0,
+          "status": "NORMAL"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 1.507568,
+          "in_service": true
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.721097,
+          "in_service": true
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.709395,
+          "in_service": true
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.542776,
+          "in_service": true
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.402912,
+          "in_service": true
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.239686,
+          "in_service": true
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.627022,
+          "in_service": true
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.077126,
+          "in_service": true
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.077208,
+          "in_service": true
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.180865,
+          "in_service": true
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.064262,
+          "in_service": true
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.096559,
+          "in_service": true
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.039554,
+          "in_service": true
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.017055,
+          "in_service": true
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.056815,
+          "in_service": true
+        }
+      ]
+    },
+    {
+      "step": 1,
+      "converged": true,
+      "frequency_hz": 59.938687,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 1.06,
+          "va_degree": 0.0,
+          "p_mw": -232.696455,
+          "q_mvar": 16.593639,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 1.045,
+          "va_degree": -4.989644,
+          "p_mw": -18.277277,
+          "q_mvar": -30.945678,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 1.01,
+          "va_degree": -12.741044,
+          "p_mw": 94.298639,
+          "q_mvar": -6.13288,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 1.017641,
+          "va_degree": -10.325458,
+          "p_mw": 47.850052,
+          "q_mvar": -3.904084,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 1.019486,
+          "va_degree": -8.784692,
+          "p_mw": 7.607958,
+          "q_mvar": 1.601675,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 1.07,
+          "va_degree": -14.238036,
+          "p_mw": 11.211728,
+          "q_mvar": -5.274499,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 1.061489,
+          "va_degree": -13.375408,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 1.09,
+          "va_degree": -13.375408,
+          "p_mw": 0.0,
+          "q_mvar": -17.642549,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 1.055884,
+          "va_degree": -14.955997,
+          "p_mw": 29.53089,
+          "q_mvar": -4.56555,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 1.050937,
+          "va_degree": -15.114996,
+          "p_mw": 9.009424,
+          "q_mvar": 5.806073,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 1.056879,
+          "va_degree": -14.808136,
+          "p_mw": 3.503665,
+          "q_mvar": 1.801885,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 1.05517,
+          "va_degree": -15.093582,
+          "p_mw": 6.106387,
+          "q_mvar": 1.601675,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 1.050356,
+          "va_degree": -15.174305,
+          "p_mw": 13.514136,
+          "q_mvar": 5.806073,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 1.035472,
+          "va_degree": -16.052496,
+          "p_mw": 14.915602,
+          "q_mvar": 5.005236,
+          "status": "NORMAL"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 1.509645,
+          "in_service": true
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.721948,
+          "in_service": true
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.710152,
+          "in_service": true
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.54333,
+          "in_service": true
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.403314,
+          "in_service": true
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.239984,
+          "in_service": true
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.627704,
+          "in_service": true
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.077247,
+          "in_service": true
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.077296,
+          "in_service": true
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.181079,
+          "in_service": true
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.064283,
+          "in_service": true
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.096641,
+          "in_service": true
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.039633,
+          "in_service": true
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.01708,
+          "in_service": true
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.0569,
+          "in_service": true
+        }
+      ]
+    },
+    {
+      "step": 2,
+      "converged": true,
+      "frequency_hz": 60.385327,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 1.06,
+          "va_degree": 0.0,
+          "p_mw": -232.999548,
+          "q_mvar": 16.637914,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 1.045,
+          "va_degree": -4.996697,
+          "p_mw": -18.254565,
+          "q_mvar": -31.034291,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 1.01,
+          "va_degree": -12.756983,
+          "p_mw": 94.397234,
+          "q_mvar": -6.190411,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 1.01761,
+          "va_degree": -10.33801,
+          "p_mw": 47.900083,
+          "q_mvar": -3.908166,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 1.019457,
+          "va_degree": -8.795527,
+          "p_mw": 7.615913,
+          "q_mvar": 1.60335,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 1.07,
+          "va_degree": -14.25512,
+          "p_mw": 11.22345,
+          "q_mvar": -5.318054,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 1.061458,
+          "va_degree": -13.391185,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 1.09,
+          "va_degree": -13.391185,
+          "p_mw": 0.0,
+          "q_mvar": -17.661645,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 1.055836,
+          "va_degree": -14.973467,
+          "p_mw": 29.561767,
+          "q_mvar": -4.546263,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 1.05089,
+          "va_degree": -15.132698,
+          "p_mw": 9.018844,
+          "q_mvar": 5.812144,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 1.056851,
+          "va_degree": -14.825645,
+          "p_mw": 3.507328,
+          "q_mvar": 1.803769,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 1.055152,
+          "va_degree": -15.111575,
+          "p_mw": 6.112772,
+          "q_mvar": 1.60335,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 1.05033,
+          "va_degree": -15.192329,
+          "p_mw": 13.528266,
+          "q_mvar": 5.812144,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 1.035413,
+          "va_degree": -16.071341,
+          "p_mw": 14.931197,
+          "q_mvar": 5.010469,
+          "status": "NORMAL"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 1.511722,
+          "in_service": true
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.7228,
+          "in_service": true
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.710909,
+          "in_service": true
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.543883,
+          "in_service": true
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.403715,
+          "in_service": true
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.240281,
+          "in_service": true
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.628386,
+          "in_service": true
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.077369,
+          "in_service": true
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.077384,
+          "in_service": true
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.181292,
+          "in_service": true
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.064304,
+          "in_service": true
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.096724,
+          "in_service": true
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.039713,
+          "in_service": true
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.017105,
+          "in_service": true
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.056984,
+          "in_service": true
+        }
+      ]
+    },
+    {
+      "step": 3,
+      "converged": true,
+      "frequency_hz": 59.850101,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 1.06,
+          "va_degree": 0.0,
+          "p_mw": -233.30242,
+          "q_mvar": 16.682106,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 1.045,
+          "va_degree": -5.003745,
+          "p_mw": -18.231872,
+          "q_mvar": -31.1229,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 1.01,
+          "va_degree": -12.77291,
+          "p_mw": 94.495743,
+          "q_mvar": -6.247917,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 1.01758,
+          "va_degree": -10.350553,
+          "p_mw": 47.950069,
+          "q_mvar": -3.912244,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 1.019429,
+          "va_degree": -8.806353,
+          "p_mw": 7.62386,
+          "q_mvar": 1.605023,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 1.07,
+          "va_degree": -14.272191,
+          "p_mw": 11.235163,
+          "q_mvar": -5.361592,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 1.061427,
+          "va_degree": -13.406949,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 1.09,
+          "va_degree": -13.406949,
+          "p_mw": 0.0,
+          "q_mvar": -17.680733,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 1.055789,
+          "va_degree": -14.990923,
+          "p_mw": 29.592616,
+          "q_mvar": -4.526993,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 1.050843,
+          "va_degree": -15.150386,
+          "p_mw": 9.028256,
+          "q_mvar": 5.818209,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 1.056823,
+          "va_degree": -14.843141,
+          "p_mw": 3.510988,
+          "q_mvar": 1.805651,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 1.055133,
+          "va_degree": -15.129553,
+          "p_mw": 6.119151,
+          "q_mvar": 1.605023,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 1.050304,
+          "va_degree": -15.210339,
+          "p_mw": 13.542384,
+          "q_mvar": 5.818209,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 1.035355,
+          "va_degree": -16.090172,
+          "p_mw": 14.946779,
+          "q_mvar": 5.015698,
+          "status": "NORMAL"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 1.513797,
+          "in_service": true
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.72365,
+          "in_service": true
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.711666,
+          "in_service": true
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.544436,
+          "in_service": true
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.404117,
+          "in_service": true
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.240578,
+          "in_service": true
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.629067,
+          "in_service": true
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.07749,
+          "in_service": true
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.077473,
+          "in_service": true
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.181506,
+          "in_service": true
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.064324,
+          "in_service": true
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.096807,
+          "in_service": true
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.039793,
+          "in_service": true
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.017131,
+          "in_service": true
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.057069,
+          "in_service": true
+        }
+      ]
+    },
+    {
+      "step": 4,
+      "converged": true,
+      "frequency_hz": 60.497061,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 1.06,
+          "va_degree": 0.0,
+          "p_mw": -233.775312,
+          "q_mvar": -12.291551,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 1.03,
+          "va_degree": -4.807779,
+          "p_mw": -18.20921,
+          "q_mvar": 13.389018,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 1.01,
+          "va_degree": -12.943928,
+          "p_mw": 94.594123,
+          "q_mvar": -17.820177,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 1.011666,
+          "va_degree": -10.40401,
+          "p_mw": 47.99999,
+          "q_mvar": -3.916317,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 1.013443,
+          "va_degree": -8.840467,
+          "p_mw": 7.631798,
+          "q_mvar": 1.606694,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 1.07,
+          "va_degree": -14.371869,
+          "p_mw": 11.24686,
+          "q_mvar": -9.030171,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 1.058722,
+          "va_degree": -13.476015,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 1.09,
+          "va_degree": -13.476015,
+          "p_mw": 0.0,
+          "q_mvar": -19.354394,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 1.053157,
+          "va_degree": -15.062774,
+          "p_mw": 29.623425,
+          "q_mvar": -4.404201,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 1.048652,
+          "va_degree": -15.226978,
+          "p_mw": 9.037655,
+          "q_mvar": 5.824267,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 1.055698,
+          "va_degree": -14.929801,
+          "p_mw": 3.514644,
+          "q_mvar": 1.807531,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 1.05492,
+          "va_degree": -15.230118,
+          "p_mw": 6.125522,
+          "q_mvar": 1.606694,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 1.049896,
+          "va_degree": -15.306639,
+          "p_mw": 13.556483,
+          "q_mvar": 5.824267,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 1.033643,
+          "va_degree": -16.176547,
+          "p_mw": 14.96234,
+          "q_mvar": 5.020919,
+          "status": "NORMAL"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 1.502441,
+          "in_service": true
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.732066,
+          "in_service": true
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.72617,
+          "in_service": true
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.553194,
+          "in_service": true
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.408683,
+          "in_service": true
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.248659,
+          "in_service": true
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.633098,
+          "in_service": true
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.080904,
+          "in_service": true
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.078032,
+          "in_service": true
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.183333,
+          "in_service": true
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.060629,
+          "in_service": true
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.095154,
+          "in_service": true
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.043102,
+          "in_service": true
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.017687,
+          "in_service": true
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.05908,
+          "in_service": true
+        }
+      ]
+    },
+    {
+      "step": 5,
+      "converged": true,
+      "frequency_hz": 59.734036,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 1.06,
+          "va_degree": 0.0,
+          "p_mw": -234.620623,
+          "q_mvar": -44.044962,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 1.013886,
+          "va_degree": -4.598984,
+          "p_mw": -18.186587,
+          "q_mvar": 52.766376,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 1.00027,
+          "va_degree": -13.039134,
+          "p_mw": 94.692329,
+          "q_mvar": -20.900698,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 1.002991,
+          "va_degree": -10.461078,
+          "p_mw": 48.049823,
+          "q_mvar": -3.920383,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 1.005565,
+          "va_degree": -8.88214,
+          "p_mw": 7.639721,
+          "q_mvar": 1.608362,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 1.07,
+          "va_degree": -14.50085,
+          "p_mw": 11.258536,
+          "q_mvar": -13.990643,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 1.054765,
+          "va_degree": -13.556336,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 1.09,
+          "va_degree": -13.556336,
+          "p_mw": 0.0,
+          "q_mvar": -21.802909,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 1.049319,
+          "va_degree": -15.147184,
+          "p_mw": 29.654179,
+          "q_mvar": -4.233589,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 1.045461,
+          "va_degree": -15.318901,
+          "p_mw": 9.047038,
+          "q_mvar": 5.830313,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 1.054061,
+          "va_degree": -15.038053,
+          "p_mw": 3.518292,
+          "q_mvar": 1.809408,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 1.054615,
+          "va_degree": -15.359752,
+          "p_mw": 6.131881,
+          "q_mvar": 1.608362,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 1.04931,
+          "va_degree": -15.429758,
+          "p_mw": 13.570557,
+          "q_mvar": 5.830313,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 1.03116,
+          "va_degree": -16.28305,
+          "p_mw": 14.977874,
+          "q_mvar": 5.026132,
+          "status": "NORMAL"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 1.547326,
+          "in_service": true
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.744134,
+          "in_service": true
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.740747,
+          "in_service": true
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.567313,
+          "in_service": true
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.422481,
+          "in_service": true
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.250198,
+          "in_service": true
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.635531,
+          "in_service": true
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.086126,
+          "in_service": true
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.078808,
+          "in_service": true
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.18592,
+          "in_service": true
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.055647,
+          "in_service": true
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.092898,
+          "in_service": true
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.048469,
+          "in_service": true
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.018504,
+          "in_service": true
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.062166,
+          "in_service": true
+        }
+      ]
+    },
+    {
+      "step": 6,
+      "converged": true,
+      "frequency_hz": 60.650465,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 1.06,
+          "va_degree": 0.0,
+          "p_mw": -234.924537,
+          "q_mvar": -44.145829,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 1.013816,
+          "va_degree": -4.605209,
+          "p_mw": -18.164013,
+          "q_mvar": 52.779587,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 1.000132,
+          "va_degree": -13.054884,
+          "p_mw": 94.79032,
+          "q_mvar": -20.880933,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 1.002899,
+          "va_degree": -10.474064,
+          "p_mw": 48.099546,
+          "q_mvar": -3.92444,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 1.005488,
+          "va_degree": -8.89335,
+          "p_mw": 7.647627,
+          "q_mvar": 1.610027,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 1.07,
+          "va_degree": -14.518921,
+          "p_mw": 11.270187,
+          "q_mvar": -14.066246,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 1.054707,
+          "va_degree": -13.572743,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 1.09,
+          "va_degree": -13.572743,
+          "p_mw": 0.0,
+          "q_mvar": -21.839264,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 1.049245,
+          "va_degree": -15.165315,
+          "p_mw": 29.684867,
+          "q_mvar": -4.213347,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 1.045391,
+          "va_degree": -15.337319,
+          "p_mw": 9.0564,
+          "q_mvar": 5.836347,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 1.054022,
+          "va_degree": -15.056397,
+          "p_mw": 3.521933,
+          "q_mvar": 1.81128,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 1.054594,
+          "va_degree": -15.378726,
+          "p_mw": 6.138227,
+          "q_mvar": 1.610027,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 1.04928,
+          "va_degree": -15.448717,
+          "p_mw": 13.5846,
+          "q_mvar": 5.836347,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 1.031084,
+          "va_degree": -16.30271,
+          "p_mw": 14.993373,
+          "q_mvar": 5.031333,
+          "status": "NORMAL"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 1.549436,
+          "in_service": true
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.745055,
+          "in_service": true
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.741517,
+          "in_service": true
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.56792,
+          "in_service": true
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.422936,
+          "in_service": true
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.250444,
+          "in_service": true
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.636216,
+          "in_service": true
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.08629,
+          "in_service": true
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.078901,
+          "in_service": true
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.186151,
+          "in_service": true
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.055641,
+          "in_service": true
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.092966,
+          "in_service": true
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.048598,
+          "in_service": true
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.018536,
+          "in_service": true
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.062276,
+          "in_service": true
+        }
+      ]
+    },
+    {
+      "step": 7,
+      "converged": true,
+      "frequency_hz": 59.549824,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 1.06,
+          "va_degree": 0.0,
+          "p_mw": -235.153235,
+          "q_mvar": -39.295105,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 1.015589,
+          "va_degree": -4.630752,
+          "p_mw": -18.1415,
+          "q_mvar": 52.792763,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 1.003115,
+          "va_degree": -13.057673,
+          "p_mw": 94.888051,
+          "q_mvar": -20.861221,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 1.006927,
+          "va_degree": -10.509325,
+          "p_mw": 48.149138,
+          "q_mvar": -3.928486,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 1.009197,
+          "va_degree": -8.933663,
+          "p_mw": 7.655512,
+          "q_mvar": 1.611687,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 1.078769,
+          "va_degree": -14.510905,
+          "p_mw": 11.281806,
+          "q_mvar": -16.445219,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 1.062542,
+          "va_degree": -13.570054,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 1.100942,
+          "va_degree": -13.570054,
+          "p_mw": 0.0,
+          "q_mvar": -24.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 1.05707,
+          "va_degree": -15.137758,
+          "p_mw": 29.715472,
+          "q_mvar": -4.509284,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 1.053432,
+          "va_degree": -15.308542,
+          "p_mw": 9.065737,
+          "q_mvar": 5.842364,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 1.062443,
+          "va_degree": -15.03544,
+          "p_mw": 3.525565,
+          "q_mvar": 1.813147,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 1.063397,
+          "va_degree": -15.357577,
+          "p_mw": 6.144555,
+          "q_mvar": 1.611687,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 1.058044,
+          "va_degree": -15.424823,
+          "p_mw": 13.598606,
+          "q_mvar": 5.842364,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 1.039448,
+          "va_degree": -16.261632,
+          "p_mw": 15.008832,
+          "q_mvar": 5.036521,
+          "status": "NORMAL"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 1.542846,
+          "in_service": true
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.743664,
+          "in_service": true
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.740937,
+          "in_service": true
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.569684,
+          "in_service": true
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.424915,
+          "in_service": true
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.248469,
+          "in_service": true
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.635989,
+          "in_service": true
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.087265,
+          "in_service": true
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.078526,
+          "in_service": true
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.185499,
+          "in_service": true
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.053802,
+          "in_service": true
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.09155,
+          "in_service": true
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.049938,
+          "in_service": true
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.018633,
+          "in_service": true
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.062762,
+          "in_service": true
+        }
+      ]
+    },
+    {
+      "step": 8,
+      "converged": true,
+      "frequency_hz": 60.871426,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 1.06,
+          "va_degree": 0.0,
+          "p_mw": -235.45707,
+          "q_mvar": -39.529322,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 1.01547,
+          "va_degree": -4.636416,
+          "p_mw": -18.119056,
+          "q_mvar": 52.805898,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 1.002895,
+          "va_degree": -13.073636,
+          "p_mw": 94.985481,
+          "q_mvar": -20.84157,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 1.006726,
+          "va_degree": -10.521643,
+          "p_mw": 48.198577,
+          "q_mvar": -3.93252,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 1.009017,
+          "va_degree": -8.943944,
+          "p_mw": 7.663372,
+          "q_mvar": 1.613341,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 1.078508,
+          "va_degree": -14.529248,
+          "p_mw": 11.29339,
+          "q_mvar": -16.437462,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 1.062289,
+          "va_degree": -13.586948,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 1.100697,
+          "va_degree": -13.586948,
+          "p_mw": 0.0,
+          "q_mvar": -24.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 1.056789,
+          "va_degree": -15.1571,
+          "p_mw": 29.745984,
+          "q_mvar": -4.480858,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 1.053145,
+          "va_degree": -15.328148,
+          "p_mw": 9.075046,
+          "q_mvar": 5.848363,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 1.062164,
+          "va_degree": -15.054607,
+          "p_mw": 3.529185,
+          "q_mvar": 1.815009,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 1.063117,
+          "va_degree": -15.377218,
+          "p_mw": 6.150864,
+          "q_mvar": 1.613341,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 1.057758,
+          "va_degree": -15.44458,
+          "p_mw": 13.612569,
+          "q_mvar": 5.848363,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 1.039141,
+          "va_degree": -16.282745,
+          "p_mw": 15.024243,
+          "q_mvar": 5.041692,
+          "status": "NORMAL"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 1.545167,
+          "in_service": true
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.744634,
+          "in_service": true
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.741735,
+          "in_service": true
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.570254,
+          "in_service": true
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.425316,
+          "in_service": true
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.248774,
+          "in_service": true
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.636723,
+          "in_service": true
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.087365,
+          "in_service": true
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.078626,
+          "in_service": true
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.185735,
+          "in_service": true
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.053884,
+          "in_service": true
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.091678,
+          "in_service": true
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.049989,
+          "in_service": true
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.018656,
+          "in_service": true
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.062837,
+          "in_service": true
+        }
+      ]
+    },
+    {
+      "step": 9,
+      "converged": true,
+      "frequency_hz": 59.286335,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 1.06,
+          "va_degree": 0.0,
+          "p_mw": -235.759906,
+          "q_mvar": -39.763023,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 1.015351,
+          "va_degree": -4.642061,
+          "p_mw": -18.096691,
+          "q_mvar": 52.818987,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 1.002675,
+          "va_degree": -13.089553,
+          "p_mw": 95.082566,
+          "q_mvar": -20.821988,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 1.006526,
+          "va_degree": -10.533924,
+          "p_mw": 48.247841,
+          "q_mvar": -3.936539,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 1.008837,
+          "va_degree": -8.954194,
+          "p_mw": 7.671205,
+          "q_mvar": 1.614991,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 1.078248,
+          "va_degree": -14.547539,
+          "p_mw": 11.304934,
+          "q_mvar": -16.429732,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 1.062036,
+          "va_degree": -13.603796,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 1.100453,
+          "va_degree": -13.603796,
+          "p_mw": 0.0,
+          "q_mvar": -24.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 1.05651,
+          "va_degree": -15.176388,
+          "p_mw": 29.776387,
+          "q_mvar": -4.452524,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 1.05286,
+          "va_degree": -15.347701,
+          "p_mw": 9.084322,
+          "q_mvar": 5.854341,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 1.061887,
+          "va_degree": -15.073721,
+          "p_mw": 3.532792,
+          "q_mvar": 1.816864,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 1.062837,
+          "va_degree": -15.396806,
+          "p_mw": 6.157151,
+          "q_mvar": 1.614991,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 1.057472,
+          "va_degree": -15.464284,
+          "p_mw": 13.626482,
+          "q_mvar": 5.854341,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 1.038835,
+          "va_degree": -16.303801,
+          "p_mw": 15.039599,
+          "q_mvar": 5.046845,
+          "status": "NORMAL"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 1.547481,
+          "in_service": true
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.745602,
+          "in_service": true
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.74253,
+          "in_service": true
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.570823,
+          "in_service": true
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.425716,
+          "in_service": true
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.249079,
+          "in_service": true
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.637455,
+          "in_service": true
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.087464,
+          "in_service": true
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.078726,
+          "in_service": true
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.18597,
+          "in_service": true
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.053966,
+          "in_service": true
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.091805,
+          "in_service": true
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.050039,
+          "in_service": true
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.018679,
+          "in_service": true
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.062912,
+          "in_service": true
+        }
+      ]
+    }
+  ],
+  "observed_telemetry_sample": [
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 1.06281,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -232.1132,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": 16.2381,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 1.04495,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -18.2997,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": -30.8284,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 1.02091,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 94.0581,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 1.06167,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -232.6162,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": 16.2503,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 1.0529,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -18.0711,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": -30.9221,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 1.00899,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 94.0657,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 1.06613,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -233.4836,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": 16.4134,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 1.04866,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -18.6593,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": -31.5372,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 1.01398,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 94.1059,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 1.05619,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -233.5722,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": 16.3438,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 1.04652,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -17.8628,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": -30.4899,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 1.01095,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 94.1711,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 1.06612,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -233.1686,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": -12.7034,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 1.02648,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -18.3494,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": 14.0456,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 1.00439,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 94.3388,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 1.06446,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -234.3117,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": -43.9751,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 1.00822,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -18.4428,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": 53.1384,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 1.00928,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 94.4351,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 1.05685,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -234.6126,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": -43.6568,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 1.01039,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -18.3874,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": 53.1792,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 1.00024,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 95.6323,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 1.05737,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -235.5144,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": -38.7962,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 1.01271,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -17.0218,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": 52.933,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 1.00429,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 95.2755,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 1.06084,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -235.6776,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": -38.895,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 1.01468,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -18.7057,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": 53.1991,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 1.00191,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 94.5536,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 1.06139,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -236.0938,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": -40.4921,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 1.0091,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -17.4004,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": 53.1536,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 0.99886,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 95.3927,
+        "quality": "GOOD"
+      }
+    ]
+  ]
+}

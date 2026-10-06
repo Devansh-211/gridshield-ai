@@ -29,3 +29,12 @@
 ### AD-07: uPlot Time-Series Engine Replacement for Recharts
 - **Decision**: Replace Recharts in historian views with uPlot.
 - **Rationale**: uPlot provides superior high-density rendering of thousands of sample points with zero spline smoothing, explicit threshold limit lines, shared crosshairs, and fixed cursor readout panels without layout shifts.
+
+### AD-08: Pre-Refactor Golden Fixtures & Regression Tolerances (P1)
+- **Decision**: Lock 6 canonical scenarios (normal, generator trip, line outage, sensor fault, FDI, cyber-physical) into `tests/golden/*.json` with relative tolerance `1e-4` and absolute tolerance `1e-5` for voltages and `1e-4 Hz` for frequency.
+- **Rationale**: Guarantees zero physics drift or mathematical regression across future refactors (P2 through P6).
+
+### AD-09: Target Python Environment & Toolchain Pinning (P1)
+- **Decision**: Standardize on Python 3.12 for production serverless deployment and CI while maintaining forward compatibility with Python 3.14 for local development.
+- **Rationale**: Pandapower and SciPy pre-built binary wheels are fully mature on Python 3.12 across all OS platforms and cloud serverless runtimes.
+

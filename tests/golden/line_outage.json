@@ -1,0 +1,2477 @@
+{
+  "scenario_name": "line_outage",
+  "spec": {
+    "scenario_type": "LINE_FAILURE",
+    "target_component": "Line 1-2",
+    "parameter_value": 0.0,
+    "start_step": 3,
+    "duration_steps": 100,
+    "total_steps": 10,
+    "seed": 102,
+    "attack": null
+  },
+  "states": [
+    {
+      "step": 0,
+      "converged": true,
+      "frequency_hz": 60.310269,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 1.06,
+          "va_degree": 0.0,
+          "p_mw": -232.393272,
+          "q_mvar": 16.549301,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 1.045,
+          "va_degree": -4.982589,
+          "p_mw": -18.3,
+          "q_mvar": -30.8571,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 1.01,
+          "va_degree": -12.7251,
+          "p_mw": 94.2,
+          "q_mvar": -6.075348,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 1.017671,
+          "va_degree": -10.312901,
+          "p_mw": 47.8,
+          "q_mvar": -3.9,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 1.019514,
+          "va_degree": -8.773854,
+          "p_mw": 7.6,
+          "q_mvar": 1.6,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 1.07,
+          "va_degree": -14.220946,
+          "p_mw": 11.2,
+          "q_mvar": -5.230944,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 1.06152,
+          "va_degree": -13.359627,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 1.09,
+          "va_degree": -13.359627,
+          "p_mw": 0.0,
+          "q_mvar": -17.623451,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 1.055932,
+          "va_degree": -14.938521,
+          "p_mw": 29.5,
+          "q_mvar": -4.584844,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 1.050985,
+          "va_degree": -15.097288,
+          "p_mw": 9.0,
+          "q_mvar": 5.8,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 1.056907,
+          "va_degree": -14.790622,
+          "p_mw": 3.5,
+          "q_mvar": 1.8,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 1.055189,
+          "va_degree": -15.075585,
+          "p_mw": 6.1,
+          "q_mvar": 1.6,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 1.050382,
+          "va_degree": -15.156276,
+          "p_mw": 13.5,
+          "q_mvar": 5.8,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 1.03553,
+          "va_degree": -16.033645,
+          "p_mw": 14.9,
+          "q_mvar": 5.0,
+          "status": "NORMAL"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 1.507568,
+          "in_service": true
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.721097,
+          "in_service": true
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.709395,
+          "in_service": true
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.542776,
+          "in_service": true
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.402912,
+          "in_service": true
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.239686,
+          "in_service": true
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.627022,
+          "in_service": true
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.077126,
+          "in_service": true
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.077208,
+          "in_service": true
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.180865,
+          "in_service": true
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.064262,
+          "in_service": true
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.096559,
+          "in_service": true
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.039554,
+          "in_service": true
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.017055,
+          "in_service": true
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.056815,
+          "in_service": true
+        }
+      ]
+    },
+    {
+      "step": 1,
+      "converged": true,
+      "frequency_hz": 59.938687,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 1.06,
+          "va_degree": 0.0,
+          "p_mw": -232.696455,
+          "q_mvar": 16.593639,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 1.045,
+          "va_degree": -4.989644,
+          "p_mw": -18.277277,
+          "q_mvar": -30.945678,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 1.01,
+          "va_degree": -12.741044,
+          "p_mw": 94.298639,
+          "q_mvar": -6.13288,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 1.017641,
+          "va_degree": -10.325458,
+          "p_mw": 47.850052,
+          "q_mvar": -3.904084,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 1.019486,
+          "va_degree": -8.784692,
+          "p_mw": 7.607958,
+          "q_mvar": 1.601675,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 1.07,
+          "va_degree": -14.238036,
+          "p_mw": 11.211728,
+          "q_mvar": -5.274499,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 1.061489,
+          "va_degree": -13.375408,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 1.09,
+          "va_degree": -13.375408,
+          "p_mw": 0.0,
+          "q_mvar": -17.642549,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 1.055884,
+          "va_degree": -14.955997,
+          "p_mw": 29.53089,
+          "q_mvar": -4.56555,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 1.050937,
+          "va_degree": -15.114996,
+          "p_mw": 9.009424,
+          "q_mvar": 5.806073,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 1.056879,
+          "va_degree": -14.808136,
+          "p_mw": 3.503665,
+          "q_mvar": 1.801885,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 1.05517,
+          "va_degree": -15.093582,
+          "p_mw": 6.106387,
+          "q_mvar": 1.601675,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 1.050356,
+          "va_degree": -15.174305,
+          "p_mw": 13.514136,
+          "q_mvar": 5.806073,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 1.035472,
+          "va_degree": -16.052496,
+          "p_mw": 14.915602,
+          "q_mvar": 5.005236,
+          "status": "NORMAL"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 1.509645,
+          "in_service": true
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.721948,
+          "in_service": true
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.710152,
+          "in_service": true
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.54333,
+          "in_service": true
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.403314,
+          "in_service": true
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.239984,
+          "in_service": true
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.627704,
+          "in_service": true
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.077247,
+          "in_service": true
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.077296,
+          "in_service": true
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.181079,
+          "in_service": true
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.064283,
+          "in_service": true
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.096641,
+          "in_service": true
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.039633,
+          "in_service": true
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.01708,
+          "in_service": true
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.0569,
+          "in_service": true
+        }
+      ]
+    },
+    {
+      "step": 2,
+      "converged": true,
+      "frequency_hz": 60.385327,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 1.06,
+          "va_degree": 0.0,
+          "p_mw": -232.999548,
+          "q_mvar": 16.637914,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 1.045,
+          "va_degree": -4.996697,
+          "p_mw": -18.254565,
+          "q_mvar": -31.034291,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 1.01,
+          "va_degree": -12.756983,
+          "p_mw": 94.397234,
+          "q_mvar": -6.190411,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 1.01761,
+          "va_degree": -10.33801,
+          "p_mw": 47.900083,
+          "q_mvar": -3.908166,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 1.019457,
+          "va_degree": -8.795527,
+          "p_mw": 7.615913,
+          "q_mvar": 1.60335,
+          "status": "NORMAL"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 1.07,
+          "va_degree": -14.25512,
+          "p_mw": 11.22345,
+          "q_mvar": -5.318054,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 1.061458,
+          "va_degree": -13.391185,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 1.09,
+          "va_degree": -13.391185,
+          "p_mw": 0.0,
+          "q_mvar": -17.661645,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 1.055836,
+          "va_degree": -14.973467,
+          "p_mw": 29.561767,
+          "q_mvar": -4.546263,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 1.05089,
+          "va_degree": -15.132698,
+          "p_mw": 9.018844,
+          "q_mvar": 5.812144,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 1.056851,
+          "va_degree": -14.825645,
+          "p_mw": 3.507328,
+          "q_mvar": 1.803769,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 1.055152,
+          "va_degree": -15.111575,
+          "p_mw": 6.112772,
+          "q_mvar": 1.60335,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 1.05033,
+          "va_degree": -15.192329,
+          "p_mw": 13.528266,
+          "q_mvar": 5.812144,
+          "status": "VOLTAGE_VIOLATION"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 1.035413,
+          "va_degree": -16.071341,
+          "p_mw": 14.931197,
+          "q_mvar": 5.010469,
+          "status": "NORMAL"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 1.511722,
+          "in_service": true
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.7228,
+          "in_service": true
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.710909,
+          "in_service": true
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.543883,
+          "in_service": true
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.403715,
+          "in_service": true
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.240281,
+          "in_service": true
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.628386,
+          "in_service": true
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.077369,
+          "in_service": true
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.077384,
+          "in_service": true
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.181292,
+          "in_service": true
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.064304,
+          "in_service": true
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.096724,
+          "in_service": true
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.039713,
+          "in_service": true
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.017105,
+          "in_service": true
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.056984,
+          "in_service": true
+        }
+      ]
+    },
+    {
+      "step": 3,
+      "converged": false,
+      "frequency_hz": 59.537608,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.0,
+          "in_service": false
+        }
+      ]
+    },
+    {
+      "step": 4,
+      "converged": false,
+      "frequency_hz": 60.55487,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.0,
+          "in_service": false
+        }
+      ]
+    },
+    {
+      "step": 5,
+      "converged": false,
+      "frequency_hz": 59.334155,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.0,
+          "in_service": false
+        }
+      ]
+    },
+    {
+      "step": 6,
+      "converged": false,
+      "frequency_hz": 60.799013,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.0,
+          "in_service": false
+        }
+      ]
+    },
+    {
+      "step": 7,
+      "converged": false,
+      "frequency_hz": 59.041184,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.0,
+          "in_service": false
+        }
+      ]
+    },
+    {
+      "step": 8,
+      "converged": false,
+      "frequency_hz": 61.150579,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.0,
+          "in_service": false
+        }
+      ]
+    },
+    {
+      "step": 9,
+      "converged": false,
+      "frequency_hz": 58.619305,
+      "buses": [
+        {
+          "bus_id": 1,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 2,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 3,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 4,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 5,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 6,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 7,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 8,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 9,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 10,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 11,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 12,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 13,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        },
+        {
+          "bus_id": 14,
+          "vm_pu": 0.0,
+          "va_degree": 0.0,
+          "p_mw": 0.0,
+          "q_mvar": 0.0,
+          "status": "DIVERGED"
+        }
+      ],
+      "lines": [
+        {
+          "line_id": 1,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 2,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 3,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 4,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 5,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 6,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 7,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 8,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 9,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 10,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 11,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 12,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 13,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 14,
+          "loading_pct": 0.0,
+          "in_service": false
+        },
+        {
+          "line_id": 15,
+          "loading_pct": 0.0,
+          "in_service": false
+        }
+      ]
+    }
+  ],
+  "observed_telemetry_sample": [
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 1.06313,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -231.3111,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": 17.0271,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 1.0396,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -18.5968,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": -30.4265,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 1.00978,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 94.7962,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 1.06197,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -231.8234,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": 16.921,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 1.04491,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -18.8598,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": -30.5493,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 1.01232,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 94.8208,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 1.057,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -232.5342,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": 16.0875,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 1.04322,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -17.504,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": -30.8994,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 1.01237,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 94.3816,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 0.00645,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -0.4636,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": -0.3914,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 0.0,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -0.2914,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": -0.0532,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 0.0,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 0.4202,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 0.00279,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": 0.6553,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": 0.223,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 0.0,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -0.048,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": -0.3286,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 0.0,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": -0.5684,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 0.0,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -0.3268,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": -0.2903,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 0.00189,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -0.7305,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": 0.3774,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 0.0,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": -0.1481,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 0.0,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -0.1935,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": 1.5509,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 0.01506,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": 0.8232,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": -0.51,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 0.00031,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 0.4883,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 0.00431,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -0.1052,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": 0.1322,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 0.00427,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -0.4367,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": -0.4182,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 0.01153,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": -0.4623,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 0.00555,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -0.0845,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": -0.475,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 0.0016,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": 0.3236,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": -0.1603,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 0.00085,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": -0.2967,
+        "quality": "GOOD"
+      }
+    ],
+    [
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "v_pu",
+        "reported_value": 0.0,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "p_mw",
+        "reported_value": -0.335,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 1",
+        "measurement_type": "q_mvar",
+        "reported_value": 0.3863,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "v_pu",
+        "reported_value": 0.00091,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "p_mw",
+        "reported_value": -0.3002,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 2",
+        "measurement_type": "q_mvar",
+        "reported_value": -0.2421,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "v_pu",
+        "reported_value": 0.0,
+        "quality": "GOOD"
+      },
+      {
+        "component_id": "Bus 3",
+        "measurement_type": "p_mw",
+        "reported_value": 0.4779,
+        "quality": "GOOD"
+      }
+    ]
+  ]
+}
