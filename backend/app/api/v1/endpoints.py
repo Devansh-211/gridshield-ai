@@ -63,10 +63,85 @@ _risk_engine = RiskEngine()
 _analyst_service = AnalystService()
 
 
+from backend.app.services.grid_view_service import GridViewService
+
+_grid_view_service = GridViewService(_active_grid)
+
+
+@router.get("/topology/{version}/graph")
+def get_topology_graph(version: str = "v1"):
+    """Returns full graph with elements, metadata, and enveloped properties (Rule R1)."""
+    return _grid_view_service.get_topology_graph(version=version)
+
+
+@router.get("/state/{snapshot}")
+def get_state_snapshot(snapshot: str = "latest"):
+    """Returns full enveloped state snapshot with system strip metrics."""
+    step = 0
+    sim_time = 0.0
+    freq = 60.0
+    if _latest_run and _latest_run.get("states"):
+        states = _latest_run["states"]
+        if snapshot == "latest":
+            st = states[-1]
+        else:
+            try:
+                s_idx = min(len(states) - 1, max(0, int(snapshot)))
+                st = states[s_idx]
+            except Exception:
+                st = states[-1]
+        step = st.step
+        sim_time = st.sim_time_s
+        freq = st.frequency_hz
+    return _grid_view_service.get_enveloped_state(step=step, sim_time_s=sim_time, frequency=freq)
+
+
+@router.get("/elements/{element_id}")
+def get_element_detail(element_id: str):
+    """Returns detailed element inspector data and linked Evidence Object fields."""
+    return _grid_view_service.get_element_detail(element_id)
+
+
+@router.get("/stream/sse")
+async def stream_grid_sse(request: Request):
+    """
+    Reliable Server-Sent Events (SSE) telemetry stream with heartbeat,
+    event IDs, and Last-Event-ID gap resumption (§4).
+    """
+    last_event_id = request.headers.get("Last-Event-ID")
+    
+    async def event_generator():
+        # Emit initial state snapshot
+        state_data = _grid_view_service.get_enveloped_state()
+        yield f"id: 0\nevent: initial_state\ndata: {json.dumps(state_data)}\n\n"
+        
+        step_counter = 1
+        if last_event_id:
+            try:
+                step_counter = int(last_event_id) + 1
+            except Exception:
+                pass
+
+        for _ in range(100):
+            if await request.is_disconnected():
+                break
+            
+            # State tick
+            state_data = _grid_view_service.get_enveloped_state(step=step_counter)
+            yield f"id: {step_counter}\nevent: state_delta\ndata: {json.dumps(state_data)}\n\n"
+            step_counter += 1
+            
+            await asyncio.sleep(0.1)
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+
+
 @router.get("/grid/topology", response_model=GridTopology)
 def get_grid_topology():
     """Returns IEEE 14-bus system topology with 2D schematic coordinates."""
     return _active_grid.get_topology()
+
 
 
 @router.get("/grid/state", response_model=GridState)

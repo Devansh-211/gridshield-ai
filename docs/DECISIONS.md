@@ -46,4 +46,8 @@
 - **Decision**: Replace scalar confidence with a 5-dimension vector (`detection`, `attribution`, `model_uncertainty`, `evidence_completeness`, `data_quality`). Treat non-answers (`UNKNOWN`, `INSUFFICIENT_DATA`, `CONFLICTING_EVIDENCE`, `MODEL_OUT_OF_DISTRIBUTION`, `TOPOLOGY_UNSUPPORTED`) as first-class states where all mitigation recommendations are strictly prohibited.
 - **Rationale**: Prevents dangerous hallucinated mitigation actions during sensor drift, detector disagreement, or unvalidated grid topologies.
 
+### AD-12: Interactive Grid View Architecture & Frontend Zero-Computation Invariant (P3)
+- **Decision**: Build the Grid View Vertical Slice as a layered, state-driven inspection console powered by `/api/v1/topology/{version}/graph`, `/api/v1/state/{snapshot}`, `/api/v1/elements/{element_id}`, and `/api/v1/stream/sse`.
+- **Rationale**: Ensures the frontend functions purely as a rendering and user-interaction layer with zero client-side calculation of loading percentages, voltage violations, severity, or risk (Invariant I5). Multi-layer toggles (Voltage, Loading, Anomaly, Attribution, Data Quality) and element inspector panels render authoritative backend Value Envelopes and Evidence Objects with full provenance tracing.
+
 

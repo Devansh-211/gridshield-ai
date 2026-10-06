@@ -49,6 +49,7 @@ class DigitalTwinGrid:
         self.net.gen["in_service"] = True
         self.net.load["in_service"] = True
 
+
     def get_topology(self) -> GridTopology:
         """Export system topology with 1-based IEEE labeling and schematic coordinates."""
         buses = []
@@ -151,6 +152,7 @@ class DigitalTwinGrid:
         buses_state = []
         lines_state = []
 
+
         if converged:
             for b_idx in self.net.bus.index:
                 ieee_id = bus_to_ieee(int(b_idx))
@@ -198,7 +200,7 @@ class DigitalTwinGrid:
                     line_id=int(l_idx) + 1, loading_pct=0.0, p_from_mw=0.0, q_from_mvar=0.0, p_to_mw=0.0, q_to_mvar=0.0, in_service=False
                 ))
 
-        return GridState(
+        state = GridState(
             step=step,
             sim_time_s=sim_time_s,
             converged=converged,
@@ -208,6 +210,7 @@ class DigitalTwinGrid:
             frequency_provenance=Provenance.SIMULATED,
             provenance=Provenance.SIMULATED
         )
+        return state
 
     def step(self, sim_time_s: float = 0.0, step: int = 0, frequency_hz: float = 60.0) -> GridState:
         """Advance physical state and return computed GridState."""
