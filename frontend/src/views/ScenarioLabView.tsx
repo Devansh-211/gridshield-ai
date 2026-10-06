@@ -17,9 +17,26 @@ interface ScenarioLabViewProps {
   onRunCompleted: () => void;
 }
 
+interface LaymanScenarioItem {
+  id: string;
+  title: string;
+  analogy: string;
+  category: 'CYBER' | 'PHYSICAL' | 'HYBRID';
+  severity: 'CRITICAL' | 'HIGH' | 'WARNING' | 'INFO';
+  plainSummary: string;
+  whatHappens: string;
+  realWorldImpact: string;
+  gridshieldDefense: string;
+  presetAction: () => void;
+}
+
 export const ScenarioLabView: React.FC<ScenarioLabViewProps> = ({
   onRunCompleted,
 }) => {
+  const [activeSubTab, setActiveSubTab] = useState<'workbench' | 'guide'>('workbench');
+  const [guideFilter, setGuideFilter] = useState<string>('ALL');
+  const [guideSearch, setGuideSearch] = useState<string>('');
+
   const [scenarioType, setScenarioType] = useState<ScenarioType>('NORMAL');
   const [hasAttack, setHasAttack] = useState<boolean>(true);
   const [attackType, setAttackType] = useState<AttackType>('FALSE_DATA_INJECTION');
@@ -150,6 +167,119 @@ export const ScenarioLabView: React.FC<ScenarioLabViewProps> = ({
     }
   };
 
+  const laymanScenarios: LaymanScenarioItem[] = [
+    {
+      id: 'fdi',
+      title: 'False Data Injection (FDI) Attack',
+      analogy: 'Hacking the Thermometer to Cause an Explosion',
+      category: 'CYBER',
+      severity: 'CRITICAL',
+      plainSummary: 'Cyberattackers modify digital sensor telemetry to report fake low voltage, tricking automated grid controllers into dangerous real-world over-excitation.',
+      whatHappens: 'An attacker falsifies voltage readings at Bus 4 by -0.12 p.u. The automated Automatic Voltage Regulator (AVR) at Generator 2 believes the grid is in an under-voltage emergency and ramps its excitation to maximum.',
+      realWorldImpact: 'Because the grid was actually normal, forcing the generator to pump excess power causes true physical over-voltage across neighboring transmission lines, threatening transformers and insulation breakdown.',
+      gridshieldDefense: 'GridShield AI cross-checks physical electrical laws (Kirchhoff & Ohm via WLS state estimation) against cyber logs. It spots the mathematical inconsistency, flags the bad sensor, and safely resets generator excitation.',
+      presetAction: () => {
+        setActiveSubTab('workbench');
+        handleRunDemo('primary');
+      },
+    },
+    {
+      id: 'line_trip',
+      title: 'Transmission Line Trip (Physical Outage)',
+      analogy: 'Closing a Major Highway Lane during Rush Hour',
+      category: 'PHYSICAL',
+      severity: 'HIGH',
+      plainSummary: 'A physical transmission corridor (Line 1-2) suddenly disconnects due to mechanical failure, lightning strike, or fallen tree.',
+      whatHappens: 'Power flow through Line 1-2 instantly drops to 0 MW. The electricity that was flowing through it is instantaneously forced onto neighboring transmission lines (Line 1-5 and Line 2-3).',
+      realWorldImpact: 'Neighboring lines heat up and exceed 100% of their thermal capacity. If protection relays trip those overloaded lines too, a cascading regional blackout can occur within seconds.',
+      gridshieldDefense: 'GridShield AI detects the abrupt impedance change and verifies zero cyber tampering in SCADA logs (confirming a pure physical fault). It calculates optimal power flow re-dispatch to relieve transmission stress.',
+      presetAction: () => {
+        setActiveSubTab('workbench');
+        handleRunDemo('secondary');
+      },
+    },
+    {
+      id: 'gen_loss',
+      title: 'Sudden Generator Outage / Loss of Generation',
+      analogy: 'An Engine Stalling on a Heavy Vehicle Going Uphill',
+      category: 'PHYSICAL',
+      severity: 'HIGH',
+      plainSummary: 'A major power plant (Generator 2) abruptly shuts down, creating an instant deficit between electrical generation and electrical demand.',
+      whatHappens: 'Because power consumption now exceeds power generation, the physical spinning inertia of all remaining generators starts slowing down, causing electrical grid frequency to dip below 50.0 Hz.',
+      realWorldImpact: 'If grid frequency drops below emergency limits (e.g. 49.5 Hz), power plants automatically disconnect to protect their turbines, which can trigger an uncontrollable total grid collapse.',
+      gridshieldDefense: 'GridShield AI tracks Center-of-Inertia (COI) frequency droop rate (df/dt), calculates the exact generation deficit in Megawatts, and recommends spinning reserve activation or prioritized industrial load shedding.',
+      presetAction: () => {
+        setActiveSubTab('workbench');
+        handleRunDemo('custom_gen');
+      },
+    },
+    {
+      id: 'dos_scada',
+      title: 'SCADA Telemetry Denial of Service (DoS)',
+      analogy: 'Blinding the Control Room by Cutting Sensor Feeds',
+      category: 'CYBER',
+      severity: 'WARNING',
+      plainSummary: 'Attackers flood substation communication switches with packet traffic, preventing telemetry sensor data from reaching operators.',
+      whatHappens: 'Sensor readings from Remote Terminal Units (RTUs) drop out or freeze. Operators and automated systems lose visibility into actual grid conditions.',
+      realWorldImpact: 'Operating a power grid blind prevents operators from seeing developing thermal overloads or voltage sags, turning routine grid shifts into unmanaged crises.',
+      gridshieldDefense: 'GridShield AI detects the communication dropout (H_data_quality metric drops), highlights unobservable buses on the single-line diagram, isolates the compromised network segment, and switches to mathematical pseudo-measurements.',
+      presetAction: () => {
+        setActiveSubTab('workbench');
+        handleRunDemo('custom_dos');
+      },
+    },
+    {
+      id: 'malicious_cmd',
+      title: 'Malicious Control Command / AVR Tamper',
+      analogy: 'An Intruder Grabbing the Steering Wheel in the Cockpit',
+      category: 'CYBER',
+      severity: 'CRITICAL',
+      plainSummary: 'An unauthorized attacker sends forged remote control commands directly to generator voltage regulators (AVRs).',
+      whatHappens: 'The generator excitation setpoint is forced upward without any grid load change or operator authorization.',
+      realWorldImpact: 'Forces localized over-voltage (exceeding 1.08 p.u.), stresses generator stator windings, and risks tripping over-excitation limiters (OEL).',
+      gridshieldDefense: 'GridShield AI matches actuator movement against SCADA audit logs and physical power flow demand. Finding no authorization or physical need, it flags unauthorized cyber manipulation and locks down remote setpoint overrides.',
+      presetAction: () => {
+        setActiveSubTab('workbench');
+        setScenarioType('NORMAL');
+        setHasAttack(true);
+        setAttackType('MALICIOUS_CONTROL_COMMAND');
+        setTargetBus('Bus 2');
+        setMagnitude(0.08);
+      },
+    },
+    {
+      id: 'load_surge',
+      title: 'Step Load Surge / Demand Spike',
+      analogy: 'Everyone Turning on Air Conditioning at the Exact Same Minute',
+      category: 'PHYSICAL',
+      severity: 'WARNING',
+      plainSummary: 'A sudden +25% electrical load increase occurs at an industrial substation (Bus 3).',
+      whatHappens: 'Heavy electrical current is drawn through the transmission network, causing resistive voltage drops across neighboring buses.',
+      realWorldImpact: 'Bus voltages sag toward 0.95 p.u. limits. If voltage sags too low, industrial electric motors can stall and draw even more current, causing a voltage collapse.',
+      gridshieldDefense: 'GridShield AI verifies that voltage sags are physically coherent across all adjacent buses (ruling out cyber sensor spoofing) and recommends capacitor bank switching or transformer tap adjustments.',
+      presetAction: () => {
+        setActiveSubTab('workbench');
+        setScenarioType('LOAD_INCREASE');
+        setHasAttack(false);
+      },
+    },
+  ];
+
+  const filteredGuideScenarios = laymanScenarios.filter((s) => {
+    if (guideFilter !== 'ALL' && s.category !== guideFilter) return false;
+    if (guideSearch) {
+      const q = guideSearch.toLowerCase();
+      return (
+        s.title.toLowerCase().includes(q) ||
+        s.analogy.toLowerCase().includes(q) ||
+        s.plainSummary.toLowerCase().includes(q) ||
+        s.whatHappens.toLowerCase().includes(q) ||
+        s.realWorldImpact.toLowerCase().includes(q)
+      );
+    }
+    return true;
+  });
+
   return (
     <div className="flex-1 flex flex-col h-full bg-app overflow-hidden font-ui text-xs">
       {/* Top Toolbar */}
@@ -160,9 +290,33 @@ export const ScenarioLabView: React.FC<ScenarioLabViewProps> = ({
               Scenario & Contingency Injection Laboratory
             </span>
             <span className="text-text-subtle">|</span>
-            <span className="text-text-muted">
-              IEEE 14-Bus AC Power Flow Digital Twin Engine
-            </span>
+            <div className="inline-flex rounded-sm bg-panel border border-border p-0.5">
+              <button
+                type="button"
+                onClick={() => setActiveSubTab('workbench')}
+                className={`px-2.5 py-0.5 text-xs font-semibold rounded-sm transition-colors ${
+                  activeSubTab === 'workbench'
+                    ? 'bg-accent text-white shadow-xs'
+                    : 'text-text-muted hover:text-text-main'
+                }`}
+              >
+                ⚡ Workbench & Controls
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveSubTab('guide')}
+                className={`px-2.5 py-0.5 text-xs font-semibold rounded-sm transition-colors flex items-center space-x-1 ${
+                  activeSubTab === 'guide'
+                    ? 'bg-accent text-white shadow-xs'
+                    : 'text-text-muted hover:text-text-main'
+                }`}
+              >
+                <span>📘 Layman's Playbook</span>
+                <span className="ml-1 px-1 py-0.2 bg-panel-alt rounded-sm text-[10px] text-accent font-bold">
+                  {laymanScenarios.length}
+                </span>
+              </button>
+            </div>
           </div>
         }
         right={
@@ -187,26 +341,122 @@ export const ScenarioLabView: React.FC<ScenarioLabViewProps> = ({
         }
       />
 
-      {/* Preset Cards Banner */}
-      <div className="p-1.5 border-b border-border bg-panel-alt grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1.5">
-        {presets.map((p) => (
-          <div
-            key={p.id}
-            onClick={() => !isRunning && handleRunDemo(p.type)}
-            className="p-2 bg-panel border border-border hover:border-accent cursor-pointer transition-all rounded-sm flex flex-col justify-between space-y-1"
-          >
-            <div className="flex items-center justify-between">
-              <span className="font-semibold text-text-main text-[11px] truncate">{p.title}</span>
-              <Status status={p.badgeStatus} />
+      {/* SUB-VIEW 1: LAYMAN'S PLAYBOOK & GUIDE */}
+      {activeSubTab === 'guide' && (
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden p-2 space-y-2">
+          {/* Guide Filter Bar */}
+          <div className="p-2 bg-panel border border-border flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex items-center space-x-2">
+              <span className="font-semibold text-text-main text-xs">Filter Category:</span>
+              {(['ALL', 'CYBER', 'PHYSICAL'] as const).map((cat) => (
+                <Button
+                  key={cat}
+                  variant={guideFilter === cat ? 'primary' : 'secondary'}
+                  size="sm"
+                  className="text-[11px] h-6 px-2 py-0"
+                  onClick={() => setGuideFilter(cat)}
+                >
+                  {cat === 'ALL' ? 'All Scenarios' : cat}
+                </Button>
+              ))}
             </div>
-            <p className="text-[10px] text-text-muted line-clamp-2">{p.subtitle}</p>
-            <div className="pt-1 flex items-center justify-between text-[10px] font-mono text-text-subtle">
-              <span>{p.badge}</span>
-              <span className="text-accent hover:underline">Launch →</span>
+            <div className="w-64">
+              <Input
+                placeholder="Search layman explanations…"
+                value={guideSearch}
+                onChange={(e) => setGuideSearch(e.target.value)}
+              />
             </div>
           </div>
-        ))}
-      </div>
+
+          {/* Cards Grid */}
+          <div className="flex-1 overflow-y-auto pr-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+            {filteredGuideScenarios.map((sc) => (
+              <div
+                key={sc.id}
+                className="bg-panel border border-border hover:border-accent transition-all rounded-sm p-3 flex flex-col justify-between space-y-2.5 shadow-xs"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between gap-1">
+                    <div>
+                      <h4 className="font-semibold text-text-main text-[13px] leading-snug">
+                        {sc.title}
+                      </h4>
+                      <div className="text-[11px] font-mono text-accent italic mt-0.5">
+                        "{sc.analogy}"
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end space-y-1 shrink-0">
+                      <Status status={sc.severity} />
+                      <span className="text-[10px] font-mono px-1 py-0.2 bg-panel-alt border border-border text-text-muted rounded-xs">
+                        {sc.category}
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="text-[11px] text-text-main bg-panel-alt p-2 rounded-sm border border-border/60">
+                    {sc.plainSummary}
+                  </p>
+
+                  <div className="space-y-1.5 text-[11px]">
+                    <div>
+                      <span className="font-bold text-text-main block">📌 What Happens:</span>
+                      <p className="text-text-muted leading-relaxed">{sc.whatHappens}</p>
+                    </div>
+                    <div>
+                      <span className="font-bold text-alarm-critical block">⚠️ Real-World Impact:</span>
+                      <p className="text-text-muted leading-relaxed">{sc.realWorldImpact}</p>
+                    </div>
+                    <div>
+                      <span className="font-bold text-accent block">🛡️ GridShield AI Defense:</span>
+                      <p className="text-text-muted leading-relaxed">{sc.gridshieldDefense}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-border flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-text-subtle">
+                    IEEE 14-Bus Verified
+                  </span>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="text-[11px] h-6 px-2 text-accent hover:bg-accent hover:text-white"
+                    onClick={sc.presetAction}
+                    disabled={isRunning}
+                  >
+                    ⚡ Test in Simulator →
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* SUB-VIEW 2: WORKBENCH (Active Simulation Controls & Outputs) */}
+      {activeSubTab === 'workbench' && (
+        <>
+          {/* Preset Cards Banner */}
+          <div className="p-1.5 border-b border-border bg-panel-alt grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1.5">
+            {presets.map((p) => (
+              <div
+                key={p.id}
+                onClick={() => !isRunning && handleRunDemo(p.type)}
+                className="p-2 bg-panel border border-border hover:border-accent cursor-pointer transition-all rounded-sm flex flex-col justify-between space-y-1"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-text-main text-[11px] truncate">{p.title}</span>
+                  <Status status={p.badgeStatus} />
+                </div>
+                <p className="text-[10px] text-text-muted line-clamp-2">{p.subtitle}</p>
+                <div className="pt-1 flex items-center justify-between text-[10px] font-mono text-text-subtle">
+                  <span>{p.badge}</span>
+                  <span className="text-accent hover:underline">Launch →</span>
+                </div>
+              </div>
+            ))}
+          </div>
 
       {/* Main Workspace 2-Column Split */}
       <div className="flex-1 flex flex-row min-h-0 overflow-hidden p-1.5 gap-1.5">
@@ -425,6 +675,8 @@ export const ScenarioLabView: React.FC<ScenarioLabViewProps> = ({
           </Pane>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 };

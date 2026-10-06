@@ -65,6 +65,8 @@ export const App: React.FC = () => {
     }
   };
 
+  const [telemetryHistory, setTelemetryHistory] = useState<Array<{ step: number; values: Record<string, number> }>>([]);
+
   const loadData = async () => {
     const start = performance.now();
     try {
@@ -84,6 +86,36 @@ export const App: React.FC = () => {
       setTelemetry(tel);
       setIncidents(incs);
       setAlarms(alms);
+
+      if (state) {
+        const step = state.step ?? simStep;
+        const b04 = state.buses.find((b) => b.bus_id === 4)?.vm_pu ?? 1.0;
+        const b02 = state.buses.find((b) => b.bus_id === 2)?.vm_pu ?? 1.0;
+        const b01 = state.buses.find((b) => b.bus_id === 1)?.vm_pu ?? 1.0;
+        const l01_02 = state.lines.find((l) => l.line_id === 1 || l.line_id === 0)?.loading_pct ?? 50.0;
+        const l02_05 = state.lines.find((l) => l.line_id === 2)?.loading_pct ?? 40.0;
+        const freq = state.frequency_hz ?? 50.0;
+
+        setTelemetryHistory((prev) => {
+          const exists = prev.some((p) => p.step === step);
+          if (exists) return prev;
+          const updated = [
+            ...prev,
+            {
+              step,
+              values: {
+                b04_v: b04,
+                b02_v: b02,
+                b01_v: b01,
+                l01_02_load: l01_02,
+                l02_05_load: l02_05,
+                freq_hz: freq,
+              },
+            },
+          ];
+          return updated.slice(-60);
+        });
+      }
     } catch (err) {
       console.error('Failed to load digital twin state:', err);
       setDbHealthy(false);
@@ -121,6 +153,7 @@ export const App: React.FC = () => {
       await resetSystem();
       setLiveSessionId(null);
       setSimStep(0);
+      setTelemetryHistory([]);
       loadData();
     } catch (err) {
       console.error('Failed to reset system:', err);
@@ -180,6 +213,8 @@ export const App: React.FC = () => {
                 onOpenIncidentDetail={(inc) => setSelectedIncident(inc)}
                 onNavigateToScenarios={() => setActiveTab('scenarios')}
                 onNavigateToExplained={() => setActiveTab('explained')}
+                onNavigateToAlarms={() => setActiveTab('alarms')}
+                onAcknowledgeAlarm={handleAcknowledgeAlarm}
               />
             )}
 
@@ -187,6 +222,10 @@ export const App: React.FC = () => {
               <GridTopologyView
                 topology={topology}
                 gridState={gridState}
+                telemetry={telemetry}
+                compromisedBuses={openIncidents[0]?.affected_components || []}
+                onAdvanceStep={() => handleAdvanceStep(1)}
+                onResetSession={handleResetSystem}
               />
             )}
 
@@ -205,7 +244,7 @@ export const App: React.FC = () => {
             )}
 
             {activeTab === 'trends' && (
-              <TrendsView />
+              <TrendsView telemetryHistory={telemetryHistory} />
             )}
 
             {activeTab === 'scenarios' && (

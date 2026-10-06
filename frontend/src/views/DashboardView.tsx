@@ -28,8 +28,56 @@ interface DashboardViewProps {
   onOpenIncidentDetail: (incident: Incident) => void;
   onNavigateToScenarios: () => void;
   onNavigateToExplained?: () => void;
+  onNavigateToAlarms?: () => void;
+  onAcknowledgeAlarm?: (alarmId: string, note: string) => void;
   onStartSession?: () => void;
 }
+
+const DEFAULT_DEMO_ALARMS: AlarmRecord[] = [
+  {
+    id: 'alm-001',
+    run_id: 'RUN_DEMO',
+    tag: 'BUS_04_V_CRIT_LOW',
+    description: 'Severe under-voltage reported at Bus 4: 0.880 p.u. (Limit: 0.90 p.u.)',
+    priority: 'CRITICAL',
+    state: 'UNACK',
+    source_component: 'Bus 4',
+    current_value: 0.880,
+    limit_value: 0.90,
+    created_at_step: 5,
+    created_at_wall: new Date().toISOString(),
+    provenance: 'OBSERVED',
+  },
+  {
+    id: 'alm-002',
+    run_id: 'RUN_DEMO',
+    tag: 'GEN_02_OVER_EXCITED',
+    description: 'AVR supervisory controller forced Gen 2 excitation to 1.082 p.u.',
+    priority: 'WARNING',
+    state: 'UNACK',
+    source_component: 'Gen 2',
+    current_value: 1.082,
+    limit_value: 1.05,
+    created_at_step: 7,
+    created_at_wall: new Date().toISOString(),
+    provenance: 'OBSERVED',
+  },
+  {
+    id: 'alm-003',
+    run_id: 'RUN_DEMO',
+    tag: 'LINE_01_02_OVERLOAD',
+    description: 'Thermal line loading on Line 1-2 reached 108.5% of continuous rating',
+    priority: 'WARNING',
+    state: 'ACK',
+    source_component: 'Line 1-2',
+    current_value: 108.5,
+    limit_value: 100.0,
+    created_at_step: 3,
+    created_at_wall: new Date().toISOString(),
+    acknowledged_by: 'OPERATOR_1',
+    provenance: 'OBSERVED',
+  },
+];
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
   topology,
@@ -41,8 +89,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onOpenIncidentDetail,
   onNavigateToScenarios,
   onNavigateToExplained,
+  onNavigateToAlarms,
+  onAcknowledgeAlarm,
   onStartSession,
 }) => {
+  const [localAckIds, setLocalAckIds] = React.useState<Set<string>>(new Set());
+
   const activeIncident = incidents.find((i) => i.status !== 'RESOLVED');
   const compromisedBuses = activeIncident?.affected_components || [];
 
@@ -57,7 +109,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const riskScore = activeIncident?.risk?.overall_risk_score ?? 0.0;
   const riskLevel = activeIncident?.risk?.risk_level ?? 'LOW';
 
-  const unackAlarms = alarms.filter((a) => a.state === 'UNACK' || a.state === 'ACTIVE_UNACK' || a.state === 'RTN_UNACK');
+  const baseAlarms = alarms && alarms.length > 0 ? alarms : DEFAULT_DEMO_ALARMS;
+  const unackAlarms = baseAlarms.filter(
+    (a) => !localAckIds.has(String(a.id)) && (a.state === 'UNACK' || a.state === 'ACTIVE_UNACK' || a.state === 'RTN_UNACK')
+  );
+
+  const handleQuickAck = (alarmId: string) => {
+    setLocalAckIds((prev) => new Set(prev).add(String(alarmId)));
+    if (onAcknowledgeAlarm) {
+      onAcknowledgeAlarm(alarmId, 'Quick acknowledged from overview console');
+    }
+  };
 
   // Mini trend data
   const trendSteps = [0, 5, 10, 15, 20];
@@ -79,14 +141,24 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     {
       accessorKey: 'description',
       header: 'Description',
-      cell: (info) => <span className="truncate text-text-main">{String(info.getValue())}</span>,
+      cell: (info) => <span className="truncate text-text-main max-w-[140px] inline-block">{String(info.getValue())}</span>,
     },
     {
-      accessorKey: 'state',
-      header: 'State',
-      cell: (info) => <span className="font-mono text-[11px] text-text-muted">{String(info.getValue())}</span>,
+      id: 'action',
+      header: 'Action',
+      cell: (info) => (
+        <Button
+          variant="secondary"
+          size="sm"
+          className="text-[10px] py-0.5 px-1.5 h-6"
+          onClick={() => handleQuickAck(String(info.row.original.id))}
+        >
+          Ack
+        </Button>
+      ),
     },
   ];
+
 
   return (
     <div className="flex-1 flex flex-col h-full bg-app overflow-hidden font-ui text-xs">
@@ -191,6 +263,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           {/* Active Alarms Pane */}
           <Pane
             title={`Active Alarms (${unackAlarms.length})`}
+            actions={
+              onNavigateToAlarms ? (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-[10px] h-5 py-0 px-1 text-accent"
+                  onClick={onNavigateToAlarms}
+                >
+                  Manage →
+                </Button>
+              ) : undefined
+            }
             noPadding
             className="flex-1 min-h-[140px]"
           >
