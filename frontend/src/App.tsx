@@ -17,6 +17,9 @@ import {
   advanceLiveSession,
   resetSystem,
 } from './api/client';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { LoginView } from './features/auth/LoginView';
+import { PreviewBanner } from './features/auth/PreviewBanner';
 import { TopBar } from './features/shell/TopBar';
 import { LeftNav, NavTabId } from './features/shell/LeftNav';
 import { StatusBar } from './features/shell/StatusBar';
@@ -31,12 +34,18 @@ import { TrendsView } from './views/TrendsView';
 import { ScenarioLabView } from './views/ScenarioLabView';
 import { ModelSystemView } from './views/ModelSystemView';
 import { ExplainedView } from './views/ExplainedView';
+import { SupervisorDashboardView } from './views/supervisor/SupervisorDashboardView';
+import { SupervisorTopologyView } from './views/supervisor/SupervisorTopologyView';
+import { SupervisorIncidentsView } from './views/supervisor/SupervisorIncidentsView';
+import { SupervisorGlossaryView } from './views/supervisor/SupervisorGlossaryView';
+import { AdminConsoleView } from './views/admin/AdminConsoleView';
 import { HelpDrawer } from './components/HelpDrawer';
 import { NetworkImporterModal } from './features/network/NetworkImporterModal';
 import { SensorConfigModal } from './features/sensors/SensorConfigModal';
 import { formatSimStepTime } from './lib/formatters';
 
-export const App: React.FC = () => {
+const WorkbenchContent: React.FC = () => {
+  const { user, isLoading, isSupervisor, isAdmin, isTechnician } = useAuth();
   const [activeTab, setActiveTab] = useState<NavTabId | string>('overview');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [topology, setTopology] = useState<GridTopology | null>(null);
@@ -54,6 +63,15 @@ export const App: React.FC = () => {
   const [dbLatencyMs, setDbLatencyMs] = useState<number>(38);
   const [dbHealthy, setDbHealthy] = useState<boolean>(true);
 
+  // Set default tab when role changes
+  useEffect(() => {
+    if (isAdmin) {
+      setActiveTab('admin');
+    } else {
+      setActiveTab('overview');
+    }
+  }, [isAdmin, isSupervisor]);
+
   // Toggle light/dark theme class on html document
   const handleToggleTheme = () => {
     const next = theme === 'light' ? 'dark' : 'light';
@@ -68,6 +86,7 @@ export const App: React.FC = () => {
   const [telemetryHistory, setTelemetryHistory] = useState<Array<{ step: number; values: Record<string, number> }>>([]);
 
   const loadData = async () => {
+    if (!user) return;
     const start = performance.now();
     try {
       const [top, state, tel, incs, alms] = await Promise.all([
@@ -89,11 +108,11 @@ export const App: React.FC = () => {
 
       if (state) {
         const step = state.step ?? simStep;
-        const b04 = state.buses.find((b) => b.bus_id === 4)?.vm_pu ?? 1.0;
-        const b02 = state.buses.find((b) => b.bus_id === 2)?.vm_pu ?? 1.0;
-        const b01 = state.buses.find((b) => b.bus_id === 1)?.vm_pu ?? 1.0;
-        const l01_02 = state.lines.find((l) => l.line_id === 1 || l.line_id === 0)?.loading_pct ?? 50.0;
-        const l02_05 = state.lines.find((l) => l.line_id === 2)?.loading_pct ?? 40.0;
+        const b04 = state.buses?.find((b) => b.bus_id === 4)?.vm_pu ?? 1.0;
+        const b02 = state.buses?.find((b) => b.bus_id === 2)?.vm_pu ?? 1.0;
+        const b01 = state.buses?.find((b) => b.bus_id === 1)?.vm_pu ?? 1.0;
+        const l01_02 = state.lines?.find((l) => l.line_id === 1 || l.line_id === 0)?.loading_pct ?? 50.0;
+        const l02_05 = state.lines?.find((l) => l.line_id === 2)?.loading_pct ?? 40.0;
         const freq = state.frequency_hz ?? 50.0;
 
         setTelemetryHistory((prev) => {
@@ -141,7 +160,7 @@ export const App: React.FC = () => {
 
   const handleAcknowledgeAlarm = async (alarmId: any, note: string) => {
     try {
-      await acknowledgeAlarm(String(alarmId), 'OPERATOR_1', note);
+      await acknowledgeAlarm(String(alarmId), user?.username || 'OPERATOR_1', note);
       loadData();
     } catch (err) {
       console.error('Failed to acknowledge alarm:', err);
@@ -161,151 +180,204 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!user) return;
     loadData();
     const interval = setInterval(loadData, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [user]);
+
+  if (isLoading) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center bg-app text-text-muted text-xs">
+        Connecting to GridShield AI Workbench...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <LoginView />;
+  }
 
   const unackAlarms = alarms.filter((a) => a.state === 'UNACK' || a.state === 'ACTIVE_UNACK' || a.state === 'RTN_UNACK');
   const hasCrit = unackAlarms.some((a) => a.priority === 'CRITICAL');
   const openIncidents = incidents.filter((i) => i.status !== 'RESOLVED');
 
   return (
-    <TooltipProvider>
-      <div className="w-screen h-screen flex flex-col bg-app text-text-main font-ui select-none overflow-hidden">
-        {/* Top Bar (36px) */}
-        <TopBar
-          sessionId={liveSessionId}
-          isRunning={liveSessionId !== null}
-          simTime={formatSimStepTime(simStep)}
-          onAdvanceStep={handleAdvanceStep}
-          onReset={handleResetSystem}
-          onOpenHelp={() => setIsHelpOpen(true)}
-          onOpenImport={() => setIsImportOpen(true)}
-          onOpenSensors={() => setIsSensorsOpen(true)}
-          theme={theme}
-          onToggleTheme={handleToggleTheme}
+    <div className="w-screen h-screen flex flex-col bg-app text-text-main font-ui select-none overflow-hidden">
+      {/* Persistent Admin Preview Mode Banner */}
+      <PreviewBanner />
+
+      {/* Top Bar (40px) */}
+      <TopBar
+        sessionId={liveSessionId}
+        isRunning={liveSessionId !== null}
+        simTime={formatSimStepTime(simStep)}
+        onAdvanceStep={handleAdvanceStep}
+        onReset={handleResetSystem}
+        onOpenHelp={() => setIsHelpOpen(true)}
+        onOpenImport={() => setIsImportOpen(true)}
+        onOpenSensors={() => setIsSensorsOpen(true)}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
+      />
+
+      {/* Center Workspace (LeftNav + Main Docked Area) */}
+      <div className="flex-1 flex flex-row min-h-0 overflow-hidden">
+        {/* Left Nav (200px) */}
+        <LeftNav
+          activeTab={activeTab}
+          onSelectTab={(tab) => setActiveTab(tab)}
+          unackAlarmsCount={unackAlarms.length}
+          openIncidentsCount={openIncidents.length}
+          hasCriticalAlarm={hasCrit}
         />
 
-        {/* Center Workspace (LeftNav + Main Docked Area) */}
-        <div className="flex-1 flex flex-row min-h-0 overflow-hidden">
-          {/* Left Nav (168px) */}
-          <LeftNav
-            activeTab={activeTab}
-            onSelectTab={(tab) => setActiveTab(tab)}
-            unackAlarmsCount={unackAlarms.length}
-            openIncidentsCount={openIncidents.length}
-            hasCriticalAlarm={hasCrit}
-          />
+        {/* Main Content Body */}
+        <main className="flex-1 flex flex-col min-w-0 min-h-0 bg-app overflow-hidden">
+          {import.meta.env.DEV && activeTab === 'kitchen' && <KitchenSinkView />}
 
-          {/* Main Content Body */}
-          <main className="flex-1 flex flex-col min-w-0 min-h-0 bg-app overflow-hidden">
-            {import.meta.env.DEV && activeTab === 'kitchen' && <KitchenSinkView />}
+          {/* SUPERVISOR VIEW MODE */}
+          {isSupervisor && (
+            <>
+              {activeTab === 'overview' && (
+                <SupervisorDashboardView
+                  onSelectIncident={(id) => setActiveTab('incidents')}
+                  onNavigateToTopology={() => setActiveTab('grid')}
+                  onNavigateToGlossary={() => setActiveTab('glossary')}
+                />
+              )}
 
-            {activeTab === 'overview' && (
-              <DashboardView
-                topology={topology}
-                gridState={gridState}
-                telemetry={telemetry}
-                incidents={incidents}
-                alarms={alarms}
-                events={[]}
-                onOpenIncidentDetail={(inc) => setSelectedIncident(inc)}
-                onNavigateToScenarios={() => setActiveTab('scenarios')}
-                onNavigateToExplained={() => setActiveTab('explained')}
-                onNavigateToAlarms={() => setActiveTab('alarms')}
-                onAcknowledgeAlarm={handleAcknowledgeAlarm}
-              />
-            )}
+              {activeTab === 'grid' && <SupervisorTopologyView />}
 
-            {activeTab === 'grid' && (
-              <GridTopologyView
-                topology={topology}
-                gridState={gridState}
-                telemetry={telemetry}
-                compromisedBuses={openIncidents[0]?.affected_components || []}
-                onAdvanceStep={() => handleAdvanceStep(1)}
-                onResetSession={handleResetSystem}
-              />
-            )}
+              {activeTab === 'incidents' && <SupervisorIncidentsView />}
 
-            {activeTab === 'alarms' && (
-              <AlarmsView
-                alarms={alarms as any}
-                onAcknowledgeAlarm={handleAcknowledgeAlarm}
-              />
-            )}
+              {activeTab === 'glossary' && <SupervisorGlossaryView />}
+            </>
+          )}
 
-            {activeTab === 'incidents' && (
-              <IncidentsView
-                incidents={incidents}
-                onSelectIncident={(inc) => setSelectedIncident(inc)}
-              />
-            )}
+          {/* ADMIN VIEW MODE */}
+          {isAdmin && activeTab === 'admin' && <AdminConsoleView />}
 
-            {activeTab === 'trends' && (
-              <TrendsView telemetryHistory={telemetryHistory} />
-            )}
+          {/* TECHNICIAN VIEW MODE / SHARED ENGINEERING CONSOLE */}
+          {(!isSupervisor || !['overview', 'grid', 'incidents', 'glossary'].includes(activeTab)) && activeTab !== 'admin' && (
+            <>
+              {activeTab === 'overview' && (
+                <DashboardView
+                  topology={topology}
+                  gridState={gridState}
+                  telemetry={telemetry}
+                  incidents={incidents}
+                  alarms={alarms}
+                  events={[]}
+                  onOpenIncidentDetail={(inc) => setSelectedIncident(inc)}
+                  onNavigateToScenarios={() => setActiveTab('scenarios')}
+                  onNavigateToExplained={() => setActiveTab('explained')}
+                  onNavigateToAlarms={() => setActiveTab('alarms')}
+                  onAcknowledgeAlarm={handleAcknowledgeAlarm}
+                />
+              )}
 
-            {activeTab === 'scenarios' && (
-              <ScenarioLabView
-                onRunCompleted={() => {
-                  loadData();
-                  setActiveTab('overview');
-                }}
-              />
-            )}
+              {activeTab === 'grid' && (
+                <GridTopologyView
+                  topology={topology}
+                  gridState={gridState}
+                  telemetry={telemetry}
+                  compromisedBuses={openIncidents[0]?.affected_components || []}
+                  onAdvanceStep={() => handleAdvanceStep(1)}
+                  onResetSession={handleResetSystem}
+                />
+              )}
 
-            {activeTab === 'models' && <ModelSystemView />}
+              {activeTab === 'alarms' && (
+                <AlarmsView
+                  alarms={alarms as any}
+                  onAcknowledgeAlarm={handleAcknowledgeAlarm}
+                />
+              )}
 
-            {activeTab === 'explained' && (
-              <ExplainedView
-                onNavigateTab={(tab) => setActiveTab(tab.toLowerCase())}
-                activeRunId={liveSessionId}
-              />
-            )}
-          </main>
-        </div>
+              {activeTab === 'incidents' && (
+                <IncidentsView
+                  incidents={incidents}
+                  onSelectIncident={(inc) => setSelectedIncident(inc)}
+                />
+              )}
 
-        {/* Status Bar (28px) */}
-        <StatusBar
-          alarms={alarms}
-          dbLatencyMs={dbLatencyMs}
-          dbHealthy={dbHealthy}
-          onNavigateToAlarms={() => setActiveTab('alarms')}
-          version="v1.0.0"
-        />
+              {activeTab === 'trends' && (
+                <TrendsView telemetryHistory={telemetryHistory} />
+              )}
 
-        {/* Incident Detail Modal */}
-        {selectedIncident && (
-          <IncidentDetailModal
-            incident={selectedIncident}
-            onClose={() => setSelectedIncident(null)}
-            onUpdated={loadData}
-          />
-        )}
+              {activeTab === 'scenarios' && (
+                <ScenarioLabView
+                  onRunCompleted={() => {
+                    loadData();
+                    setActiveTab('overview');
+                  }}
+                />
+              )}
 
-        {/* Quick Help / Glossary Drawer */}
-        <HelpDrawer
-          isOpen={isHelpOpen}
-          onClose={() => setIsHelpOpen(false)}
-          currentTab={typeof activeTab === 'string' ? activeTab.charAt(0).toUpperCase() + activeTab.slice(1) : ''}
-          onNavigateToExplained={() => setActiveTab('explained')}
-        />
+              {activeTab === 'models' && <ModelSystemView />}
 
-        {/* Network Importer Modal */}
-        <NetworkImporterModal
-          isOpen={isImportOpen}
-          onClose={() => setIsImportOpen(false)}
-          onImportSuccess={() => loadData()}
-        />
+              {activeTab === 'explained' && (
+                <ExplainedView
+                  onNavigateTab={(tab) => setActiveTab(tab.toLowerCase())}
+                  activeRunId={liveSessionId}
+                />
+              )}
 
-        {/* Telemetry Sensor Configuration Modal */}
-        <SensorConfigModal
-          isOpen={isSensorsOpen}
-          onClose={() => setIsSensorsOpen(false)}
-        />
+              {activeTab === 'glossary' && <SupervisorGlossaryView />}
+            </>
+          )}
+        </main>
       </div>
+
+      {/* Status Bar (28px) */}
+      <StatusBar
+        alarms={alarms}
+        dbLatencyMs={dbLatencyMs}
+        dbHealthy={dbHealthy}
+        onNavigateToAlarms={() => setActiveTab('alarms')}
+        version="v1.0.0"
+      />
+
+      {/* Incident Detail Modal */}
+      {selectedIncident && (
+        <IncidentDetailModal
+          incident={selectedIncident}
+          onClose={() => setSelectedIncident(null)}
+          onUpdated={loadData}
+        />
+      )}
+
+      {/* Quick Help / Glossary Drawer */}
+      <HelpDrawer
+        isOpen={isHelpOpen}
+        onClose={() => setIsHelpOpen(false)}
+        currentTab={typeof activeTab === 'string' ? activeTab.charAt(0).toUpperCase() + activeTab.slice(1) : ''}
+        onNavigateToExplained={() => setActiveTab('explained')}
+      />
+
+      {/* Network Importer Modal */}
+      <NetworkImporterModal
+        isOpen={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
+        onImportSuccess={() => loadData()}
+      />
+
+      {/* Telemetry Sensor Configuration Modal */}
+      <SensorConfigModal
+        isOpen={isSensorsOpen}
+        onClose={() => setIsSensorsOpen(false)}
+      />
+    </div>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <TooltipProvider>
+      <AuthProvider>
+        <WorkbenchContent />
+      </AuthProvider>
     </TooltipProvider>
   );
 };

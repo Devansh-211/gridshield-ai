@@ -58,6 +58,10 @@
 - **Decision**: Restrict mitigation actions strictly to an allowlisted catalog (`QUARANTINE_MEASUREMENT`, `REVERT_COMMAND`, `REDISPATCH_GEN`, `NO_ACTION`). Implement 3-way comparative verification (Baseline vs Unmitigated vs Mitigated) with forward-looking AC power flow impact simulation. Non-answer incident classifications (`UNKNOWN`, `INSUFFICIENT_DATA`, `MODEL_OUT_OF_DISTRIBUTION`) strictly trigger `NO_ACTION` (Rule R4).
 - **Rationale**: Prevents hallucinated or unauthorized grid interventions. 3-way verification guarantees operators receive concrete, physically validated before/after risk trajectories prior to executing any manual mitigation.
 
-### AD-15: Production Readiness, Vercel Serverless & Supabase Postgres Persistence (P6)
-- **Decision**: Finalize deployment topology with zero daemon threads, transaction-mode pooling on Supabase Postgres (port 6543), packed JSON telemetry schemas, and single-origin static CDN hosting on Vercel (`/api/*` routed to Python ASGI runtime).
-- **Rationale**: Meets all constraints of serverless deployment (ephemeral compute, strict time budgets, connection pooling) while preserving 100% of the integrity spine, ground-truth firewall, and deterministic reproducibility.
+### AD-16: Server-Side Whitelist Projection & Plain Language Translation (Phase PA / R12, R13)
+- **Decision**: The split between Supervisor and Technician views is strictly enforced on the server via dedicated Pydantic whitelist schemas (`SupervisorIncidentProjection`, `SupervisorGridTopologyProjection`, `SupervisorGridStateProjection`) and deterministic translation in `PlainNarrativeGenerator`. Supervisor endpoints never receive or leak engineering jargon or raw mathematical matrices.
+- **Rationale**: Enforces Rule R12 (deny-by-default role security) and Rule R13 (plain language is a translation, never a reduction). The supervisor projection maintains 100% parity with underlying Evidence Objects and preserves environment provenance badges without false certainty.
+
+### AD-17: Authenticated Sessions, Scrypt Hashing & Admin Preview Governance (Phase PA)
+- **Decision**: Standard library `hashlib.scrypt` password hashing with random 16-byte salts, constant-time `hmac.compare_digest`, HttpOnly cookies (`gridshield_session`), and ephemeral one-time bootstrap token for first-run setup. Role preview for administrators is logged to the append-only security audit log and rendered with a high-visibility persistent banner.
+- **Rationale**: Provides zero external heavy dependencies for cryptographic auth, prevents session hijacking or timing attacks, and guarantees full accountability during administrative preview audits.

@@ -208,3 +208,177 @@ export async function resetSystem(): Promise<any> {
   if (!res.ok) throw new Error(`Reset failed: ${res.statusText}`);
   return res.json();
 }
+
+// ----------------------------------------------------------------------------
+// Phase PA: Authentication & Admin Endpoints
+// ----------------------------------------------------------------------------
+
+export async function fetchBootstrapStatus(): Promise<any> {
+  const res = await fetch(`${API_BASE}/auth/bootstrap-status`);
+  if (!res.ok) throw new Error(`Bootstrap status failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function bootstrapSystem(data: {
+  bootstrap_token: string;
+  admin_username: string;
+  admin_password: string;
+  display_name?: string;
+}): Promise<any> {
+  const res = await fetch(`${API_BASE}/auth/bootstrap`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail || `Bootstrap failed: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function loginUser(data: { username: string; password: string }): Promise<any> {
+  const res = await fetch(`${API_BASE}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail || `Login failed: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function logoutUser(): Promise<any> {
+  const res = await fetch(`${API_BASE}/auth/logout`, {
+    method: 'POST',
+  });
+  if (!res.ok) throw new Error(`Logout failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchCurrentUser(): Promise<any> {
+  const res = await fetch(`${API_BASE}/auth/me`);
+  if (!res.ok) {
+    if (res.status === 401 || res.status === 403) return null;
+    throw new Error(`Profile fetch failed: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function listAdminUsers(): Promise<any[]> {
+  const res = await fetch(`${API_BASE}/admin/users`);
+  if (!res.ok) throw new Error(`List users failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function createAdminUser(data: {
+  username: string;
+  password: string;
+  role: string;
+  display_name?: string;
+}): Promise<any> {
+  const res = await fetch(`${API_BASE}/admin/users`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail || `Create user failed: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function deleteAdminUser(userId: string): Promise<any> {
+  const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail || `Delete user failed: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function setAdminPreviewRole(targetRole: string | null): Promise<any> {
+  const res = await fetch(`${API_BASE}/admin/preview-as`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ target_role: targetRole }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail || `Preview role failed: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function fetchSecurityAuditLogs(limit: number = 100, offset: number = 0): Promise<any[]> {
+  const res = await fetch(`${API_BASE}/admin/audit-log?limit=${limit}&offset=${offset}`);
+  if (!res.ok) throw new Error(`Audit log fetch failed: ${res.statusText}`);
+  return res.json();
+}
+
+// ----------------------------------------------------------------------------
+// Phase PA: Segregated Supervisor View Endpoints
+// ----------------------------------------------------------------------------
+
+export async function fetchSupervisorDashboard(): Promise<any> {
+  const res = await fetch(`${API_BASE}/views/supervisor/dashboard`);
+  if (!res.ok) throw new Error(`Supervisor dashboard failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchSupervisorIncidents(): Promise<any[]> {
+  const res = await fetch(`${API_BASE}/views/supervisor/incidents`);
+  if (!res.ok) throw new Error(`Supervisor incidents failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchSupervisorIncidentDetail(incidentId: string): Promise<any> {
+  const res = await fetch(`${API_BASE}/views/supervisor/incidents/${incidentId}`);
+  if (!res.ok) throw new Error(`Supervisor incident ${incidentId} failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchSupervisorTopology(): Promise<any> {
+  const res = await fetch(`${API_BASE}/views/supervisor/grid/topology`);
+  if (!res.ok) throw new Error(`Supervisor topology failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchSupervisorGridState(): Promise<any> {
+  const res = await fetch(`${API_BASE}/views/supervisor/grid/state`);
+  if (!res.ok) throw new Error(`Supervisor grid state failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchSupervisorGlossary(): Promise<any[]> {
+  const res = await fetch(`${API_BASE}/views/supervisor/glossary`);
+  if (!res.ok) throw new Error(`Supervisor glossary failed: ${res.statusText}`);
+  return res.json();
+}
+
+// ----------------------------------------------------------------------------
+// Phase PA: Segregated Technician View Endpoints
+// ----------------------------------------------------------------------------
+
+export async function fetchTechnicianDashboard(): Promise<any> {
+  const res = await fetch(`${API_BASE}/views/technician/dashboard`);
+  if (!res.ok) throw new Error(`Technician dashboard failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchTechnicianIncidentDetail(incidentId: string): Promise<any> {
+  const res = await fetch(`${API_BASE}/views/technician/incidents/${incidentId}`);
+  if (!res.ok) throw new Error(`Technician incident detail failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchTechnicianGridState(): Promise<any> {
+  const res = await fetch(`${API_BASE}/views/technician/grid/state`);
+  if (!res.ok) throw new Error(`Technician grid state failed: ${res.statusText}`);
+  return res.json();
+}

@@ -20,7 +20,8 @@ from backend.app.persistence.models import (
     IncidentModel, IncidentEvidenceModel, EventModel,
     AlarmModel, MitigationResultModel, AnalystOutputModel,
     AuditLogModel, ModelRegistryModel, AppSettingModel,
-    InjectionModel, GroundTruthStepModel, IncidentSequenceModel
+    InjectionModel, GroundTruthStepModel, IncidentSequenceModel,
+    UserModel, SessionModel, ElementAliasModel, GlossaryTermModel
 )
 
 
@@ -454,22 +455,293 @@ class OperationsRepository:
 
     def log_audit(
         self,
-        visitor_id: str,
-        action: str,
-        target_type: str,
-        target_id: str,
-        details: Optional[Dict[str, Any]] = None
+        visitor_id: str = "system",
+        action: str = "ACTION",
+        target_type: str = "SYSTEM",
+        target_id: str = "",
+        details: Optional[Dict[str, Any]] = None,
+        actor_id: Optional[str] = "anonymous",
+        actor_role: Optional[str] = "ANONYMOUS",
+        ip_address: Optional[str] = "127.0.0.1"
     ) -> AuditLogModel:
         audit = AuditLogModel(
             visitor_id=visitor_id,
+            actor_id=actor_id,
+            actor_role=actor_role,
             action=action,
             target_type=target_type,
             target_id=target_id,
+            ip_address=ip_address,
             details_json=details or {},
             created_at=datetime.now(timezone.utc)
         )
         self.db.add(audit)
         return audit
+
+
+# =============================================================================
+# Authentication & Security Repositories (Phase PA)
+# =============================================================================
+
+class AuthRepository:
+    """Manages user accounts, credentials, and active session tokens."""
+    def __init__(self, db: Session):
+        self.db = db
+
+    def get_user_count(self) -> int:
+        stmt = select(func.count(UserModel.id))
+        return self.db.execute(stmt).scalar() or 0
+
+    def create_user(
+        self,
+        username: str,
+        password_hash: str,
+        role: str = "SUPERVISOR",
+        display_name: str = "",
+        must_change_password: bool = False
+    ) -> UserModel:
+        user = UserModel(
+            id=f"usr-{uuid.uuid4().hex[:10]}",
+            username=username.strip().lower(),
+            password_hash=password_hash,
+            role=role.upper(),
+            display_name=display_name or username,
+            must_change_password=must_change_password,
+            is_active=True,
+            created_at=datetime.now(timezone.utc),
+            updated_at=datetime.now(timezone.utc)
+        )
+        self.db.add(user)
+        self.db.flush()
+        return user
+
+    def get_user_by_id(self, user_id: str) -> Optional[UserModel]:
+        stmt = select(UserModel).where(UserModel.id == user_id)
+        return self.db.execute(stmt).scalar_one_or_none()
+
+    def get_user_by_username(self, username: str) -> Optional[UserModel]:
+        stmt = select(UserModel).where(UserModel.username == username.strip().lower())
+        return self.db.execute(stmt).scalar_one_or_none()
+
+    def list_users(self) -> List[UserModel]:
+        stmt = select(UserModel).order_by(UserModel.created_at)
+        return list(self.db.execute(stmt).scalars().all())
+
+    def update_user(self, user_id: str, **kwargs) -> Optional[UserModel]:
+        user = self.get_user_by_id(user_id)
+        if not user:
+            return None
+        for k, v in kwargs.items():
+            if hasattr(user, k) and v is not None:
+                setattr(user, k, v)
+        user.updated_at = datetime.now(timezone.utc)
+        self.db.flush()
+        return user
+
+    def delete_user(self, user_id: str) -> bool:
+        user = self.get_user_by_id(user_id)
+        if not user:
+            return False
+        self.db.delete(user)
+        self.db.flush()
+        return True
+
+    def create_session(
+        self,
+        user_id: str,
+        token_hash: str,
+        ip_address: str = "127.0.0.1",
+        user_agent: str = "",
+        expires_at: Optional[datetime] = None
+    ) -> SessionModel:
+        now = datetime.now(timezone.utc)
+        if not expires_at:
+            expires_at = now + timedelta(hours=12)
+        sess = SessionModel(
+            id=token_hash,
+            user_id=user_id,
+            preview_role=None,
+            ip_address=ip_address,
+            user_agent=user_agent[:255] if user_agent else "",
+            expires_at=expires_at,
+            created_at=now,
+            last_activity_at=now
+        )
+        self.db.add(sess)
+        self.db.flush()
+        return sess
+
+    def get_session(self, token_hash: str) -> Optional[SessionModel]:
+        stmt = select(SessionModel).where(SessionModel.id == token_hash)
+        sess = self.db.execute(stmt).scalar_one_or_none()
+        expires = sess.expires_at
+        if expires and expires.tzinfo is None:
+            expires = expires.replace(tzinfo=timezone.utc)
+        if expires and expires < datetime.now(timezone.utc):
+            self.db.delete(sess)
+            self.db.flush()
+            return None
+        return sess
+
+    def update_preview_role(self, token_hash: str, preview_role: Optional[str]) -> Optional[SessionModel]:
+        sess = self.get_session(token_hash)
+        if not sess:
+            return None
+        sess.preview_role = preview_role.upper() if preview_role else None
+        sess.last_activity_at = datetime.now(timezone.utc)
+        self.db.flush()
+        return sess
+
+    def touch_session(self, token_hash: str) -> None:
+        stmt = update(SessionModel).where(SessionModel.id == token_hash).values(
+            last_activity_at=datetime.now(timezone.utc)
+        )
+        self.db.execute(stmt)
+        self.db.flush()
+
+    def delete_session(self, token_hash: str) -> bool:
+        sess = self.get_session(token_hash)
+        if not sess:
+            return False
+        self.db.delete(sess)
+        self.db.flush()
+        return True
+
+    def delete_all_user_sessions(self, user_id: str) -> int:
+        stmt = delete(SessionModel).where(SessionModel.user_id == user_id)
+        res = self.db.execute(stmt)
+        self.db.flush()
+        return res.rowcount or 0
+
+
+class AuditLogRepository:
+    def __init__(self, db: Session):
+        self.db = db
+
+    def log(
+        self,
+        action: str,
+        target_type: str,
+        target_id: str,
+        actor_id: Optional[str] = "anonymous",
+        actor_role: Optional[str] = "ANONYMOUS",
+        visitor_id: str = "system",
+        ip_address: str = "127.0.0.1",
+        details: Optional[Dict[str, Any]] = None
+    ) -> AuditLogModel:
+        audit = AuditLogModel(
+            visitor_id=visitor_id,
+            actor_id=actor_id,
+            actor_role=actor_role,
+            action=action,
+            target_type=target_type,
+            target_id=str(target_id),
+            ip_address=ip_address,
+            details_json=details or {},
+            created_at=datetime.now(timezone.utc)
+        )
+        self.db.add(audit)
+        self.db.flush()
+        return audit
+
+    def list_logs(self, limit: int = 100, offset: int = 0) -> List[AuditLogModel]:
+        stmt = select(AuditLogModel).order_by(desc(AuditLogModel.created_at)).offset(offset).limit(limit)
+        return list(self.db.execute(stmt).scalars().all())
+
+
+class ElementAliasRepository:
+    """Manages friendly layperson substation and corridor names for IEEE 14 bus network."""
+    def __init__(self, db: Session):
+        self.db = db
+
+    def get_all_aliases(self) -> List[ElementAliasModel]:
+        stmt = select(ElementAliasModel).order_by(ElementAliasModel.element_type, ElementAliasModel.element_id)
+        return list(self.db.execute(stmt).scalars().all())
+
+    def get_alias(self, element_type: str, element_id: int) -> Optional[ElementAliasModel]:
+        stmt = select(ElementAliasModel).where(
+            ElementAliasModel.element_type == element_type.upper(),
+            ElementAliasModel.element_id == element_id
+        )
+        return self.db.execute(stmt).scalar_one_or_none()
+
+    def seed_default_aliases(self) -> None:
+        if self.db.execute(select(func.count(ElementAliasModel.id))).scalar() > 0:
+            return
+
+        defaults = [
+            # Substations (Buses 1-14)
+            ("BUS", 1, "Substation 1 (Central Hydro Feeder)", "Primary Power Source", "Main high-voltage intake from the regional hydroelectric plant"),
+            ("BUS", 2, "Substation 2 (Industrial Gateway)", "Heavy Industry Hub", "Serves manufacturing district and industrial motors"),
+            ("BUS", 3, "Substation 3 (Westside Step-Down)", "Regional Transmission Junction", "Transfers bulk high-voltage electricity into regional rings"),
+            ("BUS", 4, "Substation 4 (Uptown Metro)", "Urban Distribution Center", "Supplies central commercial district and downtown transit"),
+            ("BUS", 5, "Substation 5 (Harbor Substation)", "Maritime & Logistics Center", "Supplies cargo port facilities and waterfront warehouses"),
+            ("BUS", 6, "Substation 6 (North Valley Hub)", "Synchronous Voltage Regulator", "Regulates voltage stability for residential northern districts"),
+            ("BUS", 7, "Substation 7 (Research Park)", "High-Tech Campus Feeder", "Feeds university laboratories and medical research facilities"),
+            ("BUS", 8, "Substation 8 (Eastside Reserve)", "Fast-Response Backup Hub", "Houses auxiliary battery and dynamic voltage stabilizer"),
+            ("BUS", 9, "Substation 9 (Airport Feeder)", "Critical Infrastructure Node", "Provides dual-feed power to regional airport and control towers"),
+            ("BUS", 10, "Substation 10 (Highland District)", "High-Density Residential Hub", "Supplies suburban residential towers and schools"),
+            ("BUS", 11, "Substation 11 (South Suburbs)", "Suburban Residential Grid", "Feeds retail shopping centers and neighborhood circuits"),
+            ("BUS", 12, "Substation 12 (Tech Corridor)", "Data Center District", "Supplies enterprise cloud data centers requiring clean power"),
+            ("BUS", 13, "Substation 13 (Green Energy Park)", "Renewable Infeed Hub", "Interconnects rooftop solar and community wind arrays"),
+            ("BUS", 14, "Substation 14 (East Suburbs)", "East Residential Perimeter", "Serves outer residential developments and water treatment plant"),
+        ]
+
+        for el_type, el_id, friendly, role, desc_txt in defaults:
+            alias = ElementAliasModel(
+                element_type=el_type,
+                element_id=el_id,
+                friendly_name=friendly,
+                substation_role=role,
+                plain_description=desc_txt,
+                created_at=datetime.now(timezone.utc)
+            )
+            self.db.add(alias)
+        self.db.flush()
+
+
+class GlossaryRepository:
+    """Manages layperson translations for power engineering and cyber concepts."""
+    def __init__(self, db: Session):
+        self.db = db
+
+    def get_all_terms(self) -> List[GlossaryTermModel]:
+        stmt = select(GlossaryTermModel).order_by(GlossaryTermModel.technical_term)
+        return list(self.db.execute(stmt).scalars().all())
+
+    def get_term(self, technical_term: str) -> Optional[GlossaryTermModel]:
+        stmt = select(GlossaryTermModel).where(GlossaryTermModel.technical_term == technical_term.strip().lower())
+        return self.db.execute(stmt).scalar_one_or_none()
+
+    def seed_default_glossary(self) -> None:
+        if self.db.execute(select(func.count(GlossaryTermModel.id))).scalar() > 0:
+            return
+
+        glossary = [
+            ("voltage sag", "Temporary dip in electrical pressure below normal operating range", "Like water pressure dropping when multiple hoses open at once"),
+            ("voltage swell", "Temporary surge in electrical pressure above safe equipment rating", "Like a sudden spike in water pipe pressure"),
+            ("frequency excursion", "Deviation of the electrical grid's heartbeat rhythm away from standard 50 Hz", "Like a heartbeat speeding up or slowing down under unexpected stress"),
+            ("rocof", "Rate of Change of Frequency — how quickly the grid's rhythm is shifting", "How suddenly a car accelerates or decelerates"),
+            ("fdi", "False Data Injection — deceptive sensor manipulation intended to trick grid controllers", "Like someone secretly changing the thermostat reading to fool the heater"),
+            ("wls chi-square", "Statistical cross-check comparing multiple sensor reports against the laws of physics", "Like double-checking a bank ledger to see if deposits and withdrawals match"),
+            ("n-1 contingency", "Simulating whether the grid can stay stable if any single major line fails", "Like checking if a bridge can handle traffic if one lane is blocked"),
+            ("reactive power", "Electrical energy that sustains electromagnetic fields inside transformers and motors", "The foam on top of a soda — doesn't quench thirst directly, but necessary to pour it"),
+            ("line loading", "How close a transmission line is to its maximum safe electricity carrying limit", "Traffic congestion on a highway compared to its total lane capacity"),
+            ("covert attack", "A stealthy cyber attack that manipulates grid state while concealing itself from detectors", "A subtle manipulation crafted to blend in with normal background noise"),
+            ("isolation forest", "AI anomaly detector that spots unfamiliar grid operating conditions", "A security guard trained to spot unusual behavior in a crowd"),
+            ("generator tripping", "Automatic safety shutdown of a generator to prevent permanent mechanical destruction", "An emergency circuit breaker cutting power when a motor overheats")
+        ]
+
+        for tech, plain, analogy in glossary:
+            term = GlossaryTermModel(
+                technical_term=tech.lower(),
+                plain_translation=plain,
+                plain_analogy=analogy,
+                created_at=datetime.now(timezone.utc)
+            )
+            self.db.add(term)
+        self.db.flush()
+
 
 
 # =============================================================================

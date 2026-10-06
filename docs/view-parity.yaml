@@ -1,0 +1,58 @@
+# GridShield AI — View Parity Manifest (Rule R13)
+# Validates that the Supervisor view is a faithful, complete translation of the Technician Evidence Object.
+# No engineering fact is omitted; each fact is deterministically translated without fabrication or false certainty.
+
+version: "1.0.0"
+date: "2026-10-07"
+standard: "Rule R13 — Faithful Translation, Never a Reduction"
+
+mappings:
+  - technician_fact: "incident.id"
+    supervisor_fact: "SupervisorIncidentProjection.incident_id"
+    translation_rule: "Exact identity preserved"
+    notes: "Enables cross-role collaboration between supervisor and technician using common incident tracking ID."
+
+  - technician_fact: "incident.environment (SIMULATION vs LIVE)"
+    supervisor_fact: "SupervisorIncidentProjection.environment_label and environment_badge_text"
+    translation_rule: "Explicit plain banner ('PRACTICE SIMULATION — Not real grid data')"
+    notes: "Non-negotiable provenance: prevents non-expert operator from mistaking educational simulations for real grid emergencies."
+
+  - technician_fact: "incident.target_bus (IEEE 1-based index, e.g., Bus 4)"
+    supervisor_fact: "SupervisorIncidentProjection.affected_substations[].friendly_name"
+    translation_rule: "Mapped via ElementAliasRepository: 'Substation 4 (Uptown Metro)'"
+    notes: "Avoids engineering bus numbers; connects to geographic/community infrastructure."
+
+  - technician_fact: "incident.attack_category (e.g., FALSE_DATA_INJECTION)"
+    supervisor_fact: "SupervisorIncidentProjection.what_is_happening"
+    translation_rule: "Grade <= 8 plain explanation of physical effect (misleading sensor reports deceiving voltage controllers)"
+    notes: "Zero undefined jargon (no 'FDI', 'WLS', 'Kalman', 'Jacobian')."
+
+  - technician_fact: "incident.risk_assessment.risk_level (LOW / MEDIUM / HIGH / CRITICAL)"
+    supervisor_fact: "SupervisorIncidentProjection.severity_level (NORMAL / WORTH_WATCHING / NEEDS_ATTENTION / URGENT)"
+    translation_rule: "1-to-1 severity mapping with contextual action urgency"
+    notes: "Never calls any state 'safe'; distinguishes routine from urgent operational states."
+
+  - technician_fact: "incident.attribution.certainty_band & confidence_score (5D vector + calibrated probability)"
+    supervisor_fact: "SupervisorIncidentProjection.how_sure_we_are"
+    translation_rule: "4-dimensional plain breakdown: confidence summary %, completeness, detector agreement, and stability"
+    notes: "Explicitly states 'We cannot tell yet' for low confidence / ambiguous evidence states."
+
+  - technician_fact: "incident.risk_assessment.consequence_summary (N-1 line thermal overloads, voltage collapse risk)"
+    supervisor_fact: "SupervisorIncidentProjection.what_it_could_lead_to"
+    translation_rule: "Plain physical consequences (overloading neighborhood transmission corridors, automatic protective shutdowns)"
+    notes: "Explains real-world cascading impact without technical power flow formulas."
+
+  - technician_fact: "incident.mitigation_recommendations (generator redispatch MW, line switching commands)"
+    supervisor_fact: "SupervisorIncidentProjection.options_to_discuss_with_technician"
+    translation_rule: "Plain options for technical discussion with clear expected outcome, why discuss first, and trade-offs"
+    notes: "Mandatory disclaimer: options are not certified safe; technician consultation required."
+
+  - technician_fact: "bus.vm_pu (Per-unit voltage, e.g. 0.94 p.u.)"
+    supervisor_fact: "SupervisorGridStateProjection.substation_readings[].plain_reading"
+    translation_rule: "Percentage deviation from normal (e.g. 'Voltage is 6.0% below normal level')"
+    notes: "Translates per-unit floating point scale into understandable percentage offsets."
+
+  - technician_fact: "line.loading_percent (Line loading % vs thermal limit)"
+    supervisor_fact: "SupervisorGridStateProjection.equipment_strain_summary"
+    translation_rule: "Aggregate corridor strain ratio (e.g. '19 of 20 power corridors running well within safe limits')"
+    notes: "Provides immediate situational overview without requiring bus admittance calculations."

@@ -348,11 +348,67 @@ class AuditLogModel(Base):
     __tablename__ = "audit_log"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    visitor_id: Mapped[str] = mapped_column(String(64), index=True)
+    visitor_id: Mapped[str] = mapped_column(String(64), index=True, default="system")
+    actor_id: Mapped[str] = mapped_column(String(64), nullable=True, default="anonymous")
+    actor_role: Mapped[str] = mapped_column(String(32), nullable=True, default="ANONYMOUS")
     action: Mapped[str] = mapped_column(String(64))
     target_type: Mapped[str] = mapped_column(String(64))
     target_id: Mapped[str] = mapped_column(String(64))
+    ip_address: Mapped[str] = mapped_column(String(64), nullable=True, default="127.0.0.1")
     details_json: Mapped[dict] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+
+class UserModel(Base):
+    __tablename__ = "users"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    username: Mapped[str] = mapped_column(String(64), unique=True, index=True)
+    password_hash: Mapped[str] = mapped_column(String(256))
+    role: Mapped[str] = mapped_column(String(32), default="SUPERVISOR")  # SUPERVISOR, TECHNICIAN, ADMIN
+    display_name: Mapped[str] = mapped_column(String(128), default="")
+    must_change_password: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+    sessions: Mapped[list["SessionModel"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+
+
+class SessionModel(Base):
+    __tablename__ = "sessions"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    user_id: Mapped[str] = mapped_column(String(64), ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    preview_role: Mapped[str] = mapped_column(String(32), nullable=True)  # Nullable: for Admin previewing as SUPERVISOR / TECHNICIAN
+    ip_address: Mapped[str] = mapped_column(String(64), default="127.0.0.1")
+    user_agent: Mapped[str] = mapped_column(String(256), default="")
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    last_activity_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+    user: Mapped["UserModel"] = relationship(back_populates="sessions")
+
+
+class ElementAliasModel(Base):
+    __tablename__ = "element_aliases"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    element_type: Mapped[str] = mapped_column(String(32), index=True)  # BUS, LINE, GENERATOR, TRANSFORMER
+    element_id: Mapped[int] = mapped_column(Integer, index=True)
+    friendly_name: Mapped[str] = mapped_column(String(128))
+    substation_role: Mapped[str] = mapped_column(String(64), default="")
+    plain_description: Mapped[str] = mapped_column(Text, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+
+class GlossaryTermModel(Base):
+    __tablename__ = "glossary_terms"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    technical_term: Mapped[str] = mapped_column(String(64), unique=True, index=True)
+    plain_translation: Mapped[str] = mapped_column(String(256))
+    plain_analogy: Mapped[str] = mapped_column(Text, default="")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
 
@@ -375,3 +431,4 @@ class AppSettingModel(Base):
 
     key: Mapped[str] = mapped_column(String(64), primary_key=True)
     value_json: Mapped[dict] = mapped_column(JSON)
+

@@ -365,3 +365,152 @@ export interface ErrorEnvelope {
   request_id?: string | null;
 }
 
+// ----------------------------------------------------------------------------
+// Phase PA: Authentication & Role Management Types
+// ----------------------------------------------------------------------------
+
+export type UserRole = 'SUPERVISOR' | 'TECHNICIAN' | 'ADMIN';
+
+export interface UserProfile {
+  user_id: string;
+  username: string;
+  display_name: string;
+  real_role: UserRole;
+  effective_role: UserRole;
+  is_preview: boolean;
+  preview_role: UserRole | null;
+  must_change_password: boolean;
+}
+
+export interface UserSummary {
+  user_id: string;
+  username: string;
+  display_name: string;
+  role: UserRole;
+  is_active: boolean;
+  must_change_password: boolean;
+  created_at: string;
+}
+
+export interface BootstrapStatus {
+  needs_bootstrap: boolean;
+  user_count: number;
+  bootstrap_token: string | null;
+}
+
+export interface SecurityAuditLog {
+  id: number;
+  actor_id?: string | null;
+  actor_role?: string | null;
+  action: string;
+  target_type: string;
+  target_id: string;
+  ip_address?: string | null;
+  details: Record<string, any>;
+  created_at: string;
+}
+
+// ----------------------------------------------------------------------------
+// Phase PA: Supervisor Plain-Language Whitelist Projections
+// ----------------------------------------------------------------------------
+
+export interface PlainConfidenceSummary {
+  plain_confidence_summary: string;
+  completeness_text: string;
+  agreement_text: string;
+  stability_text: string;
+  sensor_evidence_count: number;
+}
+
+export interface PlainDiscussionOption {
+  option_id: string;
+  option_title: string;
+  plain_action_summary: string;
+  expected_outcome: string;
+  why_discuss_first: string;
+  not_guaranteed_safe_notice: string;
+}
+
+export interface AffectedSubstationPlain {
+  substation_id: number;
+  friendly_name: string;
+  role: string;
+  plain_status: string;
+}
+
+export interface SupervisorIncidentProjection {
+  incident_id: string;
+  environment_label: 'PRACTICE_SIMULATION' | 'HISTORICAL_REPLAY' | 'LIVE_SYSTEM';
+  environment_badge_text: string;
+  status_summary: string;
+  severity_level: 'NORMAL' | 'WORTH_WATCHING' | 'NEEDS_ATTENTION' | 'URGENT';
+  what_is_happening: string;
+  how_sure_we_are: PlainConfidenceSummary;
+  what_it_could_lead_to: string;
+  options_to_discuss_with_technician: PlainDiscussionOption[];
+  affected_substations: AffectedSubstationPlain[];
+  provenance_summary: string;
+  narrative_version: string;
+}
+
+export interface SubstationTopologyPlain {
+  substation_id: number;
+  friendly_name: string;
+  substation_role: string;
+  plain_description: string;
+  coordinates: number[];
+  connected_corridor_ids: number[];
+}
+
+export interface CorridorTopologyPlain {
+  corridor_id: number;
+  from_substation_name: string;
+  to_substation_name: string;
+  capacity_tier: string;
+}
+
+export interface SupervisorGridTopologyProjection {
+  environment_label: string;
+  environment_badge_text: string;
+  substations: SubstationTopologyPlain[];
+  corridors: CorridorTopologyPlain[];
+  plain_legend: Record<string, string>;
+}
+
+export interface SubstationReadingPlain {
+  substation_id: number;
+  friendly_name: string;
+  status: 'NORMAL' | 'ELEVATED_STRAIN' | 'SUSPECT_SENSOR' | 'DEVIATION';
+  strain_level: 'LOW' | 'MEDIUM' | 'HIGH';
+  plain_reading: string;
+  provenance_text: 'Direct Measurement' | 'Cross-Checked Estimate' | 'Data Unavailable';
+}
+
+export interface SupervisorGridStateProjection {
+  step: number;
+  environment_label: string;
+  environment_badge_text: string;
+  system_health_status: 'NORMAL' | 'UNDER_OBSERVATION' | 'ATTENTION_REQUIRED' | 'CRITICAL';
+  plain_frequency_summary: string;
+  equipment_strain_summary: string;
+  active_incident_count: number;
+  substation_readings: SubstationReadingPlain[];
+}
+
+export interface SupervisorDashboardData {
+  environment_label: string;
+  environment_badge_text: string;
+  system_health: string;
+  grid_frequency_status: string;
+  corridor_strain_status: string;
+  active_incidents_count: number;
+  recent_briefings: SupervisorIncidentProjection[];
+  recommendations_summary: string;
+}
+
+export interface GlossaryItem {
+  term: string;
+  plain_translation: string;
+  plain_analogy: string;
+}
+

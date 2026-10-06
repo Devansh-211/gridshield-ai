@@ -117,5 +117,18 @@ def get_health():
     }
 
 # Mount /api/v1 router
+from backend.app.api.v1.auth_endpoints import router as auth_router
+from backend.app.api.v1.views_endpoints import router as views_router
+from backend.app.core.route_policy import validate_all_routes_on_startup
+
 app.include_router(api_v1_router)
+app.include_router(auth_router, prefix="/api/v1")
+app.include_router(views_router, prefix="/api/v1")
+
+@app.on_event("startup")
+def on_startup():
+    from backend.app.persistence.database import init_db
+    init_db()
+    validate_all_routes_on_startup(app)
+
 

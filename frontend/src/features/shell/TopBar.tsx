@@ -2,6 +2,9 @@ import React from 'react';
 import { Button } from '../../ui/Button';
 import { Tooltip } from '../../ui/Tooltip';
 import { UI_STRINGS } from '../../content/strings';
+import { useAuth } from '../../context/AuthContext';
+import { User, LogOut, Eye } from 'lucide-react';
+import { UserRole } from '../../../types/api';
 
 interface TopBarProps {
   sessionId?: string | null;
@@ -28,6 +31,8 @@ export const TopBar: React.FC<TopBarProps> = ({
   theme,
   onToggleTheme,
 }) => {
+  const { user, logout, switchPreviewRole, isPreview } = useAuth();
+
   return (
     <header className="h-10 min-h-[40px] bg-panel border-b border-border px-3 flex items-center justify-between select-none text-xs z-30">
       {/* Left: Wordmark & Simulation Badge */}
@@ -137,8 +142,48 @@ export const TopBar: React.FC<TopBarProps> = ({
       </div>
 
 
-      {/* Right: UTC Clock, Theme Toggle & Help */}
+      {/* Right: User Profile, Preview Switcher, UTC Clock, Theme Toggle & Logout */}
       <div className="flex items-center space-x-2 shrink-0">
+        {/* Role Preview Dropdown for Admins */}
+        {user?.real_role === 'ADMIN' && (
+          <div className="flex items-center gap-1.5 bg-app px-2 py-0.5 rounded border border-border">
+            <Eye className="w-3.5 h-3.5 text-amber-400" />
+            <select
+              value={user.preview_role || 'ADMIN'}
+              onChange={(e) => {
+                const target = e.target.value === 'ADMIN' ? null : (e.target.value as UserRole);
+                switchPreviewRole(target);
+              }}
+              className="bg-transparent text-[11px] font-semibold text-text-main focus:outline-none cursor-pointer"
+            >
+              <option value="ADMIN">Admin Console</option>
+              <option value="SUPERVISOR">Preview: Supervisor</option>
+              <option value="TECHNICIAN">Preview: Technician</option>
+            </select>
+          </div>
+        )}
+
+        {/* User Pill */}
+        {user && (
+          <div className="flex items-center gap-1.5 bg-surface px-2 py-1 rounded border border-border">
+            <User className="w-3 h-3 text-blue-400" />
+            <span className="text-[11px] font-medium text-text-main font-mono">
+              {user.username}
+            </span>
+            <span
+              className={`px-1.5 py-0.2 rounded text-[9px] font-bold uppercase ${
+                user.effective_role === 'ADMIN'
+                  ? 'bg-purple-500/20 text-purple-400'
+                  : user.effective_role === 'TECHNICIAN'
+                  ? 'bg-amber-500/20 text-amber-400'
+                  : 'bg-blue-500/20 text-blue-400'
+              }`}
+            >
+              {user.effective_role}
+            </span>
+          </div>
+        )}
+
         <span className="text-[11px] font-mono text-text-muted hidden md:inline">
           {simTime}
         </span>
@@ -162,7 +207,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
           aria-label="Toggle theme"
         >
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+          {theme === 'light' ? '🌙' : '☀️'}
         </Button>
 
         {onOpenHelp && (
@@ -174,6 +219,19 @@ export const TopBar: React.FC<TopBarProps> = ({
             aria-label="Help"
           >
             ?
+          </Button>
+        )}
+
+        {user && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={logout}
+            title="Sign out of workbench"
+            aria-label="Sign out"
+            className="text-red-400 hover:text-red-300"
+          >
+            <LogOut className="w-3.5 h-3.5" />
           </Button>
         )}
       </div>

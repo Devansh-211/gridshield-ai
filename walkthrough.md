@@ -1,53 +1,93 @@
-# GridShield AI — Always-On Rules & Usability Floor Implementation Walkthrough
+# GridShield AI — Phase PA Walkthrough & Verification Report
 
-## Overview
-GridShield AI has been upgraded into a **cyber-physical grid exercise, analysis, and decision-support workbench** strictly meeting all 12 Invariants (I1–I12), 9 Always-On Rules (A1–A9), 11 Integrity Rules (R1–R11), and the Usability Floor.
+## Authentication, Roles & Segregated Views (Phase PA)
 
-All work was executed on the dedicated git branch `workbench-mvp`. `main` remains untouched.
+### Executive Summary
+Phase PA establishes enterprise-grade authentication, role-based access control, server-side whitelist projection, and segregated user experiences across **Supervisor**, **Technician**, and **Administrator** roles.
 
----
-
-## Control State
-`AUTONOMOUS` — All 5 phases (Phase 1 through Phase 5) completed, verified, and tagged.
-
----
-
-## Milestone Tags & Git Progression
-- `phase-1-start` & `phase-1-complete`: Core Integrity Architecture & Rules Engine (R1, R2, R4, R5, R6, R9, R11).
-- `phase-2-start` & `phase-2-complete`: Custom Network Importer (.m & .json) & Telemetry Sensor Health Manager (R5, R6).
-- `phase-3-start` & `phase-3-complete`: Exercise Mode Visual Scenario Authoring & Deterministic Runner (R3, R10).
-- `phase-4-start` & `phase-4-complete`: Analysis (Replay) Mode & After-Action Report Exporter (R1, R2, R7).
-- `phase-5-start` & `workbench-mvp-complete`: Immutable What-If Engine & Product Boundary Verification (R8).
+1. **Supervisor Mode**: A plain-language translation of the underlying Evidence Object for non-engineers. Features friendly regional substation names, plain arterial corridor strain layers, and a 4-part decision card (*What is happening*, *How sure we are*, *What it could lead to*, *Options worth discussing with a technician*).
+2. **Technician Mode**: Complete engineering and SCADA telemetry console with IEEE bus indices, raw values and units, detector confidence vectors, residuals, and full Evidence JSON tree inspector.
+3. **Administrator Mode**: User account CRUD, role assignment, append-only security audit log reader, and an instant "Preview As" mode switcher with persistent visual warning banners.
 
 ---
 
-## Key Achievements & Compliance Audit
+## 8-Point Phase Gate Verification
 
-### 1. Integrity Architecture (Rules R1–R11)
-- **R1 Value Envelope**: Every API/UI value carries value, unit, source, timestamp+timezone, provenance (`LIVE | HISTORICAL | PUBLIC_DATASET | SIMULATED | DERIVED | PREDICTED | UNAVAILABLE`), confidence, and validity.
-- **R2 Environment Labeling**: Header and export badges explicitly display `SIMULATOR`, `REPLAY(dataset_id)`, `MOCK`, `FIXTURE`, `UNAVAILABLE`, or `LIVE`.
-- **R3 Non-Answer States**: Supports `UNKNOWN`, `INSUFFICIENT_DATA`, `CONFLICTING_EVIDENCE`, `MODEL_OUT_OF_DISTRIBUTION`, and `TOPOLOGY_UNSUPPORTED`. No mitigation recommendations are permitted under non-answer states. Sensor degradation hypothesis `H_data_quality` is tracked.
-- **R4 & R5 Evidence Object & 5D Confidence Vector**: Full version registry {topology, state_estimate, model, data_schema, code_commit} and 5 distinct confidence dimensions (detection, attribution, model uncertainty, evidence completeness, data quality).
-- **R6 Validated-Domain Gate**: `models/registry/compatibility.json` enforces topology and feature-space OOD limits, suppressing ML attribution on unvalidated networks.
-- **R7 Grounded LLM Explanation**: Temperature=0, delimiter isolation (`<<<DATA>>>`), and deterministic template fallback on missing keys or grounding failures.
-- **R8 Immutable What-If Engine**: What-if simulations run on immutable network copies, emitting `PREDICTED` recommendations.
-- **R11 Ground-Truth Firewall**: Type boundary ensures detection/attribution/LLM accept only observed telemetry.
+All 8 Phase Gate verification criteria were executed and verified via `pytest backend/tests/test_phase_pa_auth_views.py`:
 
-### 2. Usability Floor
-- **One-Command Start**: Clean dev server startup via `Makefile` / `npm run dev`.
-- **Flexible Custom Network Ingestion**: Import MATPOWER `.m` files and pandapower `.json` files via `NetworkImporter` modal with automated validation reports.
-- **Sensor Config & Health Console**: Configure sensor placement, noise variance, stuck signals, and monitor sensor data quality.
-- **Exercise & Replay Modes**: Visual scenario builder for disturbance/attack authoring and CSV/Parquet dataset replay engine.
-- **After-Action Report Export**: Generate JSON and Markdown evidence bundles with product boundary disclaimers.
-
-### 3. Recent Enhancements & UI/Telemetry Fixes
-- **Overview Active Alarms Synchronization**: Fixed alarm stream synchronization on the Overview console, auto-seeding baseline alarms on uninitialized SQLite databases, and providing instant optimistic UI updates on operator acknowledgment (`UNACK` $\rightarrow$ `ACK`).
-- **Layman's Terms Scenario Playbook**: Added an interactive plain-English guide in the Scenario Lab (`📘 Layman's Playbook`) with real-world analogies, step-by-step disturbance breakdowns, and one-click simulation launcher buttons.
-- **Multi-Page Live Telemetry Audit**: Wired rolling historian telemetry buffer to Trends view, real-time overlays to Grid Topology view, and fallback inspection capability to Incidents view.
+| Gate | Criterion | Status | Evidence |
+| :--- | :--- | :--- | :--- |
+| **Gate 1** | **Route Security Matrix & Deny-by-Default** | **PASSED** | 59/59 endpoints registered in `route_policy.py`; unauthenticated requests rejected with 401; supervisor denied technician endpoints with 403. |
+| **Gate 2** | **Server-Side Whitelist Projection** | **PASSED** | `/views/supervisor/*` endpoints return strict Pydantic whitelist schemas. Zero raw physical matrices or unwhitelisted keys leaked. |
+| **Gate 3** | **Jargon Linter & Plain Language Guard** | **PASSED** | Linter verifies zero occurrences of 20+ forbidden engineering jargon terms (`p.u.`, `state estimation`, `residual`, `jacobian`, etc.). Grade $\le 8$ reading level. |
+| **Gate 4** | **Fidelity to Ground Truth & Evidence Object** | **PASSED** | Plain briefings accurately reflect incident status, affected components, and options without reducing evidence or altering truth. |
+| **Gate 5** | **View Parity Manifest** | **PASSED** | `docs/view-parity.yaml` maps 100% of engineering telemetry and detector outputs to supervisor counterparts. |
+| **Gate 6** | **Cryptography, Sessions & Bootstrap Lifecycle** | **PASSED** | Standard library `scrypt` hashing with 16-byte random salts, constant-time `hmac.compare_digest`, and one-time bootstrap token invalidation. |
+| **Gate 7** | **Admin Role Preview & Audit Trail** | **PASSED** | Admin switching to `SUPERVISOR` or `TECHNICIAN` logs to append-only `AuditLogModel` under real admin identity; frontend displays persistent warning banner. |
+| **Gate 8** | **Determinism & Provenance Integrity** | **PASSED** | Seeded deterministic translations with full provenance badges (`PRACTICE SIMULATION — Educational Digital Twin`). |
 
 ---
 
-## Test Verification Summary
-- **Backend Test Suite**: `105/105 PASS` (100% pass rate across 20 test files in `backend/tests/` including API endpoints, state estimation, anomaly detection, attribution, risk engine, and golden regressions).
-- **Frontend Compilation**: `cmd /c npm run build` passed with `0` TypeScript errors (`dist/` production assets generated).
-- **Git Branch Status**: Fully committed and pushed to remote `origin/workbench-mvp`. Clean separation preserved from `main`.
+## Full Test Suite Results
+
+```
+============================= test session starts =============================
+platform win32 -- Python 3.14.2, pytest-9.1.1, pluggy-1.6.0
+rootdir: D:\New project
+configfile: pyproject.toml
+
+backend/tests/test_phase_pa_auth_views.py ........                       [100%]
+======================= 8 passed, 12 warnings in 16.67s =======================
+
+============================= Full System Suite ==============================
+=============== 113 passed, 6126 warnings in 555.51s (0:09:15) ================
+```
+
+---
+
+## Frontend Build Verification
+
+```
+> gridshield-ai-frontend@1.0.0 build
+> tsc && vite build
+
+vite v5.4.21 building for production...
+✓ 2027 modules transformed.
+dist/index.html                                                     1.10 kB
+dist/assets/index-DDJ1iusH.css                                     49.30 kB
+dist/assets/index-B_P1CjGe.js                                     575.35 kB
+✓ built in 47.68s
+```
+
+---
+
+## Key Files Created & Modified
+
+- **Security & Database Models**:
+  - [`backend/app/persistence/models.py`](file:///d:/New%20project/backend/app/persistence/models.py)
+  - [`backend/app/core/security.py`](file:///d:/New%20project/backend/app/core/security.py)
+  - [`backend/app/core/auth_context.py`](file:///d:/New%20project/backend/app/core/auth_context.py)
+  - [`backend/app/core/route_policy.py`](file:///d:/New%20project/backend/app/core/route_policy.py)
+  - [`backend/app/persistence/repositories.py`](file:///d:/New%20project/backend/app/persistence/repositories.py)
+- **Plain Language Translation Engine & Whitelist Schemas**:
+  - [`backend/app/narrative/schemas.py`](file:///d:/New%20project/backend/app/narrative/schemas.py)
+  - [`backend/app/narrative/generator.py`](file:///d:/New%20project/backend/app/narrative/generator.py)
+  - [`docs/view-parity.yaml`](file:///d:/New%20project/docs/view-parity.yaml)
+- **API Endpoints**:
+  - [`backend/app/api/v1/auth_endpoints.py`](file:///d:/New%20project/backend/app/api/v1/auth_endpoints.py)
+  - [`backend/app/api/v1/views_endpoints.py`](file:///d:/New%20project/backend/app/api/v1/views_endpoints.py)
+- **Phase Gate Tests**:
+  - [`backend/tests/test_phase_pa_auth_views.py`](file:///d:/New%20project/backend/tests/test_phase_pa_auth_views.py)
+- **Frontend Segregated Views & Auth Shells**:
+  - [`frontend/src/context/AuthContext.tsx`](file:///d:/New%20project/frontend/src/context/AuthContext.tsx)
+  - [`frontend/src/features/auth/LoginView.tsx`](file:///d:/New%20project/frontend/src/features/auth/LoginView.tsx)
+  - [`frontend/src/features/auth/BootstrapModal.tsx`](file:///d:/New%20project/frontend/src/features/auth/BootstrapModal.tsx)
+  - [`frontend/src/features/auth/PreviewBanner.tsx`](file:///d:/New%20project/frontend/src/features/auth/PreviewBanner.tsx)
+  - [`frontend/src/views/supervisor/SupervisorDashboardView.tsx`](file:///d:/New%20project/frontend/src/views/supervisor/SupervisorDashboardView.tsx)
+  - [`frontend/src/views/supervisor/SupervisorTopologyView.tsx`](file:///d:/New%20project/frontend/src/views/supervisor/SupervisorTopologyView.tsx)
+  - [`frontend/src/views/supervisor/SupervisorIncidentsView.tsx`](file:///d:/New%20project/frontend/src/views/supervisor/SupervisorIncidentsView.tsx)
+  - [`frontend/src/views/supervisor/SupervisorGlossaryView.tsx`](file:///d:/New%20project/frontend/src/views/supervisor/SupervisorGlossaryView.tsx)
+  - [`frontend/src/views/admin/AdminConsoleView.tsx`](file:///d:/New%20project/frontend/src/views/admin/AdminConsoleView.tsx)
+  - [`frontend/src/App.tsx`](file:///d:/New%20project/frontend/src/App.tsx)
+  - [`frontend/src/features/shell/TopBar.tsx`](file:///d:/New%20project/frontend/src/features/shell/TopBar.tsx)
+  - [`frontend/src/features/shell/LeftNav.tsx`](file:///d:/New%20project/frontend/src/features/shell/LeftNav.tsx)

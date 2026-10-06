@@ -65,6 +65,33 @@ def init_db():
             conn.commit()
     Base.metadata.create_all(bind=engine)
 
+    # Lightweight column migration for existing SQLite dev databases
+    if IS_SQLITE:
+        try:
+            with engine.connect() as conn:
+                res = conn.execute(text("PRAGMA table_info(audit_log);")).fetchall()
+                existing_cols = {row[1] for row in res}
+                if "actor_id" not in existing_cols and len(existing_cols) > 0:
+                    conn.execute(text("ALTER TABLE audit_log ADD COLUMN actor_id VARCHAR(64) DEFAULT 'anonymous';"))
+                if "actor_role" not in existing_cols and len(existing_cols) > 0:
+                    conn.execute(text("ALTER TABLE audit_log ADD COLUMN actor_role VARCHAR(32) DEFAULT 'ANONYMOUS';"))
+                if "ip_address" not in existing_cols and len(existing_cols) > 0:
+                    conn.execute(text("ALTER TABLE audit_log ADD COLUMN ip_address VARCHAR(64) DEFAULT '127.0.0.1';"))
+                conn.commit()
+        except Exception as e:
+            print(f"[WARN] Error in SQLite migration: {e}")
+    
+    # Auto-seed friendly element aliases & plain glossary
+    try:
+        from backend.app.persistence.repositories import ElementAliasRepository, GlossaryRepository
+        with get_db_session() as db:
+            ElementAliasRepository(db).seed_default_aliases()
+            GlossaryRepository(db).seed_default_glossary()
+    except Exception as e:
+        print(f"[WARN] Error seeding aliases/glossary: {e}")
+
+
+
 def get_db() -> Generator[Session, None, None]:
     """FastAPI dependency for yielding database sessions."""
     db = SessionLocal()
