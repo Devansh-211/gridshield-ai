@@ -57,3 +57,7 @@
 ### AD-14: Response Simulation, Action Allowlist & Non-Answer Invariants (P5)
 - **Decision**: Restrict mitigation actions strictly to an allowlisted catalog (`QUARANTINE_MEASUREMENT`, `REVERT_COMMAND`, `REDISPATCH_GEN`, `NO_ACTION`). Implement 3-way comparative verification (Baseline vs Unmitigated vs Mitigated) with forward-looking AC power flow impact simulation. Non-answer incident classifications (`UNKNOWN`, `INSUFFICIENT_DATA`, `MODEL_OUT_OF_DISTRIBUTION`) strictly trigger `NO_ACTION` (Rule R4).
 - **Rationale**: Prevents hallucinated or unauthorized grid interventions. 3-way verification guarantees operators receive concrete, physically validated before/after risk trajectories prior to executing any manual mitigation.
+
+### AD-15: Production Readiness, Vercel Serverless & Supabase Postgres Persistence (P6)
+- **Decision**: Finalize deployment topology with zero daemon threads, transaction-mode pooling on Supabase Postgres (port 6543), packed JSON telemetry schemas, and single-origin static CDN hosting on Vercel (`/api/*` routed to Python ASGI runtime).
+- **Rationale**: Meets all constraints of serverless deployment (ephemeral compute, strict time budgets, connection pooling) while preserving 100% of the integrity spine, ground-truth firewall, and deterministic reproducibility.
