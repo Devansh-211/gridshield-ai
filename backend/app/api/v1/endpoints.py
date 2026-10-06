@@ -45,11 +45,15 @@ from backend.app.attribution.certainty import compute_certainty_band
 from backend.app.risk.engine import RiskEngine
 from backend.app.incidents.manager import IncidentManager
 from backend.app.mitigation.engine import (
+
     recommend_mitigation,
     simulate_impact,
     simulate_mitigation,
 )
 from backend.app.analyst.service import AnalystService
+from backend.app.services.network_importer import NetworkImporter
+from backend.app.services.sensor_manager import SensorManager, SensorConfig
+
 
 router = APIRouter(prefix="/api/v1")
 
@@ -61,11 +65,13 @@ _detector = AnomalyDetector()
 _attribution_engine = AttributionEngine()
 _risk_engine = RiskEngine()
 _analyst_service = AnalystService()
-
+_network_importer = NetworkImporter()
+_sensor_manager = SensorManager()
 
 from backend.app.services.grid_view_service import GridViewService
 
 _grid_view_service = GridViewService(_active_grid)
+
 
 
 @router.get("/topology/{version}/graph")
@@ -771,4 +777,29 @@ def post_system_reset():
     _latest_run = None
     _incident_manager = IncidentManager()
     return {"status": "RESET_COMPLETED"}
+
+
+from fastapi import UploadFile, File
+
+@router.post("/network/import")
+async def import_custom_network(file: UploadFile = File(...)):
+    """
+    Import a custom grid network (.m MATPOWER or .json pandapower file).
+    Generates validation report & R6 compatibility gate check.
+    """
+    content = await file.read()
+    try:
+        report = _network_importer.import_network_from_file(file.filename, content)
+        return report
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Network import error: {str(e)}")
+
+
+@router.get("/sensors/health")
+def get_sensors_health():
+    """Returns telemetry sensor health report & R5 data quality score."""
+    return _sensor_manager.evaluate_sensor_health()
+
 

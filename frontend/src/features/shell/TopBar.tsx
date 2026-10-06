@@ -10,6 +10,8 @@ interface TopBarProps {
   onAdvanceStep?: (steps: number) => void;
   onReset?: () => void;
   onOpenHelp?: () => void;
+  onOpenImport?: () => void;
+  onOpenSensors?: () => void;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
 }
@@ -21,6 +23,8 @@ export const TopBar: React.FC<TopBarProps> = ({
   onAdvanceStep,
   onReset,
   onOpenHelp,
+  onOpenImport,
+  onOpenSensors,
   theme,
   onToggleTheme,
 }) => {
@@ -108,7 +112,30 @@ export const TopBar: React.FC<TopBarProps> = ({
             </Button>
           </>
         )}
+
+        {onOpenImport && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onOpenImport}
+            title="Import custom MATPOWER (.m) or pandapower (.json) network"
+          >
+            🔌 Import Net
+          </Button>
+        )}
+
+        {onOpenSensors && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onOpenSensors}
+            title="Telemetry sensor configuration & data quality"
+          >
+            📡 Sensors
+          </Button>
+        )}
       </div>
+
 
       {/* Right: UTC Clock, Theme Toggle & Help */}
       <div className="flex items-center space-x-2 shrink-0">

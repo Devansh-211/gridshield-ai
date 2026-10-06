@@ -32,6 +32,8 @@ import { ScenarioLabView } from './views/ScenarioLabView';
 import { ModelSystemView } from './views/ModelSystemView';
 import { ExplainedView } from './views/ExplainedView';
 import { HelpDrawer } from './components/HelpDrawer';
+import { NetworkImporterModal } from './features/network/NetworkImporterModal';
+import { SensorConfigModal } from './features/sensors/SensorConfigModal';
 import { formatSimStepTime } from './lib/formatters';
 
 export const App: React.FC = () => {
@@ -44,6 +46,9 @@ export const App: React.FC = () => {
   const [alarms, setAlarms] = useState<AlarmRecord[]>([]);
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
   const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
+  const [isImportOpen, setIsImportOpen] = useState<boolean>(false);
+  const [isSensorsOpen, setIsSensorsOpen] = useState<boolean>(false);
+
   const [liveSessionId, setLiveSessionId] = useState<string | null>(null);
   const [simStep, setSimStep] = useState<number>(0);
   const [dbLatencyMs, setDbLatencyMs] = useState<number>(38);
@@ -143,6 +148,8 @@ export const App: React.FC = () => {
           onAdvanceStep={handleAdvanceStep}
           onReset={handleResetSystem}
           onOpenHelp={() => setIsHelpOpen(true)}
+          onOpenImport={() => setIsImportOpen(true)}
+          onOpenSensors={() => setIsSensorsOpen(true)}
           theme={theme}
           onToggleTheme={handleToggleTheme}
         />
@@ -245,6 +252,19 @@ export const App: React.FC = () => {
           onClose={() => setIsHelpOpen(false)}
           currentTab={typeof activeTab === 'string' ? activeTab.charAt(0).toUpperCase() + activeTab.slice(1) : ''}
           onNavigateToExplained={() => setActiveTab('explained')}
+        />
+
+        {/* Network Importer Modal */}
+        <NetworkImporterModal
+          isOpen={isImportOpen}
+          onClose={() => setIsImportOpen(false)}
+          onImportSuccess={() => loadData()}
+        />
+
+        {/* Telemetry Sensor Configuration Modal */}
+        <SensorConfigModal
+          isOpen={isSensorsOpen}
+          onClose={() => setIsSensorsOpen(false)}
         />
       </div>
     </TooltipProvider>

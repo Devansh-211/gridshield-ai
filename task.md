@@ -1,12 +1,11 @@
-# Task Checklist: Phase 1 — Core Integrity Architecture & Rules Engine
+# Task Checklist: Phase 2 — Custom Network Ingestion & Sensor Configuration
 
 ## Control State: AUTONOMOUS
 
-- [x] Task 1.1: Git Tag Initialization (`git tag phase-1-start`)
-- [x] Task 1.2: R1 Value Envelope & Migration Engine (`ValueEnvelope[T]` with provenances `LIVE | HISTORICAL | PUBLIC_DATASET | SIMULATED | DERIVED | PREDICTED | UNAVAILABLE` and legacy label conversion map)
-- [x] Task 1.3: R2 Environment Labeling (Backend context & frontend TopBar/export badges: `SIMULATOR`, `REPLAY(dataset_id)`, `MOCK`, `FIXTURE`, `UNAVAILABLE`, `LIVE`)
-- [x] Task 1.4: R4 & R5 Evidence Object & 5D Confidence Vector (Versioned `EvidenceObject` and 5D confidence: detection, attribution, model uncertainty, evidence completeness, data quality)
-- [x] Task 1.5: R6 Validated-Domain Gate & OOD Check (`models/registry/compatibility.json` and feature-space OOD checks emitting `TOPOLOGY_UNSUPPORTED` / `MODEL_OUT_OF_DISTRIBUTION`)
-- [x] Task 1.6: R11 Ground-Truth Firewall Type Enforcer (Type boundary preventing raw ground-truth leaking to detection/attribution/LLM)
-- [x] Task 1.7: Phase 1 Verification (25/25 integrity tests PASS + 96/96 suite PASS + Vite build PASS)
-- [x] Task 1.8: Git Commit & Tag (`phase-1-complete`)
+- [x] Task 2.1: Git Tag Initialization (`git tag phase-2-start`)
+- [x] Task 2.2: Backend `NetworkImporter` Service (MATPOWER `.m` files & pandapower `.json` custom network imports with automated validation report generator)
+- [x] Task 2.3: Sensor Configuration & Data Quality Manager (Custom sensor placement, noise variance, stuck/missing sensor flags `H_data_quality`)
+- [x] Task 2.4: Network Import API Endpoints (`POST /api/v1/network/import`, `GET /api/v1/sensors/health`)
+- [x] Task 2.5: UI Network Importer Modal & Sensor Config Console
+- [x] Task 2.6: Phase 2 Unit/Integration Tests & Verification (3/3 network/sensor tests PASS + Vite build PASS)
+- [x] Task 2.7: Git Commit & Tag (`phase-2-complete`)
