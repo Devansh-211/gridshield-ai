@@ -803,3 +803,34 @@ def get_sensors_health():
     return _sensor_manager.evaluate_sensor_health()
 
 
+from backend.app.services.replay_engine import DatasetReplayEngine
+from backend.app.services.report_exporter import ReportExporter
+
+_replay_engine = DatasetReplayEngine()
+
+@router.post("/replay/dataset")
+async def replay_dataset(dataset_id: str = Query("pub_ds_01"), file: UploadFile = File(...)):
+    """
+    Replay CSV telemetry dataset and return evidence analysis report (Analysis Mode).
+    """
+    content = (await file.read()).decode("utf-8")
+    try:
+        return _replay_engine.replay_csv_dataset(dataset_id, content)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Replay failed: {str(e)}")
+
+
+@router.post("/reports/after-action")
+def export_after_action_report(evidence_data: Dict[str, Any]):
+    """
+    Export after-action evidence report bundle with product boundary disclaimers.
+    """
+    report = ReportExporter.generate_after_action_report(evidence_data)
+    markdown_str = ReportExporter.export_to_markdown(report)
+    return {
+        "report": report,
+        "markdown": markdown_str
+    }
+
+
+

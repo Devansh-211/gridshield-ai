@@ -1,9 +1,10 @@
-# Task Checklist: Phase 3 — Exercise Mode: UI Scenario Authoring & Execution
+# Task Checklist: Phase 4 — Analysis (Replay) Mode & Evidence Reporting
 
 ## Control State: AUTONOMOUS
 
-- [x] Task 3.1: Git Tag Initialization (`git tag phase-3-start`)
-- [x] Task 3.2: Visual Scenario Authoring Console (Enhanced `ScenarioLabView` supporting custom physical load/line/gen steps + FDI/DoS cyber attack vectors)
-- [x] Task 3.3: Rule R3 Non-Answer Safety & Hypothesis Engine (`CONFLICTING_EVIDENCE`, `TOPOLOGY_UNSUPPORTED`, `MODEL_OUT_OF_DISTRIBUTION`, `INSUFFICIENT_DATA`, and `H_data_quality` hypothesis display)
-- [x] Task 3.4: Phase 3 Unit/Integration Tests & Verification (3/3 exercise tests PASS + 99/99 suite PASS + Vite build PASS)
-- [x] Task 3.5: Git Commit & Tag (`phase-3-complete`)
+- [x] Task 4.1: Git Tag Initialization (`git tag phase-4-start`)
+- [x] Task 4.2: Dataset Replay Engine (`backend/app/services/replay_engine.py` ingesting CSV dataset streams with `REPLAY(dataset_id)` environment & `PUBLIC_DATASET` provenance)
+- [x] Task 4.3: Grounded LLM Explanation & Rule R7 Delimiter Isolation (`AnalystService` enforcing prompt injection delimiter isolation & deterministic template fallback on grounding failure)
+- [x] Task 4.4: After-Action Report & Evidence Bundle Exporter (`ReportExporter` emitting JSON and Markdown evidence bundles with product boundary disclaimers)
+- [x] Task 4.5: Phase 4 Unit/Integration Tests & Verification (3/3 replay/report tests PASS + 102/102 suite PASS + Vite build PASS)
+- [x] Task 4.6: Git Commit & Tag (`phase-4-complete`)
