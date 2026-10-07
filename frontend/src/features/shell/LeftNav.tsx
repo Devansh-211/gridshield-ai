@@ -63,6 +63,8 @@ export const LeftNav: React.FC<LeftNavProps> = ({
         count: openIncidentsCount > 0 ? openIncidentsCount : undefined,
         countAlert: openIncidentsCount > 0,
       },
+      { id: 'scenarios', label: 'Scenario Lab', icon: <FlaskConical className="w-3.5 h-3.5 text-cyan-400" /> },
+      { id: 'explained', label: 'AI Assistant', icon: <Sparkles className="w-3.5 h-3.5 text-amber-300" /> },
       { id: 'glossary', label: 'Plain Glossary', icon: <BookOpen className="w-3.5 h-3.5 text-purple-400" /> },
     ];
   } else if (isAdmin) {

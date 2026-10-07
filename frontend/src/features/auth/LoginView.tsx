@@ -115,10 +115,57 @@ export const LoginView: React.FC = () => {
           </form>
         )}
 
+        {/* 1-Click Quick Demo Access */}
+        <div className="mt-6 pt-4 border-t border-border-main space-y-2">
+          <div className="text-[11px] font-bold text-text-muted uppercase tracking-wider text-center">
+            Quick 1-Click Demo Logins:
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setUsername('supervisor');
+                setPassword('supervisor1234');
+                login('supervisor', 'supervisor1234');
+              }}
+              className="p-2 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 text-center transition-colors cursor-pointer"
+            >
+              <div className="text-[11px] font-bold">Supervisor</div>
+              <div className="text-[9px] text-text-muted">Plain View</div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setUsername('technician');
+                setPassword('technician1234');
+                login('technician', 'technician1234');
+              }}
+              className="p-2 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 text-center transition-colors cursor-pointer"
+            >
+              <div className="text-[11px] font-bold">Technician</div>
+              <div className="text-[9px] text-text-muted">Full Detail</div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setUsername('admin');
+                setPassword('admin1234');
+                login('admin', 'admin1234');
+              }}
+              className="p-2 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-400 text-center transition-colors cursor-pointer"
+            >
+              <div className="text-[11px] font-bold">Admin</div>
+              <div className="text-[9px] text-text-muted">Governance</div>
+            </button>
+          </div>
+        </div>
+
         {/* Role overview notice */}
-        <div className="mt-8 pt-4 border-t border-border-main text-[11px] text-text-muted space-y-1.5">
+        <div className="mt-6 pt-3 border-t border-border-main text-[11px] text-text-muted space-y-1.5">
           <div className="font-semibold text-text-main text-[10px] uppercase tracking-wider">
-            Available Role Views:
+            Role Overview:
           </div>
           <div className="flex items-center justify-between text-slate-400">
             <span>• Supervisor:</span>

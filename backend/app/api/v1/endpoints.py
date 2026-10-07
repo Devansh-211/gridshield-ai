@@ -657,48 +657,6 @@ def get_alarms(
 
     alarms = ops_repo.get_alarms(run_id=run_id, priority=priority, state=db_state)
 
-    # If DB is completely empty and no filters were specified, seed default alarms
-    if not alarms and not run_id and not priority and not state:
-        from backend.app.persistence.repositories import VisitorRepository
-        vis_repo = VisitorRepository(db)
-        vis = vis_repo.get_or_create_visitor()
-        run_repo = RunRepository(db)
-        demo_run = run_repo.create_run(
-            visitor_id=vis.id,
-            kind="DEMO",
-            scenario_type="NORMAL",
-            config_json={"attack": "FDI_BUS4"}
-        )
-        ops_repo.save_alarm(
-            run_id=demo_run.id,
-            step=5,
-            tag="BUS_04_V_CRIT_LOW",
-            priority="CRITICAL",
-            description="Severe under-voltage reported at Bus 4: 0.880 p.u. (Limit: 0.90 p.u.)",
-            value=0.880,
-            limit=0.90
-        )
-        ops_repo.save_alarm(
-            run_id=demo_run.id,
-            step=7,
-            tag="GEN_02_OVER_EXCITED",
-            priority="WARNING",
-            description="AVR supervisory controller forced Gen 2 excitation to 1.082 p.u.",
-            value=1.082,
-            limit=1.05
-        )
-        ops_repo.save_alarm(
-            run_id=demo_run.id,
-            step=3,
-            tag="LINE_01_02_OVERLOAD",
-            priority="WARNING",
-            description="Thermal line loading on Line 1-2 reached 108.5% of continuous rating",
-            value=108.5,
-            limit=100.0
-        )
-        db.commit()
-        alarms = ops_repo.get_alarms(run_id=run_id, priority=priority, state=db_state)
-
     out = []
     for a in alarms:
         st = "UNACK" if a.state == "ACTIVE_UNACK" else ("ACK" if a.state == "ACTIVE_ACK" else a.state)
@@ -833,12 +791,23 @@ def post_system_keepalive(
 
 
 @router.post("/system/reset")
-def post_system_reset():
+def post_system_reset(db: Session = Depends(get_db)):
     """Resets digital twin state and incident history."""
     global _active_grid, _latest_run, _incident_manager
     _active_grid = DigitalTwinGrid()
     _latest_run = None
     _incident_manager = IncidentManager()
+    
+    # Clear stale alarms and events in DB
+    try:
+        from backend.app.persistence.models import AlarmModel, EventModel, IncidentModel
+        db.query(AlarmModel).delete()
+        db.query(EventModel).delete()
+        db.query(IncidentModel).delete()
+        db.commit()
+    except Exception as e:
+        print(f"[WARN] Error clearing DB on reset: {e}")
+
     return {"status": "RESET_COMPLETED"}
 
 
@@ -853,7 +822,17 @@ async def import_custom_network(file: UploadFile = File(...)):
     content = await file.read()
     try:
         report = _network_importer.import_network_from_file(file.filename, content)
-        return report
+        if report["network_meta"].get("valid") and "net" in report:
+            _active_grid.net = copy.deepcopy(report["net"])
+            _active_grid._base_net = copy.deepcopy(report["net"])
+            try:
+                _active_grid.run_power_flow()
+            except Exception:
+                pass
+        return {
+            "network_meta": report["network_meta"],
+            "layout_coordinates": report["layout_coordinates"]
+        }
     except ValueError as ve:
         raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:

@@ -24,16 +24,13 @@ from backend.app.narrative.schemas import (
     SupervisorGridStateProjection,
 )
 from backend.app.narrative.generator import PlainNarrativeGenerator
-from backend.app.simulation.grid import DigitalTwinGrid
-from backend.app.services.grid_view_service import GridViewService
-from backend.app.incidents.manager import IncidentManager
 from backend.app.schemas.contracts import Incident, GridTopology, GridState
+from backend.app.api.v1.endpoints import (
+    _active_grid, _incident_manager, _grid_view_service
+)
 
 router = APIRouter(prefix="/views", tags=["Segregated Role Views"])
 
-_active_grid = DigitalTwinGrid()
-_grid_view_service = GridViewService(_active_grid)
-_incident_manager = IncidentManager()
 _generator = PlainNarrativeGenerator()
 
 

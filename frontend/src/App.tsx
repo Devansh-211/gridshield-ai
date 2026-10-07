@@ -251,6 +251,22 @@ const WorkbenchContent: React.FC = () => {
 
               {activeTab === 'incidents' && <SupervisorIncidentsView />}
 
+              {activeTab === 'scenarios' && (
+                <ScenarioLabView
+                  onRunCompleted={() => {
+                    loadData();
+                    setActiveTab('overview');
+                  }}
+                />
+              )}
+
+              {activeTab === 'explained' && (
+                <ExplainedView
+                  onNavigateTab={(tab) => setActiveTab(tab.toLowerCase())}
+                  activeRunId={liveSessionId}
+                />
+              )}
+
               {activeTab === 'glossary' && <SupervisorGlossaryView />}
             </>
           )}
@@ -259,7 +275,7 @@ const WorkbenchContent: React.FC = () => {
           {isAdmin && activeTab === 'admin' && <AdminConsoleView />}
 
           {/* TECHNICIAN VIEW MODE / SHARED ENGINEERING CONSOLE */}
-          {(!isSupervisor || !['overview', 'grid', 'incidents', 'glossary'].includes(activeTab)) && activeTab !== 'admin' && (
+          {(!isSupervisor || !['overview', 'grid', 'incidents', 'scenarios', 'explained', 'glossary'].includes(activeTab)) && activeTab !== 'admin' && (
             <>
               {activeTab === 'overview' && (
                 <DashboardView

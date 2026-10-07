@@ -81,14 +81,25 @@ def init_db():
         except Exception as e:
             print(f"[WARN] Error in SQLite migration: {e}")
     
-    # Auto-seed friendly element aliases & plain glossary
+    # Auto-seed friendly element aliases, plain glossary & default demo accounts
     try:
-        from backend.app.persistence.repositories import ElementAliasRepository, GlossaryRepository
+        from backend.app.persistence.repositories import (
+            ElementAliasRepository, GlossaryRepository, AuthRepository
+        )
+        from backend.app.core.security import hash_password
         with get_db_session() as db:
             ElementAliasRepository(db).seed_default_aliases()
             GlossaryRepository(db).seed_default_glossary()
+            
+            auth_repo = AuthRepository(db)
+            if not auth_repo.get_user_by_username("admin"):
+                auth_repo.create_user("admin", hash_password("admin1234"), "ADMIN", display_name="System Administrator")
+            if not auth_repo.get_user_by_username("supervisor"):
+                auth_repo.create_user("supervisor", hash_password("supervisor1234"), "SUPERVISOR", display_name="Operations Supervisor")
+            if not auth_repo.get_user_by_username("technician"):
+                auth_repo.create_user("technician", hash_password("technician1234"), "TECHNICIAN", display_name="Lead Grid Technician")
     except Exception as e:
-        print(f"[WARN] Error seeding aliases/glossary: {e}")
+        print(f"[WARN] Error seeding aliases/glossary/users: {e}")
 
 
 
