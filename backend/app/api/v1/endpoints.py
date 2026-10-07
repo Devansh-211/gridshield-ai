@@ -158,6 +158,15 @@ def get_grid_state():
     return _active_grid.get_state()
 
 
+@router.post("/grid/step", response_model=GridState)
+def step_active_grid(payload: Dict[str, Any] = {}):
+    """Advances the in-memory active digital twin grid by n steps."""
+    steps = int(payload.get("steps", 1))
+    for _ in range(steps):
+        _active_grid.step()
+    return _active_grid.get_state()
+
+
 @router.get("/telemetry", response_model=List[ObservedTelemetryPoint])
 def get_latest_telemetry():
     """Returns the latest observed telemetry points with noise and provenance."""
@@ -166,7 +175,7 @@ def get_latest_telemetry():
     state = _active_grid.get_state()
     from backend.app.telemetry.generator import TelemetryGenerator
     from backend.app.core.rng import get_rng
-    gen = TelemetryGenerator(get_rng(42))
+    gen = TelemetryGenerator(get_rng(42 + _active_grid.current_step))
     obs, _ = gen.generate(state)
     return obs
 
@@ -604,6 +613,9 @@ def advance_live_session(
     )
     if "error" in res:
         raise HTTPException(status_code=res.get("status_code", 400), detail=res["error"])
+    if "sim_step" in res:
+        _active_grid.step(sim_time_s=float(res["sim_step"]), step=res["sim_step"])
+        res["grid_state"] = _active_grid.get_state()
     return res
 
 

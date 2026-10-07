@@ -350,12 +350,14 @@ export interface DemoStepResult {
 export interface LiveSessionState {
   run_id: string;
   status: string;
-  current_step: number;
-  total_steps: number;
-  active_alarms_count: number;
-  open_incidents_count: number;
-  grid_state: GridState;
-  provenance: Provenance;
+  current_step?: number;
+  sim_step?: number;
+  total_steps?: number;
+  active_alarms_count?: number;
+  open_incidents_count?: number;
+  grid_state?: GridState;
+  grid_summary?: Record<string, any>;
+  provenance?: Provenance;
 }
 
 export interface ErrorEnvelope {

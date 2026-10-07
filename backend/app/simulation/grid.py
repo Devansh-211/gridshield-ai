@@ -4,6 +4,7 @@ Initializes IEEE 14-bus system using pandapower, defines 2D schematic coordinate
 and runs Newton-Raphson AC power flow calculations.
 """
 import copy
+import math
 from typing import Dict, Any, List, Optional
 import pandapower as pp
 import pandapower.networks as pn
@@ -38,11 +39,15 @@ class DigitalTwinGrid:
     def __init__(self):
         self._base_net = pn.case14()
         self.net = copy.deepcopy(self._base_net)
+        self.current_step = 0
+        self.current_sim_time = 0.0
         self.reset()
 
     def reset(self):
         """Reset grid to baseline nominal configuration."""
         self.net = copy.deepcopy(self._base_net)
+        self.current_step = 0
+        self.current_sim_time = 0.0
         # Ensure standard in-service flags
         self.net.bus["in_service"] = True
         self.net.line["in_service"] = True
@@ -146,12 +151,22 @@ class DigitalTwinGrid:
         except Exception:
             return False
 
-    def get_state(self, step: int = 0, sim_time_s: float = 0.0, frequency_hz: float = 60.0) -> GridState:
+    def get_state(self, step: Optional[int] = None, sim_time_s: Optional[float] = None, frequency_hz: Optional[float] = None) -> GridState:
         """Compute and extract complete physical ground truth state."""
         converged = self.solve_power_flow()
         buses_state = []
         lines_state = []
 
+        cur_step = self.current_step if step is None else step
+        cur_time = self.current_sim_time if sim_time_s is None else sim_time_s
+        
+        # Calculate subtle realistic nominal frequency micro-variation around 60.0 Hz
+        if frequency_hz is None:
+            # Deterministic harmonic perturbation within ±0.03 Hz
+            f_offset = 0.02 * math.sin(cur_step * 0.2) + 0.01 * math.cos(cur_step * 0.07)
+            cur_freq = round(60.0 + f_offset, 3)
+        else:
+            cur_freq = frequency_hz
 
         if converged:
             for b_idx in self.net.bus.index:
@@ -201,20 +216,30 @@ class DigitalTwinGrid:
                 ))
 
         state = GridState(
-            step=step,
-            sim_time_s=sim_time_s,
+            step=cur_step,
+            sim_time_s=cur_time,
             converged=converged,
             buses=buses_state,
             lines=lines_state,
-            frequency_hz=frequency_hz,
+            frequency_hz=cur_freq,
             frequency_provenance=Provenance.SIMULATED,
             provenance=Provenance.SIMULATED
         )
         return state
 
-    def step(self, sim_time_s: float = 0.0, step: int = 0, frequency_hz: float = 60.0) -> GridState:
+    def step(self, sim_time_s: Optional[float] = None, step: Optional[int] = None, frequency_hz: Optional[float] = None) -> GridState:
         """Advance physical state and return computed GridState."""
-        return self.get_state(step=step, sim_time_s=sim_time_s, frequency_hz=frequency_hz)
+        if step is not None:
+            self.current_step = step
+        else:
+            self.current_step += 1
+
+        if sim_time_s is not None:
+            self.current_sim_time = sim_time_s
+        else:
+            self.current_sim_time = float(self.current_step)
+
+        return self.get_state(step=self.current_step, sim_time_s=self.current_sim_time, frequency_hz=frequency_hz)
 
     def trip_line_by_name(self, line_name: str) -> bool:
         """Take a transmission line out of service by name (e.g. 'Line 1-2' or 'Line 2-5')."""

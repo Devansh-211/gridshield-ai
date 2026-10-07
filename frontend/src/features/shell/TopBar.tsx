@@ -3,13 +3,18 @@ import { Button } from '../../ui/Button';
 import { Tooltip } from '../../ui/Tooltip';
 import { UI_STRINGS } from '../../content/strings';
 import { useAuth } from '../../context/AuthContext';
-import { User, LogOut, Eye } from 'lucide-react';
+import { User, LogOut, Eye, Play, Pause, RotateCcw } from 'lucide-react';
 import { UserRole } from '../../../types/api';
 
 interface TopBarProps {
   sessionId?: string | null;
   isRunning?: boolean;
+  isSimPlaying?: boolean;
+  simSpeed?: number;
+  onTogglePlay?: () => void;
+  onChangeSpeed?: (speed: number) => void;
   simTime?: string;
+  simStep?: number;
   onAdvanceStep?: (steps: number) => void;
   onReset?: () => void;
   onOpenHelp?: () => void;
@@ -22,7 +27,12 @@ interface TopBarProps {
 export const TopBar: React.FC<TopBarProps> = ({
   sessionId,
   isRunning = false,
+  isSimPlaying = true,
+  simSpeed = 1,
+  onTogglePlay,
+  onChangeSpeed,
   simTime = '2026-10-06 14:00:00Z',
+  simStep = 0,
   onAdvanceStep,
   onReset,
   onOpenHelp,
@@ -67,35 +77,80 @@ export const TopBar: React.FC<TopBarProps> = ({
           </span>
         </Tooltip>
 
-        {/* Session ID */}
-        {sessionId && (
-          <span className="text-[11px] font-mono text-text-muted hidden sm:inline">
-            Session: <strong className="text-text-main">{sessionId.slice(0, 8)}</strong>
-          </span>
-        )}
+        {/* Live Step Badge */}
+        <span className="px-1.5 py-0.5 bg-surface text-text-muted border border-border text-[10px] font-mono rounded">
+          Step: <strong className="text-text-main font-semibold">{simStep}</strong>
+        </span>
 
         {/* Run State Indicator */}
-        <span className="flex items-center space-x-1 text-[11px] font-mono">
+        <span className="flex items-center space-x-1.5 text-[11px] font-mono">
           <span
-            className={`w-1.5 h-1.5 rounded-none ${
-              isRunning ? 'bg-alarm-ok' : 'bg-text-subtle'
+            className={`w-2 h-2 rounded-full ${
+              isSimPlaying ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'
             }`}
           />
-          <span className="text-text-muted">
-            {isRunning ? UI_STRINGS.statusBar.simulating : UI_STRINGS.statusBar.idle}
+          <span className={isSimPlaying ? 'text-emerald-400 font-semibold' : 'text-text-muted'}>
+            {isSimPlaying ? `LIVE (${simSpeed}x)` : 'PAUSED'}
           </span>
         </span>
       </div>
 
-      {/* Center: Stepping & Simulation Controls */}
-      <div className="flex items-center space-x-1">
+      {/* Center: Live Playback, Stepping & Tools */}
+      <div className="flex items-center space-x-1.5">
+        {/* Play/Pause Button */}
+        {onTogglePlay && (
+          <Button
+            variant={isSimPlaying ? 'secondary' : 'primary'}
+            size="sm"
+            onClick={onTogglePlay}
+            className={`flex items-center gap-1 font-semibold ${
+              isSimPlaying
+                ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                : 'bg-emerald-600 hover:bg-emerald-500 text-white'
+            }`}
+            title={isSimPlaying ? 'Pause continuous simulation' : 'Resume live real-time simulation'}
+          >
+            {isSimPlaying ? (
+              <>
+                <Pause className="w-3 h-3 fill-current" /> Pause
+              </>
+            ) : (
+              <>
+                <Play className="w-3 h-3 fill-current" /> Play
+              </>
+            )}
+          </Button>
+        )}
+
+        {/* Speed Selector */}
+        {onChangeSpeed && (
+          <div className="flex items-center bg-surface rounded border border-border p-0.5">
+            {[1, 2, 5].map((spd) => (
+              <button
+                key={spd}
+                type="button"
+                onClick={() => onChangeSpeed(spd)}
+                className={`px-1.5 py-0.5 text-[10px] font-mono rounded font-semibold transition-colors ${
+                  simSpeed === spd
+                    ? 'bg-accent text-white shadow-sm'
+                    : 'text-text-muted hover:text-text-main hover:bg-app'
+                }`}
+                title={`Run simulation at ${spd}x speed`}
+              >
+                {spd}x
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Manual Step Jump Buttons */}
         {onAdvanceStep && (
-          <>
+          <div className="flex items-center space-x-1 pl-1 border-l border-border">
             <Button
               variant="secondary"
               size="sm"
               onClick={() => onAdvanceStep(1)}
-              title="Advance digital twin by 1 second step"
+              title="Step forward 1 second"
             >
               +1s
             </Button>
@@ -103,7 +158,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               variant="secondary"
               size="sm"
               onClick={() => onAdvanceStep(5)}
-              title="Advance digital twin by 5 second steps"
+              title="Step forward 5 seconds"
             >
               +5s
             </Button>
@@ -111,11 +166,11 @@ export const TopBar: React.FC<TopBarProps> = ({
               variant="secondary"
               size="sm"
               onClick={() => onAdvanceStep(20)}
-              title="Advance digital twin by 20 second steps"
+              title="Step forward 20 seconds"
             >
               +20s
             </Button>
-          </>
+          </div>
         )}
 
         {onOpenImport && (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   GridTopology,
   GridState,
@@ -15,6 +15,7 @@ import {
   acknowledgeAlarm,
   createLiveSession,
   advanceLiveSession,
+  stepGrid,
   resetSystem,
 } from './api/client';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -59,7 +60,12 @@ const WorkbenchContent: React.FC = () => {
   const [isSensorsOpen, setIsSensorsOpen] = useState<boolean>(false);
 
   const [liveSessionId, setLiveSessionId] = useState<string | null>(null);
+  const liveSessionIdRef = useRef<string | null>(null);
   const [simStep, setSimStep] = useState<number>(0);
+  const [isSimPlaying, setIsSimPlaying] = useState<boolean>(true);
+  const [simSpeed, setSimSpeed] = useState<number>(1);
+  const isAdvancingRef = useRef<boolean>(false);
+
   const [dbLatencyMs, setDbLatencyMs] = useState<number>(38);
   const [dbHealthy, setDbHealthy] = useState<boolean>(true);
 
@@ -141,18 +147,25 @@ const WorkbenchContent: React.FC = () => {
     }
   };
 
-  const handleAdvanceStep = async (steps: number) => {
+  const handleAdvanceStep = async (steps: number = 1) => {
     try {
-      let runId = liveSessionId;
+      let runId = liveSessionIdRef.current;
       if (!runId) {
         const session = await createLiveSession();
         runId = session.run_id;
+        liveSessionIdRef.current = runId;
         setLiveSessionId(runId);
       }
       const updated = await advanceLiveSession(runId, steps);
-      setGridState(updated.grid_state);
-      setSimStep((prev) => prev + steps);
-      loadData();
+      if (updated?.sim_step !== undefined) {
+        setSimStep(updated.sim_step);
+      } else {
+        setSimStep((prev) => prev + steps);
+      }
+      if (updated?.grid_state) {
+        setGridState(updated.grid_state);
+      }
+      await loadData();
     } catch (err) {
       console.error('Failed to advance live session:', err);
     }
@@ -170,6 +183,7 @@ const WorkbenchContent: React.FC = () => {
   const handleResetSystem = async () => {
     try {
       await resetSystem();
+      liveSessionIdRef.current = null;
       setLiveSessionId(null);
       setSimStep(0);
       setTelemetryHistory([]);
@@ -179,12 +193,38 @@ const WorkbenchContent: React.FC = () => {
     }
   };
 
+  // Initial load
   useEffect(() => {
     if (!user) return;
     loadData();
-    const interval = setInterval(loadData, 4000);
-    return () => clearInterval(interval);
   }, [user]);
+
+  // Continuous active simulation loop
+  useEffect(() => {
+    if (!user || !isSimPlaying) {
+      // Fallback polling when paused
+      if (user && !isSimPlaying) {
+        const fallbackInterval = setInterval(loadData, 4000);
+        return () => clearInterval(fallbackInterval);
+      }
+      return;
+    }
+
+    const intervalMs = Math.max(200, Math.floor(1000 / simSpeed));
+    const timer = setInterval(async () => {
+      if (isAdvancingRef.current) return;
+      isAdvancingRef.current = true;
+      try {
+        await handleAdvanceStep(1);
+      } catch (err) {
+        console.error('Auto-advance simulation step error:', err);
+      } finally {
+        isAdvancingRef.current = false;
+      }
+    }, intervalMs);
+
+    return () => clearInterval(timer);
+  }, [user, isSimPlaying, simSpeed]);
 
   if (isLoading) {
     return (
@@ -210,8 +250,13 @@ const WorkbenchContent: React.FC = () => {
       {/* Top Bar (40px) */}
       <TopBar
         sessionId={liveSessionId}
-        isRunning={liveSessionId !== null}
+        isRunning={isSimPlaying}
+        isSimPlaying={isSimPlaying}
+        simSpeed={simSpeed}
+        onTogglePlay={() => setIsSimPlaying((prev) => !prev)}
+        onChangeSpeed={(spd) => setSimSpeed(spd)}
         simTime={formatSimStepTime(simStep)}
+        simStep={simStep}
         onAdvanceStep={handleAdvanceStep}
         onReset={handleResetSystem}
         onOpenHelp={() => setIsHelpOpen(true)}

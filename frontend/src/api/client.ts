@@ -35,6 +35,16 @@ export async function fetchGridState(): Promise<GridState> {
   return res.json();
 }
 
+export async function stepGrid(steps: number = 1): Promise<GridState> {
+  const res = await fetch(`${API_BASE}/grid/step`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ steps }),
+  });
+  if (!res.ok) throw new Error(`Grid step failed: ${res.statusText}`);
+  return res.json();
+}
+
 export async function fetchLatestTelemetry(): Promise<ObservedTelemetryPoint[]> {
   const res = await fetch(`${API_BASE}/telemetry`);
   if (!res.ok) throw new Error(`Telemetry fetch failed: ${res.statusText}`);
