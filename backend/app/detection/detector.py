@@ -36,8 +36,11 @@ class AnomalyDetector:
         fn_path = os.path.join(self.models_dir, "feature_names.json")
 
         if os.path.exists(iso_path) and os.path.exists(clf_path) and os.path.exists(fn_path):
-            self.iso_forest = joblib.load(iso_path)
-            self.classifier = joblib.load(clf_path)
+            import warnings
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                self.iso_forest = joblib.load(iso_path)
+                self.classifier = joblib.load(clf_path)
             with open(fn_path, "r", encoding="utf-8") as f:
                 self.feature_names = json.load(f)
 
