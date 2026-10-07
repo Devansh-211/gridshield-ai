@@ -6,10 +6,157 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/v1/health": {
+      "get": {
+        "summary": "Get Health",
+        "operationId": "get_health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "summary": "Get Health",
         "operationId": "get_health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/topology/{version}/graph": {
+      "get": {
+        "summary": "Get Topology Graph",
+        "description": "Returns full graph with elements, metadata, and enveloped properties (Rule R1).",
+        "operationId": "get_topology_graph_api_v1_topology__version__graph_get",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/state/{snapshot}": {
+      "get": {
+        "summary": "Get State Snapshot",
+        "description": "Returns full enveloped state snapshot with system strip metrics.",
+        "operationId": "get_state_snapshot_api_v1_state__snapshot__get",
+        "parameters": [
+          {
+            "name": "snapshot",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Snapshot"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/elements/{element_id}": {
+      "get": {
+        "summary": "Get Element Detail",
+        "description": "Returns detailed element inspector data and linked Evidence Object fields.",
+        "operationId": "get_element_detail_api_v1_elements__element_id__get",
+        "parameters": [
+          {
+            "name": "element_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Element Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/stream/sse": {
+      "get": {
+        "summary": "Stream Grid Sse",
+        "description": "Reliable Server-Sent Events (SSE) telemetry stream with heartbeat,\nevent IDs, and Last-Event-ID gap resumption (\u00a74).",
+        "operationId": "stream_grid_sse_api_v1_stream_sse_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -53,6 +200,47 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GridState"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/grid/step": {
+      "post": {
+        "summary": "Step Active Grid",
+        "description": "Advances the in-memory active digital twin grid by n steps.",
+        "operationId": "step_active_grid_api_v1_grid_step_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "type": "object",
+                "title": "Payload",
+                "default": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GridState"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -114,6 +302,45 @@
             }
           },
           "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/session": {
+      "post": {
+        "summary": "Create Live Session",
+        "description": "Creates a new persistent, visitor-scoped live simulation session.",
+        "operationId": "create_live_session_api_v1_runs_session_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "type": "object",
+                "title": "Payload",
+                "default": {}
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -559,6 +786,338 @@
         }
       }
     },
+    "/api/v1/warmup": {
+      "get": {
+        "summary": "Get Warmup",
+        "description": "Lazily warms up physics engine, dependencies, and loads trained model.",
+        "operationId": "get_warmup_api_v1_warmup_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metrics": {
+      "get": {
+        "summary": "Get Metrics",
+        "description": "Serves committed and verified model evaluation metrics JSON.",
+        "operationId": "get_metrics_api_v1_metrics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/advance": {
+      "post": {
+        "summary": "Advance Live Session",
+        "description": "Advances live session by n steps (client-paced stepwise advance).",
+        "operationId": "advance_live_session_api_v1_runs__run_id__advance_post",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true,
+                "default": {},
+                "title": "Payload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/feed": {
+      "get": {
+        "summary": "Get Run Feed",
+        "description": "Cursor-based polling feed for events, alarms, and telemetry deltas.",
+        "operationId": "get_run_feed_api_v1_runs__run_id__feed_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "after_event_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "After Event Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/alarms": {
+      "get": {
+        "summary": "Get Alarms",
+        "description": "Returns list of active and acknowledged alarms.",
+        "operationId": "get_alarms_api_v1_alarms_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "priority",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Priority"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "State"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/alarms/{alarm_id}/acknowledge": {
+      "post": {
+        "summary": "Acknowledge Alarm",
+        "description": "Acknowledges an active alarm with an optional note.",
+        "operationId": "acknowledge_alarm_api_v1_alarms__alarm_id__acknowledge_post",
+        "parameters": [
+          {
+            "name": "alarm_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Alarm Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true,
+                "default": {},
+                "title": "Payload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/demo/{run_id}/next": {
+      "post": {
+        "summary": "Post Demo Next",
+        "description": "Advances one stage of the stepwise server-side demo state machine.",
+        "operationId": "post_demo_next_api_v1_demo__run_id__next_post",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/keepalive": {
+      "post": {
+        "summary": "Post System Keepalive",
+        "description": "Vercel Cron keep-alive and expired session pruning endpoint.",
+        "operationId": "post_system_keepalive_api_v1_system_keepalive_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/system/reset": {
       "post": {
         "summary": "Post System Reset",
@@ -575,10 +1134,761 @@
           }
         }
       }
+    },
+    "/api/v1/network/import": {
+      "post": {
+        "summary": "Import Custom Network",
+        "description": "Import a custom grid network (.m MATPOWER or .json pandapower file).\nGenerates validation report & R6 compatibility gate check.",
+        "operationId": "import_custom_network_api_v1_network_import_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_import_custom_network_api_v1_network_import_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sensors/health": {
+      "get": {
+        "summary": "Get Sensors Health",
+        "description": "Returns telemetry sensor health report & R5 data quality score.",
+        "operationId": "get_sensors_health_api_v1_sensors_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/replay/dataset": {
+      "post": {
+        "summary": "Replay Dataset",
+        "description": "Replay CSV telemetry dataset and return evidence analysis report (Analysis Mode).",
+        "operationId": "replay_dataset_api_v1_replay_dataset_post",
+        "parameters": [
+          {
+            "name": "dataset_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "pub_ds_01",
+              "title": "Dataset Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_replay_dataset_api_v1_replay_dataset_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reports/after-action": {
+      "post": {
+        "summary": "Export After Action Report",
+        "description": "Export after-action evidence report bundle with product boundary disclaimers.",
+        "operationId": "export_after_action_report_api_v1_reports_after_action_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "type": "object",
+                "title": "Evidence Data"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/bootstrap-status": {
+      "get": {
+        "tags": [
+          "Authentication & Admin"
+        ],
+        "summary": "Get Bootstrap Status",
+        "description": "Returns whether the application is uninitialized and requires bootstrap setup.",
+        "operationId": "get_bootstrap_status_api_v1_auth_bootstrap_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/bootstrap": {
+      "post": {
+        "tags": [
+          "Authentication & Admin"
+        ],
+        "summary": "Bootstrap Admin Account",
+        "description": "Initializes the very first Administrator account using the one-time bootstrap token.",
+        "operationId": "bootstrap_admin_account_api_v1_auth_bootstrap_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BootstrapRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication & Admin"
+        ],
+        "summary": "Login",
+        "description": "Authenticates username & password, issues session token and HttpOnly cookie.",
+        "operationId": "login_api_v1_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "tags": [
+          "Authentication & Admin"
+        ],
+        "summary": "Logout",
+        "description": "Terminates active session and clears authentication cookies.",
+        "operationId": "logout_api_v1_auth_logout_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "tags": [
+          "Authentication & Admin"
+        ],
+        "summary": "Get Current User Profile",
+        "description": "Returns authenticated profile, active role, and preview status.",
+        "operationId": "get_current_user_profile_api_v1_auth_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users": {
+      "get": {
+        "tags": [
+          "Authentication & Admin"
+        ],
+        "summary": "List Users",
+        "description": "Admin only: Lists all registered users and roles.",
+        "operationId": "list_users_api_v1_admin_users_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponse"
+                  },
+                  "type": "array",
+                  "title": "Response List Users Api V1 Admin Users Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Authentication & Admin"
+        ],
+        "summary": "Create User",
+        "description": "Admin only: Creates a new user account with specified role.",
+        "operationId": "create_user_api_v1_admin_users_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/{user_id}": {
+      "delete": {
+        "tags": [
+          "Authentication & Admin"
+        ],
+        "summary": "Delete User",
+        "description": "Admin only: Deletes a user account.",
+        "operationId": "delete_user_api_v1_admin_users__user_id__delete",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/preview-as": {
+      "post": {
+        "tags": [
+          "Authentication & Admin"
+        ],
+        "summary": "Set Preview Role",
+        "description": "Admin only: Switches role preview mode (SUPERVISOR or TECHNICIAN) or resets to default.",
+        "operationId": "set_preview_role_api_v1_admin_preview_as_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewAsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/audit-log": {
+      "get": {
+        "tags": [
+          "Authentication & Admin"
+        ],
+        "summary": "Get Audit Log",
+        "description": "Admin only: Reads append-only security audit log.",
+        "operationId": "get_audit_log_api_v1_admin_audit_log_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditLogResponse"
+                  },
+                  "title": "Response Get Audit Log Api V1 Admin Audit Log Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/views/supervisor/dashboard": {
+      "get": {
+        "tags": [
+          "Segregated Role Views"
+        ],
+        "summary": "Get Supervisor Dashboard",
+        "description": "Supervisor Mode: Plain-language system status, frequency health, and active incident briefings.",
+        "operationId": "get_supervisor_dashboard_api_v1_views_supervisor_dashboard_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/views/supervisor/incidents": {
+      "get": {
+        "tags": [
+          "Segregated Role Views"
+        ],
+        "summary": "List Supervisor Incidents",
+        "description": "Supervisor Mode: Returns list of active incidents projected into plain language.",
+        "operationId": "list_supervisor_incidents_api_v1_views_supervisor_incidents_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SupervisorIncidentProjection"
+                  },
+                  "type": "array",
+                  "title": "Response List Supervisor Incidents Api V1 Views Supervisor Incidents Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/views/supervisor/incidents/{incident_id}": {
+      "get": {
+        "tags": [
+          "Segregated Role Views"
+        ],
+        "summary": "Get Supervisor Incident",
+        "description": "Supervisor Mode: Returns 4-part plain briefing for specific incident.",
+        "operationId": "get_supervisor_incident_api_v1_views_supervisor_incidents__incident_id__get",
+        "parameters": [
+          {
+            "name": "incident_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Incident Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupervisorIncidentProjection"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/views/supervisor/grid/topology": {
+      "get": {
+        "tags": [
+          "Segregated Role Views"
+        ],
+        "summary": "Get Supervisor Topology",
+        "description": "Supervisor Mode: Plain grid layout with friendly substation names and arterial corridors.",
+        "operationId": "get_supervisor_topology_api_v1_views_supervisor_grid_topology_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupervisorGridTopologyProjection"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/views/supervisor/grid/state": {
+      "get": {
+        "tags": [
+          "Segregated Role Views"
+        ],
+        "summary": "Get Supervisor Grid State",
+        "description": "Supervisor Mode: Plain strain indicators and substation status.",
+        "operationId": "get_supervisor_grid_state_api_v1_views_supervisor_grid_state_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupervisorGridStateProjection"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/views/supervisor/glossary": {
+      "get": {
+        "tags": [
+          "Segregated Role Views"
+        ],
+        "summary": "Get Supervisor Glossary",
+        "description": "Supervisor Mode: Interactive glossary of power-system terms with analogies.",
+        "operationId": "get_supervisor_glossary_api_v1_views_supervisor_glossary_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/views/technician/dashboard": {
+      "get": {
+        "tags": [
+          "Segregated Role Views"
+        ],
+        "summary": "Get Technician Dashboard",
+        "description": "Technician Mode: Full engineering dashboard with raw telemetry, envelopes, and residuals.",
+        "operationId": "get_technician_dashboard_api_v1_views_technician_dashboard_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/views/technician/incidents/{incident_id}": {
+      "get": {
+        "tags": [
+          "Segregated Role Views"
+        ],
+        "summary": "Get Technician Incident Detail",
+        "description": "Technician Mode: Full raw Evidence Object with 5D confidence vector and JSON tree.",
+        "operationId": "get_technician_incident_detail_api_v1_views_technician_incidents__incident_id__get",
+        "parameters": [
+          {
+            "name": "incident_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Incident Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/views/technician/grid/state": {
+      "get": {
+        "tags": [
+          "Segregated Role Views"
+        ],
+        "summary": "Get Technician Grid State",
+        "description": "Technician Mode: Comprehensive physical telemetry with units and R1 envelopes.",
+        "operationId": "get_technician_grid_state_api_v1_views_technician_grid_state_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AffectedSubstationPlain": {
+        "properties": {
+          "substation_id": {
+            "type": "integer",
+            "title": "Substation Id"
+          },
+          "friendly_name": {
+            "type": "string",
+            "title": "Friendly Name"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "plain_status": {
+            "type": "string",
+            "title": "Plain Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "substation_id",
+          "friendly_name",
+          "role",
+          "plain_status"
+        ],
+        "title": "AffectedSubstationPlain"
+      },
       "AnalystContext": {
         "properties": {
           "incident_id": {
@@ -888,6 +2198,141 @@
         ],
         "title": "Attribution"
       },
+      "AuditLogResponse": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "actor_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor Id"
+          },
+          "actor_role": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor Role"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "target_type": {
+            "type": "string",
+            "title": "Target Type"
+          },
+          "target_id": {
+            "type": "string",
+            "title": "Target Id"
+          },
+          "ip_address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ip Address"
+          },
+          "details": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Details"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "actor_id",
+          "actor_role",
+          "action",
+          "target_type",
+          "target_id",
+          "ip_address",
+          "details",
+          "created_at"
+        ],
+        "title": "AuditLogResponse"
+      },
+      "Body_import_custom_network_api_v1_network_import_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_import_custom_network_api_v1_network_import_post"
+      },
+      "Body_replay_dataset_api_v1_replay_dataset_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_replay_dataset_api_v1_replay_dataset_post"
+      },
+      "BootstrapRequest": {
+        "properties": {
+          "bootstrap_token": {
+            "type": "string",
+            "title": "Bootstrap Token"
+          },
+          "admin_username": {
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 3,
+            "title": "Admin Username"
+          },
+          "admin_password": {
+            "type": "string",
+            "minLength": 8,
+            "title": "Admin Password"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name",
+            "default": "System Administrator"
+          }
+        },
+        "type": "object",
+        "required": [
+          "bootstrap_token",
+          "admin_username",
+          "admin_password"
+        ],
+        "title": "BootstrapRequest"
+      },
       "BusState": {
         "properties": {
           "bus_id": {
@@ -999,6 +2444,66 @@
           "COMPROMISED"
         ],
         "title": "ComponentIntegrity"
+      },
+      "CorridorTopologyPlain": {
+        "properties": {
+          "corridor_id": {
+            "type": "integer",
+            "title": "Corridor Id"
+          },
+          "from_substation_name": {
+            "type": "string",
+            "title": "From Substation Name"
+          },
+          "to_substation_name": {
+            "type": "string",
+            "title": "To Substation Name"
+          },
+          "capacity_tier": {
+            "type": "string",
+            "title": "Capacity Tier"
+          }
+        },
+        "type": "object",
+        "required": [
+          "corridor_id",
+          "from_substation_name",
+          "to_substation_name",
+          "capacity_tier"
+        ],
+        "title": "CorridorTopologyPlain"
+      },
+      "CreateUserRequest": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 3,
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "title": "Password"
+          },
+          "role": {
+            "type": "string",
+            "pattern": "^(SUPERVISOR|TECHNICIAN|ADMIN)$",
+            "title": "Role"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password",
+          "role"
+        ],
+        "title": "CreateUserRequest"
       },
       "EvidenceItem": {
         "properties": {
@@ -1495,6 +3000,24 @@
         ],
         "title": "LoadTopology"
       },
+      "LoginRequest": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "LoginRequest"
+      },
       "MitigationActionType": {
         "type": "string",
         "enum": [
@@ -1691,6 +3214,100 @@
         ],
         "title": "ObservedTelemetryPoint"
       },
+      "PlainConfidenceSummary": {
+        "properties": {
+          "plain_confidence_summary": {
+            "type": "string",
+            "title": "Plain Confidence Summary",
+            "description": "E.g. High certainty (92%). Based on cross-checked physics."
+          },
+          "completeness_text": {
+            "type": "string",
+            "title": "Completeness Text",
+            "description": "E.g. 100% of substation sensors responding."
+          },
+          "agreement_text": {
+            "type": "string",
+            "title": "Agreement Text",
+            "description": "E.g. Multiple independent detectors agree on this pattern."
+          },
+          "stability_text": {
+            "type": "string",
+            "title": "Stability Text",
+            "description": "E.g. Reading has remained steady for the last 3 checks."
+          },
+          "sensor_evidence_count": {
+            "type": "integer",
+            "title": "Sensor Evidence Count",
+            "description": "Number of sensor feeds examined."
+          }
+        },
+        "type": "object",
+        "required": [
+          "plain_confidence_summary",
+          "completeness_text",
+          "agreement_text",
+          "stability_text",
+          "sensor_evidence_count"
+        ],
+        "title": "PlainConfidenceSummary"
+      },
+      "PlainDiscussionOption": {
+        "properties": {
+          "option_id": {
+            "type": "string",
+            "title": "Option Id"
+          },
+          "option_title": {
+            "type": "string",
+            "title": "Option Title"
+          },
+          "plain_action_summary": {
+            "type": "string",
+            "title": "Plain Action Summary"
+          },
+          "expected_outcome": {
+            "type": "string",
+            "title": "Expected Outcome"
+          },
+          "why_discuss_first": {
+            "type": "string",
+            "title": "Why Discuss First"
+          },
+          "not_guaranteed_safe_notice": {
+            "type": "string",
+            "title": "Not Guaranteed Safe Notice",
+            "default": "This option should be evaluated with a certified grid technician before execution. Actions carry trade-offs."
+          }
+        },
+        "type": "object",
+        "required": [
+          "option_id",
+          "option_title",
+          "plain_action_summary",
+          "expected_outcome",
+          "why_discuss_first"
+        ],
+        "title": "PlainDiscussionOption"
+      },
+      "PreviewAsRequest": {
+        "properties": {
+          "target_role": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(SUPERVISOR|TECHNICIAN)$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Role"
+          }
+        },
+        "type": "object",
+        "title": "PreviewAsRequest"
+      },
       "Provenance": {
         "type": "string",
         "enum": [
@@ -1854,6 +3471,285 @@
         ],
         "title": "ScenarioType"
       },
+      "SubstationReadingPlain": {
+        "properties": {
+          "substation_id": {
+            "type": "integer",
+            "title": "Substation Id"
+          },
+          "friendly_name": {
+            "type": "string",
+            "title": "Friendly Name"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "NORMAL",
+              "ELEVATED_STRAIN",
+              "SUSPECT_SENSOR",
+              "DEVIATION"
+            ],
+            "title": "Status"
+          },
+          "strain_level": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH"
+            ],
+            "title": "Strain Level"
+          },
+          "plain_reading": {
+            "type": "string",
+            "title": "Plain Reading"
+          },
+          "provenance_text": {
+            "type": "string",
+            "enum": [
+              "Direct Measurement",
+              "Cross-Checked Estimate",
+              "Data Unavailable"
+            ],
+            "title": "Provenance Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "substation_id",
+          "friendly_name",
+          "status",
+          "strain_level",
+          "plain_reading",
+          "provenance_text"
+        ],
+        "title": "SubstationReadingPlain"
+      },
+      "SubstationTopologyPlain": {
+        "properties": {
+          "substation_id": {
+            "type": "integer",
+            "title": "Substation Id"
+          },
+          "friendly_name": {
+            "type": "string",
+            "title": "Friendly Name"
+          },
+          "substation_role": {
+            "type": "string",
+            "title": "Substation Role"
+          },
+          "plain_description": {
+            "type": "string",
+            "title": "Plain Description"
+          },
+          "coordinates": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Coordinates"
+          },
+          "connected_corridor_ids": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Connected Corridor Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "substation_id",
+          "friendly_name",
+          "substation_role",
+          "plain_description",
+          "coordinates",
+          "connected_corridor_ids"
+        ],
+        "title": "SubstationTopologyPlain"
+      },
+      "SupervisorGridStateProjection": {
+        "properties": {
+          "step": {
+            "type": "integer",
+            "title": "Step"
+          },
+          "environment_label": {
+            "type": "string",
+            "title": "Environment Label",
+            "default": "PRACTICE_SIMULATION"
+          },
+          "environment_badge_text": {
+            "type": "string",
+            "title": "Environment Badge Text",
+            "default": "PRACTICE SIMULATION \u2014 Educational Digital Twin"
+          },
+          "system_health_status": {
+            "type": "string",
+            "enum": [
+              "NORMAL",
+              "UNDER_OBSERVATION",
+              "ATTENTION_REQUIRED",
+              "CRITICAL"
+            ],
+            "title": "System Health Status"
+          },
+          "plain_frequency_summary": {
+            "type": "string",
+            "title": "Plain Frequency Summary"
+          },
+          "equipment_strain_summary": {
+            "type": "string",
+            "title": "Equipment Strain Summary"
+          },
+          "active_incident_count": {
+            "type": "integer",
+            "title": "Active Incident Count"
+          },
+          "substation_readings": {
+            "items": {
+              "$ref": "#/components/schemas/SubstationReadingPlain"
+            },
+            "type": "array",
+            "title": "Substation Readings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "step",
+          "system_health_status",
+          "plain_frequency_summary",
+          "equipment_strain_summary",
+          "active_incident_count",
+          "substation_readings"
+        ],
+        "title": "SupervisorGridStateProjection"
+      },
+      "SupervisorGridTopologyProjection": {
+        "properties": {
+          "environment_label": {
+            "type": "string",
+            "title": "Environment Label",
+            "default": "PRACTICE_SIMULATION"
+          },
+          "environment_badge_text": {
+            "type": "string",
+            "title": "Environment Badge Text",
+            "default": "PRACTICE SIMULATION \u2014 Educational Digital Twin"
+          },
+          "substations": {
+            "items": {
+              "$ref": "#/components/schemas/SubstationTopologyPlain"
+            },
+            "type": "array",
+            "title": "Substations"
+          },
+          "corridors": {
+            "items": {
+              "$ref": "#/components/schemas/CorridorTopologyPlain"
+            },
+            "type": "array",
+            "title": "Corridors"
+          },
+          "plain_legend": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Plain Legend"
+          }
+        },
+        "type": "object",
+        "required": [
+          "substations",
+          "corridors",
+          "plain_legend"
+        ],
+        "title": "SupervisorGridTopologyProjection"
+      },
+      "SupervisorIncidentProjection": {
+        "properties": {
+          "incident_id": {
+            "type": "string",
+            "title": "Incident Id"
+          },
+          "environment_label": {
+            "type": "string",
+            "enum": [
+              "PRACTICE_SIMULATION",
+              "HISTORICAL_REPLAY",
+              "LIVE_SYSTEM"
+            ],
+            "title": "Environment Label",
+            "default": "PRACTICE_SIMULATION"
+          },
+          "environment_badge_text": {
+            "type": "string",
+            "title": "Environment Badge Text",
+            "default": "PRACTICE SIMULATION \u2014 Not real grid data"
+          },
+          "status_summary": {
+            "type": "string",
+            "title": "Status Summary"
+          },
+          "severity_level": {
+            "type": "string",
+            "enum": [
+              "NORMAL",
+              "WORTH_WATCHING",
+              "NEEDS_ATTENTION",
+              "URGENT"
+            ],
+            "title": "Severity Level"
+          },
+          "what_is_happening": {
+            "type": "string",
+            "title": "What Is Happening"
+          },
+          "how_sure_we_are": {
+            "$ref": "#/components/schemas/PlainConfidenceSummary"
+          },
+          "what_it_could_lead_to": {
+            "type": "string",
+            "title": "What It Could Lead To"
+          },
+          "options_to_discuss_with_technician": {
+            "items": {
+              "$ref": "#/components/schemas/PlainDiscussionOption"
+            },
+            "type": "array",
+            "title": "Options To Discuss With Technician"
+          },
+          "affected_substations": {
+            "items": {
+              "$ref": "#/components/schemas/AffectedSubstationPlain"
+            },
+            "type": "array",
+            "title": "Affected Substations"
+          },
+          "provenance_summary": {
+            "type": "string",
+            "title": "Provenance Summary"
+          },
+          "narrative_version": {
+            "type": "string",
+            "title": "Narrative Version",
+            "default": "v1.0.0"
+          }
+        },
+        "type": "object",
+        "required": [
+          "incident_id",
+          "status_summary",
+          "severity_level",
+          "what_is_happening",
+          "how_sure_we_are",
+          "what_it_could_lead_to",
+          "options_to_discuss_with_technician",
+          "affected_substations",
+          "provenance_summary"
+        ],
+        "title": "SupervisorIncidentProjection"
+      },
       "TelemetryQuality": {
         "type": "string",
         "enum": [
@@ -1863,6 +3759,105 @@
           "SUSPECT"
         ],
         "title": "TelemetryQuality"
+      },
+      "UserProfileResponse": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "real_role": {
+            "type": "string",
+            "title": "Real Role"
+          },
+          "effective_role": {
+            "type": "string",
+            "title": "Effective Role"
+          },
+          "is_preview": {
+            "type": "boolean",
+            "title": "Is Preview"
+          },
+          "preview_role": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preview Role"
+          },
+          "must_change_password": {
+            "type": "boolean",
+            "title": "Must Change Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "username",
+          "display_name",
+          "real_role",
+          "effective_role",
+          "is_preview",
+          "preview_role",
+          "must_change_password"
+        ],
+        "title": "UserProfileResponse"
+      },
+      "UserResponse": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "must_change_password": {
+            "type": "boolean",
+            "title": "Must Change Password"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "username",
+          "display_name",
+          "role",
+          "is_active",
+          "must_change_password",
+          "created_at"
+        ],
+        "title": "UserResponse"
       },
       "ValidationError": {
         "properties": {

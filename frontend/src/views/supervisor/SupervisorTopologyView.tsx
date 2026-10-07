@@ -181,7 +181,7 @@ export const SupervisorTopologyView: React.FC = () => {
           onMouseLeave={handleMouseUp}
         >
           {/* Zoom / Pan Controls Overlay */}
-          <div className="absolute top-3 left-3 z-10 flex items-center space-x-1.5 bg-panel border border-border px-2 py-1 rounded text-[11px] font-mono text-text-muted shadow-md">
+          <div className="absolute top-3 left-3 z-10 flex items-center space-x-1.5 bg-panel border border-border px-2 py-1 rounded text-[11px] font-mono text-text-muted shadow-sm">
             <button
               onClick={() => setZoom((z) => Math.min(2.5, z + 0.15))}
               className="p-1 hover:text-text-main hover:bg-surface rounded"
@@ -379,15 +379,15 @@ export const SupervisorTopologyView: React.FC = () => {
           <div className="flex items-center gap-4">
             <span className="font-semibold text-text-main">Operating Strain:</span>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm" />
+              <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500 shadow-sm" />
               <span>Low Strain (Normal)</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-sm" />
+              <span className="w-2.5 h-2.5 rounded-sm bg-amber-500 shadow-sm" />
               <span>Medium Strain (Watch)</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-sm" />
+              <span className="w-2.5 h-2.5 rounded-sm bg-red-500 shadow-sm" />
               <span>High Strain (Investigate)</span>
             </div>
           </div>
@@ -423,7 +423,7 @@ export const SupervisorTopologyView: React.FC = () => {
               const reading = getSubstationReading(selectedSubstation.substation_id);
               const strain = reading?.strain_level || 'LOW';
               return (
-                <div className="p-4 rounded-xl bg-app border border-border space-y-2.5 shadow-sm">
+                <div className="p-4 rounded bg-app border border-border space-y-2.5 shadow-sm">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-semibold text-text-muted">Current Strain Level</span>
                     <span
@@ -450,7 +450,7 @@ export const SupervisorTopologyView: React.FC = () => {
             })()}
 
             {/* Role & Description in Plain English */}
-            <div className="space-y-2 p-3.5 rounded-xl bg-panel-alt border border-border">
+            <div className="space-y-2 p-3.5 rounded bg-panel-alt border border-border">
               <h3 className="text-xs font-bold text-text-main flex items-center gap-1.5">
                 <Zap className="w-3.5 h-3.5 text-amber-400" />
                 What this Substation Does:

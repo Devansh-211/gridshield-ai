@@ -152,7 +152,7 @@ const WorkbenchContent: React.FC = () => {
       let runId = liveSessionIdRef.current;
       if (!runId) {
         const session = await createLiveSession();
-        runId = session.run_id;
+        runId = session.run_id || 'RUN_LIVE';
         liveSessionIdRef.current = runId;
         setLiveSessionId(runId);
       }

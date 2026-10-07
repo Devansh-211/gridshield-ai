@@ -26,15 +26,11 @@ export const LoginView: React.FC = () => {
 
   return (
     <div className="w-screen h-screen flex flex-col items-center justify-center bg-app text-text-main font-ui select-none p-4 relative overflow-hidden">
-      {/* Background ambient accents */}
-      <div className="absolute -top-32 -left-32 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="w-full max-w-md bg-surface border border-border-main rounded-xl shadow-2xl p-8 z-10">
+      <div className="w-full max-w-md bg-surface border border-border rounded p-8 z-10 shadow-sm">
         {/* Header Branding */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-600/20 border border-blue-500/30 text-blue-400 mb-3 shadow-inner">
-            <Shield className="w-8 h-8" />
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded bg-blue-600/20 border border-blue-500/30 text-blue-400 mb-3">
+            <Shield className="w-7 h-7" />
           </div>
           <h1 className="text-xl font-bold tracking-tight text-text-main">
             GridShield <span className="text-blue-500 font-mono">AI</span>
@@ -46,11 +42,11 @@ export const LoginView: React.FC = () => {
 
         {/* First run prompt if bootstrap needed */}
         {needsBootstrap ? (
-          <div className="mb-6 p-4 bg-blue-950/40 border border-blue-500/40 rounded-lg text-center space-y-2">
+          <div className="mb-6 p-4 bg-blue-950/40 border border-blue-500/40 rounded text-center space-y-2">
             <ShieldCheck className="w-6 h-6 text-blue-400 mx-auto" />
             <h3 className="text-xs font-bold text-blue-200">System Uninitialized</h3>
             <p className="text-[11px] text-blue-300/80">
-              No administrator accounts detected. Complete initial setup to unlock the workbench.
+              No administrator accounts detected. Complete initial setup to access the workbench.
             </p>
             <button
               onClick={() => setIsBootstrapOpen(true)}
@@ -62,7 +58,7 @@ export const LoginView: React.FC = () => {
         ) : (
           <form onSubmit={handleLoginSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 bg-red-900/30 border border-red-500/50 rounded-lg flex items-center gap-2 text-xs text-red-200">
+              <div className="p-3 bg-red-900/30 border border-red-500/50 rounded flex items-center gap-2 text-xs text-red-200">
                 <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
                 <span>{error}</span>
               </div>
@@ -79,7 +75,7 @@ export const LoginView: React.FC = () => {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="supervisor, technician, or admin"
                 required
-                className="w-full bg-app border border-border-main rounded-lg px-3.5 py-2.5 text-xs text-text-main focus:outline-none focus:border-blue-500 transition-colors"
+                className="w-full bg-app border border-border rounded px-3.5 py-2 text-xs text-text-main focus:outline-none focus:border-blue-500 transition-colors font-mono"
               />
             </div>
 
@@ -94,14 +90,14 @@ export const LoginView: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
                 required
-                className="w-full bg-app border border-border-main rounded-lg px-3.5 py-2.5 text-xs text-text-main focus:outline-none focus:border-blue-500 transition-colors"
+                className="w-full bg-app border border-border rounded px-3.5 py-2 text-xs text-text-main focus:outline-none focus:border-blue-500 transition-colors font-mono"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 px-4 rounded-lg text-xs transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 shadow-md shadow-blue-900/20"
+              className="w-full mt-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 px-4 rounded text-xs transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {loading ? (
                 <span>Authenticating...</span>

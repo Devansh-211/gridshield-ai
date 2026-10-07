@@ -34,7 +34,7 @@ export const SupervisorIncidentsView: React.FC = () => {
   return (
     <div className="flex-1 flex flex-col p-6 overflow-y-auto space-y-6 bg-app">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border-main shadow-sm">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded bg-surface border border-border shadow-sm">
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-500/20 text-blue-400 border border-blue-500/30">
@@ -55,7 +55,7 @@ export const SupervisorIncidentsView: React.FC = () => {
           Loading active incident briefings...
         </div>
       ) : incidents.length === 0 ? (
-        <div className="p-12 rounded-xl bg-surface border border-border-main text-center space-y-3">
+        <div className="p-12 rounded bg-surface border border-border text-center space-y-3">
           <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
           <h3 className="text-sm font-bold text-text-main">No Incidents Detected</h3>
           <p className="text-xs text-text-muted max-w-md mx-auto">
@@ -67,7 +67,7 @@ export const SupervisorIncidentsView: React.FC = () => {
           {incidents.map((incident) => (
             <div
               key={incident.incident_id}
-              className="p-6 rounded-xl bg-surface border border-border-main shadow-md space-y-5"
+              className="p-6 rounded bg-surface border border-border shadow-sm space-y-5"
             >
               {/* Top Meta Bar */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-border-main">

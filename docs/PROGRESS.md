@@ -65,7 +65,7 @@
   - Frontend Build: 0 errors (`npm run build`), **461.00 kB JS** / **37.69 kB CSS** (well below 500 kB budget).
   - Backend Test Suite: 53/53 pytest suites green (100% pass rate).
 
-## Phase PA: Authentication, Roles & Segregated Views (PASSED)
+## Phase PA & Workbench Enhancements (PASSED)
 - [x] **PA.1: Threat Model & Attack Surface Map** (`reports/auth/THREAT_MODEL.md`): Defined supervisor, technician, and admin roles, MITRE ATT&CK mitigation, deny-by-default route matrix.
 - [x] **PA.2: Database Persistence & Crypto Core**: `UserModel`, `SessionModel`, `ElementAliasModel`, `GlossaryTermModel`, `AuditLogModel` with `scrypt` hashing, constant-time `hmac.compare_digest`, and one-time bootstrap token.
 - [x] **PA.3: Route Policy & Deny-by-Default Validator**: Registered role policies for all 59 endpoints in `route_policy.py`; startup validator guarantees 0 unauthenticated endpoints.
@@ -74,13 +74,19 @@
 - [x] **PA.6: View Parity Manifest** (`docs/view-parity.yaml`): 100% engineering facts mapped to plain supervisor equivalents with zero information loss.
 - [x] **PA.7: Phase Gate Test Suite** (`backend/tests/test_phase_pa_auth_views.py`): 8/8 phase gate tests passing (Gate 1 Route Security, Gate 2 Server Whitelist, Gate 3 Jargon Linter, Gate 4 Fidelity, Gate 5 Parity Manifest, Gate 6 Crypto, Gate 7 Admin Preview, Gate 8 Determinism).
 - [x] **PA.8: Frontend Role-Segregated Shells & Auth**: `AuthContext`, `LoginView`, `BootstrapModal`, `PreviewBanner`, `SupervisorDashboardView`, `SupervisorTopologyView`, `SupervisorIncidentsView`, `SupervisorGlossaryView`, `AdminConsoleView`.
-- [x] **PA.9: System Verification**: Full test suite **113/113 passed**, Vite frontend build verified (0 errors).
+- [x] **PA.9: Workbench Live Engine & UI Fine-Tuning**:
+  - Implemented continuous async simulation ticking with speed multipliers (1x, 2x, 5x), step jumps (+1s, +5s, +20s), and reset baseline.
+  - Rebuilt Supervisor Regional Map (`SupervisorTopologyView.tsx`) with pan/zoom viewport controls, substation shells, and interactive corridor inspection.
+  - Fully resolved all 49 UI linter violations across 11 views for strict Operations Gray design conformance.
+  - Complete sync of auto-generated TypeScript contracts (`scripts/generate_types.py`).
+- [x] **PA.10: Master Verification**: Full test suite **113/113 passed**, Vite frontend build verified (0 errors), `scripts/check.py` all green.
 
 ## Verification Metrics Summary
 - **Backend Tests**: 113/113 tests passing (`pytest -v backend/tests/`)
 - **Phase PA Phase Gate Tests**: 8/8 tests passing (`backend/tests/test_phase_pa_auth_views.py`)
 - **Frontend Build**: `npm run build` cleanly compiled (0 TypeScript errors)
-- **UI Linter**: `python scripts/ui_lint.py` -> 0 violations across 37 files
+- **UI Linter**: `python scripts/ui_lint.py` -> 0 violations across 49 source files
 - **Readability**: `python scripts/readability_check.py` -> 15/15 sections PASS (Grade 4.6–8.5)
 - **Rubric Evaluation**: 8/8 views PASS (all scoring 40/40)
+
 

@@ -306,60 +306,6 @@ export interface AnalystQuestionResponse {
   provenance: Provenance;
 }
 
-export type AlarmState = 'UNACK' | 'ACK' | 'ACTIVE_UNACK' | 'ACTIVE_ACK' | 'RTN_UNACK' | 'SHELVED' | 'CLEARED';
-export type AlarmPriority = 'CRITICAL' | 'WARNING' | 'CAUTION' | 'DIAGNOSTIC';
-
-export interface AlarmRecord {
-  id: string;
-  run_id: string;
-  tag: string;
-  description: string;
-  priority: AlarmPriority;
-  state: AlarmState;
-  source_substation?: string | null;
-  source_component?: string | null;
-  setpoint_violated?: string | null;
-  current_value?: number | null;
-  limit_value?: number | null;
-  units?: string | null;
-  created_at_step: number;
-  created_at_wall?: string | null;
-  acknowledged_by?: string | null;
-  acknowledged_at?: string | null;
-  shelved_until?: string | null;
-  return_to_normal_at?: string | null;
-  provenance: Provenance;
-}
-
-export interface DemoStepResult {
-  step_index: number;
-  total_steps: number;
-  title: string;
-  stage_name: string;
-  summary_plain: string;
-  summary_technical: string;
-  sim_step: number;
-  alarms_raised: AlarmRecord[];
-  incidents_raised: string[];
-  actions_applied: string[];
-  next_step_index: number | null;
-  is_complete: boolean;
-  provenance: Provenance;
-}
-
-export interface LiveSessionState {
-  run_id: string;
-  status: string;
-  current_step?: number;
-  sim_step?: number;
-  total_steps?: number;
-  active_alarms_count?: number;
-  open_incidents_count?: number;
-  grid_state?: GridState;
-  grid_summary?: Record<string, any>;
-  provenance?: Provenance;
-}
-
 export interface ErrorEnvelope {
   code: string;
   message: string;
@@ -367,10 +313,7 @@ export interface ErrorEnvelope {
   request_id?: string | null;
 }
 
-// ----------------------------------------------------------------------------
-// Phase PA: Authentication & Role Management Types
-// ----------------------------------------------------------------------------
-
+// --- Phase PA: Auth, Role-Based Views, and Narrative Projections ---
 export type UserRole = 'SUPERVISOR' | 'TECHNICIAN' | 'ADMIN';
 
 export interface UserProfile {
@@ -380,7 +323,7 @@ export interface UserProfile {
   real_role: UserRole;
   effective_role: UserRole;
   is_preview: boolean;
-  preview_role: UserRole | null;
+  preview_role?: UserRole | null;
   must_change_password: boolean;
 }
 
@@ -394,12 +337,6 @@ export interface UserSummary {
   created_at: string;
 }
 
-export interface BootstrapStatus {
-  needs_bootstrap: boolean;
-  user_count: number;
-  bootstrap_token: string | null;
-}
-
 export interface SecurityAuditLog {
   id: number;
   actor_id?: string | null;
@@ -411,10 +348,6 @@ export interface SecurityAuditLog {
   details: Record<string, any>;
   created_at: string;
 }
-
-// ----------------------------------------------------------------------------
-// Phase PA: Supervisor Plain-Language Whitelist Projections
-// ----------------------------------------------------------------------------
 
 export interface PlainConfidenceSummary {
   plain_confidence_summary: string;
@@ -430,7 +363,7 @@ export interface PlainDiscussionOption {
   plain_action_summary: string;
   expected_outcome: string;
   why_discuss_first: string;
-  not_guaranteed_safe_notice: string;
+  not_guaranteed_safe_notice?: string;
 }
 
 export interface AffectedSubstationPlain {
@@ -460,7 +393,7 @@ export interface SubstationTopologyPlain {
   friendly_name: string;
   substation_role: string;
   plain_description: string;
-  coordinates: number[];
+  coordinates: [number, number];
   connected_corridor_ids: number[];
 }
 
@@ -476,7 +409,7 @@ export interface SupervisorGridTopologyProjection {
   environment_badge_text: string;
   substations: SubstationTopologyPlain[];
   corridors: CorridorTopologyPlain[];
-  plain_legend: Record<string, string>;
+  plain_legend: Record<string, any>;
 }
 
 export interface SubstationReadingPlain {
@@ -516,3 +449,43 @@ export interface GlossaryItem {
   plain_analogy: string;
 }
 
+// --- Workbench & Live Session ---
+export interface AlarmRecord {
+  id: string;
+  run_id?: string;
+  tag: string;
+  description: string;
+  priority: 'CRITICAL' | 'WARNING' | 'INFO' | string;
+  state: 'UNACK' | 'ACK' | 'CLEARED' | 'ACTIVE_UNACK' | 'ACTIVE_ACK' | 'RTN_UNACK' | 'RTN_ACK' | 'SHELVED' | string;
+  source_component: string;
+  current_value?: number;
+  limit_value?: number;
+  created_at_step?: number;
+  created_at_wall?: string;
+  acknowledged_by?: string;
+  provenance?: Provenance;
+}
+
+export interface LiveSessionState {
+  run_id?: string;
+  visitor_id?: string;
+  kind?: string;
+  seed?: number;
+  scenario_type?: string;
+  status?: string;
+  sim_step?: number;
+  step?: number;
+  speed?: number;
+  is_running?: boolean;
+  active_scenario?: string;
+  grid_state?: GridState;
+  version?: number;
+  created_at?: string;
+}
+
+export interface DemoStepResult {
+  step: number;
+  grid_state: GridState;
+  incidents: Incident[];
+  new_alarms?: AlarmRecord[];
+}

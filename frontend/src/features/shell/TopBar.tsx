@@ -85,8 +85,8 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* Run State Indicator */}
         <span className="flex items-center space-x-1.5 text-[11px] font-mono">
           <span
-            className={`w-2 h-2 rounded-full ${
-              isSimPlaying ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'
+            className={`w-2 h-2 rounded-sm ${
+              isSimPlaying ? 'bg-emerald-400' : 'bg-amber-400'
             }`}
           />
           <span className={isSimPlaying ? 'text-emerald-400 font-semibold' : 'text-text-muted'}>

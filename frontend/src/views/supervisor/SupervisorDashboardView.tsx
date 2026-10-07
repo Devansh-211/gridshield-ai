@@ -70,7 +70,7 @@ export const SupervisorDashboardView: React.FC<SupervisorDashboardViewProps> = (
   return (
     <div className="flex-1 flex flex-col p-6 overflow-y-auto space-y-6">
       {/* Top Environment & Health Banner */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border-main shadow-sm">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded bg-surface border border-border shadow-sm">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-500/20 text-blue-400 border border-blue-500/30">
@@ -116,7 +116,7 @@ export const SupervisorDashboardView: React.FC<SupervisorDashboardViewProps> = (
       {/* Grid Pulse Status Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* System Heartbeat */}
-        <div className="p-4 rounded-xl bg-surface border border-border-main shadow-sm space-y-2">
+        <div className="p-4 rounded bg-surface border border-border shadow-sm space-y-2">
           <div className="flex items-center justify-between text-xs text-text-muted">
             <span className="font-semibold flex items-center gap-1.5">
               <Activity className="w-4 h-4 text-blue-400" />
@@ -130,7 +130,7 @@ export const SupervisorDashboardView: React.FC<SupervisorDashboardViewProps> = (
         </div>
 
         {/* Corridor Strain */}
-        <div className="p-4 rounded-xl bg-surface border border-border-main shadow-sm space-y-2">
+        <div className="p-4 rounded bg-surface border border-border shadow-sm space-y-2">
           <div className="flex items-center justify-between text-xs text-text-muted">
             <span className="font-semibold flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4 text-emerald-400" />
@@ -149,7 +149,7 @@ export const SupervisorDashboardView: React.FC<SupervisorDashboardViewProps> = (
         </div>
 
         {/* Active Incidents */}
-        <div className="p-4 rounded-xl bg-surface border border-border-main shadow-sm space-y-2">
+        <div className="p-4 rounded bg-surface border border-border shadow-sm space-y-2">
           <div className="flex items-center justify-between text-xs text-text-muted">
             <span className="font-semibold flex items-center gap-1.5">
               <AlertTriangle className="w-4 h-4 text-amber-400" />
@@ -186,7 +186,7 @@ export const SupervisorDashboardView: React.FC<SupervisorDashboardViewProps> = (
         </div>
 
         {(!data?.recent_briefings || data.recent_briefings.length === 0) ? (
-          <div className="p-8 rounded-xl bg-surface border border-border-main text-center space-y-2">
+          <div className="p-8 rounded bg-surface border border-border text-center space-y-2">
             <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto" />
             <h3 className="text-sm font-bold text-text-main">No Active Grid Disruptions</h3>
             <p className="text-xs text-text-muted max-w-md mx-auto">
@@ -198,10 +198,10 @@ export const SupervisorDashboardView: React.FC<SupervisorDashboardViewProps> = (
             {data.recent_briefings.map((briefing) => (
               <div
                 key={briefing.incident_id}
-                className="p-5 rounded-xl bg-surface border border-border-main shadow-sm space-y-4 hover:border-blue-500/40 transition-colors"
+                className="p-5 rounded bg-surface border border-border shadow-sm space-y-4 hover:border-blue-500/40 transition-colors"
               >
                 {/* Briefing Header */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-3 border-b border-border-main">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-3 border-b border-border">
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-xs font-bold text-text-main">
@@ -312,7 +312,7 @@ export const SupervisorDashboardView: React.FC<SupervisorDashboardViewProps> = (
       </div>
 
       {/* Safety & Educational Twin Non-Operability Notice */}
-      <div className="p-4 rounded-xl bg-blue-950/20 border border-blue-500/20 text-xs text-text-muted leading-relaxed">
+      <div className="p-4 rounded bg-blue-950/20 border border-blue-500/20 text-xs text-text-muted leading-relaxed">
         <strong className="text-blue-300">Decision-Support Notice:</strong> GridShield AI provides
         educational simulations, detection translations, and decision support. It does not replace certified
         system operators or protection relays. Candidate options carry operational trade-offs and must be verified

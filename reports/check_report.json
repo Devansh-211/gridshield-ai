@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-05 19:11:33 UTC",
+  "timestamp": "2026-10-07 03:23:43 UTC",
   "overall_status": "PASSED",
   "steps": [
     {
@@ -7,7 +7,7 @@
       "command": "\"D:\\New project\\.venv\\Scripts\\python.exe\" scripts/generate_types.py",
       "status": "PASSED",
       "exit_code": 0,
-      "duration_s": 4.52,
+      "duration_s": 5.69,
       "output": "Exported OpenAPI schema to docs\\openapi.json\nGenerated TypeScript types in frontend\\types\\api.ts\n"
     },
     {
@@ -15,7 +15,7 @@
       "command": "\"D:\\New project\\.venv\\Scripts\\python.exe\" backend/spikes/phase0_spikes.py",
       "status": "PASSED",
       "exit_code": 0,
-      "duration_s": 4.9,
+      "duration_s": 5.89,
       "output": "\",\n    \"converged\": true,\n    \"v_min_pu\": 1.01,\n    \"v_max_pu\": 1.09,\n    \"bus_count\": 14,\n    \"line_count\": 15\n  },\n  \"spike_2_wls\": {\n    \"status\": \"PASSED\",\n    \"clean_estimation_converged\": true,\n    \"bad_data_flagged\": true\n  },\n  \"spike_3_observability\": {\n    \"status\": \"PASSED\",\n    \"measurement_count\": 72,\n    \"state_dimension\": 27,\n    \"redundancy_ratio\": 2.667\n  },\n  \"spike_4_toolchain\": {\n    \"status\": \"PASSED\",\n    \"openapi_version\": \"3.1.0\",\n    \"paths\": [\n      \"/test\"\n    ]\n  }\n}\n"
     },
     {
@@ -23,24 +23,24 @@
       "command": "\"D:\\New project\\.venv\\Scripts\\python.exe\" -m pytest backend/tests -v",
       "status": "PASSED",
       "exit_code": 0,
-      "duration_s": 149.33,
-      "output": "            [ 42%]\nbackend\\tests\\test_m4_attribution_and_risk.py ....                       [ 52%]\nbackend\\tests\\test_m5_mitigation_and_verification.py .....               [ 65%]\nbackend\\tests\\test_m6_analyst.py ....                                    [ 75%]\nbackend\\tests\\test_m7_api.py .......                                     [ 92%]\nbackend\\tests\\test_m8_demo.py ...                                        [100%]\n\n======================= 40 passed in 147.61s (0:02:27) ========================\n"
+      "duration_s": 203.7,
+      "output": "DeprecationWarning: tap_dependency_table is missing in net, which is most probably due to unsupported net data. tap_dependency_table was introduced with pandapower 3.0 and replaced spline characteristics. Spline characteristics will still work, but they are deprecated and will be removed in future releases.\n    warnings.warn(DeprecationWarning(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=============== 113 passed, 6131 warnings in 199.41s (0:03:19) ================\n"
     },
     {
       "step": "Headless Demo Golden Run",
       "command": "\"D:\\New project\\.venv\\Scripts\\python.exe\" scripts/run_demo_test.py",
       "status": "PASSED",
       "exit_code": 0,
-      "duration_s": 32.3,
-      "output": "itigated Max Voltage Dev: 0.0900 p.u.\n  -> Mitigated Max Voltage Dev: 0.0900 p.u.\n\n[2/2] Running Secondary Demo (Physical Line 1-2 Outage Contrast)...\n  -> Completed in 3.69s\n  -> Run ID: RUN_143EA99E\n  -> Active Incident: GS-0001 (ClassificationClass.FALSE_DATA_INJECTION)\n  -> Attribution Likely Cause: PHYSICAL\n\n======================================================================\nDEMO TEST PASSED in 26.57s (Budget: < 90s)\n======================================================================\n"
+      "duration_s": 27.71,
+      "output": "] Running Secondary Demo (Physical Line 1-2 Outage Contrast)...\nWarning: Alarms persistence during run failed: 'Depends' object has no attribute 'add'\n  -> Completed in 3.44s\n  -> Run ID: RUN_D07910B3\n  -> Active Incident: GS-0001 (ClassificationClass.FALSE_DATA_INJECTION)\n  -> Attribution Likely Cause: PHYSICAL\n\n======================================================================\nDEMO TEST PASSED in 22.34s (Budget: < 90s)\n======================================================================\n"
     },
     {
       "step": "Frontend Production Build",
       "command": "cd frontend && npm.cmd run build",
       "status": "PASSED",
       "exit_code": 0,
-      "duration_s": 21.33,
-      "output": "mbuilding for production...\u001b[36m\u001b[39m\ntransforming...\n\u001b[32m\u00e2\u0153\u201c\u001b[39m 2722 modules transformed.\nrendering chunks...\ncomputing gzip size...\n\u001b[2mdist/\u001b[22m\u001b[32mindex.html                 \u001b[39m\u001b[1m\u001b[2m  1.10 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m \u00e2\u201d\u201a gzip:   0.64 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[35massets/index-Cx0c8AYt.css  \u001b[39m\u001b[1m\u001b[2m 28.83 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m \u00e2\u201d\u201a gzip:   5.70 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-CbiVXiTC.js   \u001b[39m\u001b[1m\u001b[33m602.26 kB\u001b[39m\u001b[22m\u001b[2m \u00e2\u201d\u201a gzip: 168.86 kB\u001b[22m\n\u001b[32m\u00e2\u0153\u201c built in 16.49s\u001b[39m\n"
+      "duration_s": 15.87,
+      "output": "mal-6ng42L7E.woff2         \u001b[39m\u001b[1m\u001b[2m 24.18 kB\u001b[22m\u001b[1m\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[32massets/ibm-plex-sans-latin-600-normal-CuJfVYMP.woff2         \u001b[39m\u001b[1m\u001b[2m 24.25 kB\u001b[22m\u001b[1m\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[35massets/index-BwNlAlHy.css                                    \u001b[39m\u001b[1m\u001b[2m 47.23 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m \u00e2\u201d\u201a gzip:   9.02 kB\u001b[22m\n\u001b[2mdist/\u001b[22m\u001b[36massets/index-BszrAxbZ.js                                     \u001b[39m\u001b[1m\u001b[33m584.08 kB\u001b[39m\u001b[22m\u001b[2m \u00e2\u201d\u201a gzip: 174.77 kB\u001b[22m\n\u001b[32m\u00e2\u0153\u201c built in 12.32s\u001b[39m\n"
     }
   ]
 }

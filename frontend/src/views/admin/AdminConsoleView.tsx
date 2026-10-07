@@ -104,7 +104,7 @@ export const AdminConsoleView: React.FC = () => {
   return (
     <div className="flex-1 flex flex-col p-6 overflow-y-auto space-y-6 bg-app text-text-main">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border-main shadow-sm">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded bg-surface border border-border shadow-sm">
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-purple-500/20 text-purple-400 border border-purple-500/30">
@@ -192,7 +192,7 @@ export const AdminConsoleView: React.FC = () => {
             </button>
           </div>
 
-          <div className="bg-surface rounded-xl border border-border-main overflow-hidden shadow-sm">
+          <div className="bg-surface rounded border border-border overflow-hidden shadow-sm">
             <table className="w-full text-xs text-left">
               <thead className="bg-app border-b border-border-main text-[11px] font-semibold text-text-muted">
                 <tr>
@@ -231,7 +231,7 @@ export const AdminConsoleView: React.FC = () => {
                     </td>
                     <td className="p-3">
                       <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        <span className="w-1.5 h-1.5 rounded-sm bg-emerald-400" />
                         Active
                       </span>
                     </td>
@@ -259,7 +259,7 @@ export const AdminConsoleView: React.FC = () => {
 
       {/* TAB 2: ROLE PREVIEW */}
       {activeTab === 'preview' && (
-        <div className="p-6 rounded-xl bg-surface border border-border-main shadow-sm space-y-6 max-w-2xl">
+        <div className="p-6 rounded bg-surface border border-border shadow-sm space-y-6 max-w-2xl">
           <div className="space-y-1">
             <h2 className="text-sm font-bold text-text-main flex items-center gap-2">
               <Eye className="w-4 h-4 text-amber-400" />
@@ -350,7 +350,7 @@ export const AdminConsoleView: React.FC = () => {
             </button>
           </div>
 
-          <div className="bg-surface rounded-xl border border-border-main overflow-hidden shadow-sm">
+          <div className="bg-surface rounded border border-border overflow-hidden shadow-sm">
             <table className="w-full text-xs text-left">
               <thead className="bg-app border-b border-border-main text-[11px] font-semibold text-text-muted">
                 <tr>
@@ -395,8 +395,8 @@ export const AdminConsoleView: React.FC = () => {
 
       {/* Create User Modal */}
       {isAddUserOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="bg-surface border border-border-main rounded-xl shadow-2xl w-full max-w-md p-6 space-y-4 animate-in fade-in zoom-in duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
+          <div className="bg-surface border border-border rounded shadow-sm w-full max-w-md p-6 space-y-4 animate-in fade-in zoom-in duration-150">
             <div className="flex items-center justify-between pb-3 border-b border-border-main">
               <h3 className="text-sm font-bold text-text-main flex items-center gap-2">
                 <UserPlus className="w-4 h-4 text-blue-400" />

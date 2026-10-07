@@ -8,7 +8,7 @@ export const PreviewBanner: React.FC = () => {
   if (!isPreview || !user) return null;
 
   return (
-    <div className="bg-amber-600 dark:bg-amber-700 text-white px-4 py-1.5 flex items-center justify-between text-xs font-semibold tracking-wide shadow-md z-50 border-b border-amber-800 animate-pulse">
+    <div className="bg-amber-600 dark:bg-amber-700 text-white px-4 py-1.5 flex items-center justify-between text-xs font-semibold tracking-wide z-50 border-b border-amber-800">
       <div className="flex items-center gap-2">
         <Eye className="w-4 h-4 text-amber-200" />
         <span className="uppercase bg-amber-900/60 px-1.5 py-0.5 rounded text-[10px] tracking-wider border border-amber-400/40">

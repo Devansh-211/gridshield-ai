@@ -59,8 +59,8 @@ export const NetworkImporterModal: React.FC<NetworkImporterModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-panel border border-border w-full max-w-xl p-5 shadow-2xl space-y-4">
+    <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
+      <div className="bg-panel border border-border w-full max-w-xl p-5 shadow-sm space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border pb-3">
           <h2 className="text-sm font-semibold text-text-main flex items-center space-x-2">

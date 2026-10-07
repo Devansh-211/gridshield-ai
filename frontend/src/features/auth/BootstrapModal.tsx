@@ -48,10 +48,10 @@ export const BootstrapModal: React.FC<BootstrapModalProps> = ({ isOpen, onSucces
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="bg-surface border border-border-main rounded-lg shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
-        <div className="bg-gradient-to-r from-blue-900/50 to-slate-900/50 p-5 border-b border-border-main flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+      <div className="bg-surface border border-border rounded w-full max-w-md overflow-hidden shadow-sm">
+        <div className="bg-panel-alt p-5 border-b border-border flex items-center gap-3">
+          <div className="w-10 h-10 rounded bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400">
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>

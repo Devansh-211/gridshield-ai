@@ -32,7 +32,7 @@ export const SupervisorGlossaryView: React.FC = () => {
   return (
     <div className="flex-1 flex flex-col p-6 overflow-y-auto space-y-6 bg-app">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border-main shadow-sm">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded bg-surface border border-border shadow-sm">
         <div>
           <h1 className="text-base font-bold text-text-main flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-blue-400" />
@@ -51,7 +51,7 @@ export const SupervisorGlossaryView: React.FC = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search concepts or analogies..."
-            className="w-full bg-app border border-border-main rounded-lg pl-9 pr-3 py-2 text-xs text-text-main focus:outline-none focus:border-blue-500"
+            className="w-full bg-app border border-border rounded pl-9 pr-3 py-2 text-xs text-text-main focus:outline-none focus:border-blue-500 font-mono"
           />
         </div>
       </div>
@@ -69,7 +69,7 @@ export const SupervisorGlossaryView: React.FC = () => {
           {filtered.map((item, idx) => (
             <div
               key={idx}
-              className="p-4 rounded-xl bg-surface border border-border-main shadow-sm space-y-3 hover:border-blue-500/40 transition-colors flex flex-col justify-between"
+              className="p-4 rounded bg-surface border border-border shadow-sm space-y-3 hover:border-blue-500/40 transition-colors flex flex-col justify-between"
             >
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
